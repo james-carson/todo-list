@@ -1,7 +1,6 @@
 class Todo {
 
 // Todo item constructor:
-
     constructor(title, dueDate, priority, notes, complete) {
         this.title = title
         this.dueDate = dueDate
@@ -11,7 +10,6 @@ class Todo {
     }
 
 // Method to edit items:
-
     editTodo(newTitle, newDueDate, newPriority, newNotes) {
         this.title = newTitle || this.title;
         this.dueDate = newDueDate || this.dueDate;
@@ -20,11 +18,9 @@ class Todo {
 }
 
 // Method to toggle todo as complete/incomplete:
-
 toggleComplete() {
     this.complete = !this.complete;
 }
 
 // Deleting will be done through Projects
-
 }
