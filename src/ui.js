@@ -3,6 +3,9 @@ import { Todo } from './todo';
 import { Projects } from './project';
 import { isToday, isThisWeek } from 'date-fns';
 
+// Import dummy data for testing:
+import { todos } from './todo';
+
 // Filter lists by date (and uncompleted)
 
 function getTodosDueToday(todos) {
