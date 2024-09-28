@@ -6,6 +6,8 @@ import { isToday, isThisWeek } from 'date-fns';
 // Import dummy data for testing:
 import { todos } from './todo';
 
+// *** TODO: Will need to use loadData to make sure that the latest version is being used later ***
+
 // Filter lists by date (and uncompleted)
 
 function getTodosDueToday(todos) {
@@ -52,14 +54,14 @@ function getUncompletedByDueDate(todos) {
 // Add event listeners for clicks
 
 const dueTodayButton = document.getElementById('due_today');
-dueTodayButton.addEventListener('click')
+dueTodayButton.addEventListener('click', () => {
+    const dueTodayTodos = getTodosDueToday(todos);
+    renderTodos(dueTodayTodos, 'Due Today');
+}
 
+)
 
-
-
-
-// Coming back to this - creating renderTodos() first!***
-
+// NEXT: Set up logic for all event listeners: ***
 
 
 
@@ -100,7 +102,7 @@ function renderTodos(todos, projectName) {
         });
         todoDiv.appendChild(checkbox);
 
-        // Add the title of the todo:
+        // Add the title of the todo - Will I need this? ***:
         const todoTitle = document.createElement('div');
         todoTitle.classList.add('todo_title');
         todoTitle.textContent = todo.title;
