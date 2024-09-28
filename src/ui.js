@@ -50,7 +50,17 @@ function getUncompletedByDueDate(todos) {
 
 const dueTodayButton = document.getElementById('due_today');
 dueTodayButton.addEventListener('click')
+
+
+
+
+
 // Coming back to this - creating renderTodos() first!***
+
+
+
+
+
 
 // Logic for displaying todos on content
 
@@ -76,23 +86,16 @@ function renderTodos(todos, projectName) {
         checkbox.checked = todo.complete;
         checkbox.addEventListener('change', () => {
             todo.complete = checkbox.checked;
+            // This part saves the data to storage.js using the imported function: 
+            saveData();
+            //    Removes todo when checked after 2 seconds:
+            if (todo.complete) {
+                setTimeout(() => {
+                    todoDiv.remove();
+                }, 2000);
+            }
         });
-        // ***I need more here - I need this to save to storage and then possibly have the todo disappear from the list after a few seconds. Check the functionality below:
         todoDiv.appendChild(checkbox);
-
-        // checkbox.addEventListener('change', () => {
-        //     todo.complete = checkbox.checked;
-        
-        //     // Save the updated todos to localStorage (or whatever storage you're using)
-        //     saveData(); 
-        
-        //     if (todo.complete) {
-        //         // Set a timeout to remove the todo from the DOM after 2 seconds
-        //         setTimeout(() => {
-        //             todoDiv.remove();
-        //         }, 2000);
-        //     }
-        // });
 
         // Add the title of the todo:
         const todoTitle = document.createElement('div');
