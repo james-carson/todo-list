@@ -6,7 +6,7 @@ import { Projects } from './projects';
 // Filter lists by date (and uncompleted)
 export function getTodosDueToday() {
     console.log('running getTodosDueToday()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
         // Convert dueDate to Date object:
@@ -19,7 +19,7 @@ export function getTodosDueToday() {
 // Same as above, but with this week rather than today:
 export function getTodosDueThisWeek() {
     console.log('running getTodosDueThisWeek()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
@@ -30,7 +30,7 @@ export function getTodosDueThisWeek() {
 // Filter lists for high priority (and uncompleted)
 export function getHighPriority() {
     console.log('running getHighPriority()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => todo.priority === 'high' && !todo.complete);
 }
@@ -38,7 +38,7 @@ export function getHighPriority() {
 // Filter for completed:
 export function getCompletedTodos() {
     console.log('running getCompletedTodos()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => todo.complete);
 }
@@ -46,7 +46,7 @@ export function getCompletedTodos() {
 // Get names of all lists
 export function getProjectNames() {
     console.log('running getProjectNames()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     console.log(`Here is the data: ${projects}`)
     return projects;
 }
@@ -54,7 +54,7 @@ export function getProjectNames() {
 // Render all in order
 export function getUncompletedByDueDate() {
     console.log('running getUncompletedByDueDate()')
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos
         .filter(todo => !todo.complete)
@@ -66,7 +66,7 @@ export function appendProjectNames() {
     console.log('running appendProjectNames()')
     const projectList = document.getElementById('project_list');
     projectList.textContent = '';
-    const projects = loadData('projects') || [];
+    const projects = loadData() || [];
 
     projects.forEach(project => {
         const projectItem = document.createElement('h3');
@@ -275,4 +275,5 @@ window.getCompletedTodos = getCompletedTodos;
 window.getProjectNames = getProjectNames;
 window.getUncompletedByDueDate = getUncompletedByDueDate;
 window.appendProjectNames = appendProjectNames;
-window.renderTodos = renderTodos;
+window.renderStaticTodos = renderStaticTodos;
+window.renderDynamicTodos = renderDynamicTodos;
