@@ -32,7 +32,7 @@ export function getHighPriority() {
     console.log('running getHighPriority()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
-    return todos.filter(todo => todo.priority === 'High' && !todo.complete);
+    return todos.filter(todo => todo.priority === 'high' && !todo.complete);
 }
 
 // Filter for completed:
@@ -66,7 +66,7 @@ export function appendProjectNames() {
     console.log('running appendProjectNames()')
     const projectList = document.getElementById('project_list');
     projectList.textContent = '';
-    const projects = getProjectNames();
+    const projects = loadData('projects') || [];
 
     projects.forEach(project => {
         const projectItem = document.createElement('h3');
@@ -75,7 +75,7 @@ export function appendProjectNames() {
         projectItem.classList.add('project_name');
         // Adding event listener to listen for clicks here:
         projectItem.addEventListener('click', () => {
-            renderTodos(project);
+            renderTodos(project, project.name);
         });
         projectList.appendChild(projectItem);
     });
@@ -94,9 +94,17 @@ export function renderTodos(input, title = '') {
     content.appendChild(projectTitle);
 
     // Get todos from a project or directly if input is an array:
-    const todos = Array.isArray(input) ? input : input.getTodos();
+    let todos;
+    if (Array.isArray(input)) {
+        todos = input;  // Input is already an array of todos
+    } else if (input && typeof input.getTodos === 'function') {
+        todos = input.getTodos();  // Input is a project object
+    } else {
+        console.error('Invalid input passed to renderTodos:', input);
+        return;  // Exit early if input is invalid
+    }
 
-    todos.getTodos().forEach(todo => {
+    todos.forEach(todo => {
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo_div');  // Class for CSS grid styling

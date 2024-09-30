@@ -46,10 +46,3 @@ export function initialiseData() {
         console.log('Local storage found and loaded')
     }
 }
-
-// || (localStorage = 'null') || (localStorage = '')
-
-// // Putting these to make the scope global:
-
-// window.initialiseData = initialiseData;
-// window.saveProjectsToLocalStorage = saveProjectsToLocalStorage;

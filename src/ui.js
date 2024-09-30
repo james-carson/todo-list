@@ -1,7 +1,7 @@
 import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, appendProjectNames, renderTodos } from './functions.js';
 
-// Added this wrapper to ensure that the DOM is loaded before these are attached:
-document.addEventListener('DOMContentLoaded', () => {
+// Added function wrapper to use on DOM loading:
+export function attachEventListeners() {
 
     // Add event listener for clicks for Due Today:
     const dueTodayButton = document.getElementById('due_today');
@@ -34,4 +34,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const completedTodos = getCompletedTodos();
         renderTodos(completedTodos, 'Completed');
     });
-});
+};
