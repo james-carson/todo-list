@@ -47,7 +47,8 @@ export function getCompletedTodos() {
 export function getProjectNames() {
     console.log('running getProjectNames()')
     const projects = loadData('projects') || [];
-    return projects.map(project => project.name);
+    console.log(`Here is the data: ${projects}`)
+    return projects;
 }
 
 // Render all in order
@@ -68,8 +69,9 @@ export function appendProjectNames() {
     const projects = getProjectNames();
 
     projects.forEach(project => {
-        const projectItem = document.createElement('div');
+        const projectItem = document.createElement('h3');
         projectItem.textContent = project.name;
+        console.log(`The name of this project is ${project.name}`)
         projectItem.classList.add('project_name');
         // Adding event listener to listen for clicks here:
         projectItem.addEventListener('click', () => {
@@ -80,7 +82,7 @@ export function appendProjectNames() {
 };
 
 // Logic for displaying todos on content
-export function renderTodos(project) {
+export function renderTodos(input, title = '') {
     console.log('running renderTodos(project)')
     // Clear the content div:
     const content = document.getElementById('content');
@@ -88,10 +90,13 @@ export function renderTodos(project) {
 
     // Add a project title:
     const projectTitle = document.createElement('h2');
-    projectTitle.textContent = project.name;
+    projectTitle.textContent = title || input.name;
     content.appendChild(projectTitle);
 
-    project.getTodos().forEach(todo => {
+    // Get todos from a project or directly if input is an array:
+    const todos = Array.isArray(input) ? input : input.getTodos();
+
+    todos.getTodos().forEach(todo => {
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo_div');  // Class for CSS grid styling
@@ -136,3 +141,12 @@ export function renderTodos(project) {
         content.appendChild(todoDiv);
     });
 }
+
+window.getTodosDueToday = getTodosDueToday;
+window.getTodosDueThisWeek = getTodosDueThisWeek;
+window.getHighPriority = getHighPriority;
+window.getCompletedTodos = getCompletedTodos;
+window.getProjectNames = getProjectNames;
+window.getUncompletedByDueDate = getUncompletedByDueDate;
+window.appendProjectNames = appendProjectNames;
+window.renderTodos = renderTodos;

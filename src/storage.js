@@ -10,6 +10,3 @@ export const loadData = (key) => {
     console.log(`Just loaded: ${storedData}`);
     return storedData ? JSON.parse(storedData) : null;
 };
-
-// window.saveData = saveData;
-// window.loadData = loadData;

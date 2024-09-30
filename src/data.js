@@ -34,14 +34,20 @@ export const defaultProjects = [
 
 // Call this function to initialize projects and todos
 export function initialiseData() {
-    if (!localStorage) {
+    // Create a variable to load the data into:
+    const storedProjects = loadData('projects');
+    // If there is no data
+    if (!storedProjects || storedProjects.length === 0) {
         saveData('projects', defaultProjects);
         console.log('No local storage found, so defaultProjects was initialised')
+    // If data exists:
     } else {
         loadData('projects');
         console.log('Local storage found and loaded')
     }
 }
+
+// || (localStorage = 'null') || (localStorage = '')
 
 // // Putting these to make the scope global:
 

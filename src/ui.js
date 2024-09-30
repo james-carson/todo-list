@@ -1,34 +1,37 @@
 import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, appendProjectNames, renderTodos } from './functions.js';
 
-// Add event listener for clicks for Due Today:
-const dueTodayButton = document.getElementById('due_today');
-dueTodayButton.addEventListener('click', () => {
-    const dueTodayTodos = getTodosDueToday();
-    renderTodos(dueTodayTodos, 'Due Today');
-});
+// Added this wrapper to ensure that the DOM is loaded before these are attached:
+document.addEventListener('DOMContentLoaded', () => {
 
-// Add event listener for clicks for This Week:
-const dueThisWeekButton = document.getElementById('due_this_week');
-dueThisWeekButton.addEventListener('click', () => {
-    const dueThisWeekTodos = getTodosDueThisWeek();
-    renderTodos(dueThisWeekTodos, 'Due This Week');
-});
+    // Add event listener for clicks for Due Today:
+    const dueTodayButton = document.getElementById('due_today');
+    dueTodayButton.addEventListener('click', () => {
+        console.log('Due Today Clicked')
+        const dueTodayTodos = getTodosDueToday();
+        renderTodos(dueTodayTodos, 'Due Today');
+    });
 
-// Add event listener for clicks for High Priority:
-const highPriorityButton = document.getElementById('high_priority');
-highPriorityButton.addEventListener('click', () => {
-    const highPriorityTodos = getHighPriority();
-    renderTodos(highPriorityTodos, 'High Priority');
-});
+    // Add event listener for clicks for This Week:
+    const dueThisWeekButton = document.getElementById('due_this_week');
+    console.log('Due This Week Clicked')
+    dueThisWeekButton.addEventListener('click', () => {
+        const dueThisWeekTodos = getTodosDueThisWeek();
+        renderTodos(dueThisWeekTodos, 'Due This Week');
+    });
 
-// Add event listener for clicks for Completed:
-const completedButton = document.getElementById('completed_list');
-completedButton.addEventListener('click', () => {
-    const completedTodos = getCompletedTodos();
-    renderTodos(completedTodos, 'Completed');
-});
+    // Add event listener for clicks for High Priority:
+    const highPriorityButton = document.getElementById('high_priority');
+    console.log('High Priority Clicked')
+    highPriorityButton.addEventListener('click', () => {
+        const highPriorityTodos = getHighPriority();
+        renderTodos(highPriorityTodos, 'High Priority');
+    });
 
-// Event listener to append the Project Names: - THIS WAS MOVED TO INDEX.JS
-// document.addEventListener('DOMContentLoaded', () => {
-//     appendProjectNames();
-// });
+    // Add event listener for clicks for Completed:
+    const completedButton = document.getElementById('completed_list');
+    console.log('Completed Clicked')
+    completedButton.addEventListener('click', () => {
+        const completedTodos = getCompletedTodos();
+        renderTodos(completedTodos, 'Completed');
+    });
+});

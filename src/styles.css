@@ -304,14 +304,34 @@ h1 {
 #sidebar {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    padding: 2vh 2vw;
 }
 
 #sidebar div:hover {
     cursor: pointer;
 }
 
-#sidebar div{
+#sidebar div {
     color: white;
+}
+
+#project_list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    color: white;
+}
+
+.projectItem {
+    color: white;
+    height: 200px;
+}
+
+#completed_list {
+    justify-self: flex-end;
 }
 
 #content {
