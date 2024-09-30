@@ -5,6 +5,7 @@ import { Projects } from './projects';
 
 // Filter lists by date (and uncompleted)
 export function getTodosDueToday() {
+    console.log('running getTodosDueToday()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
@@ -17,6 +18,7 @@ export function getTodosDueToday() {
 
 // Same as above, but with this week rather than today:
 export function getTodosDueThisWeek() {
+    console.log('running getTodosDueThisWeek()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
@@ -27,6 +29,7 @@ export function getTodosDueThisWeek() {
 
 // Filter lists for high priority (and uncompleted)
 export function getHighPriority() {
+    console.log('running getHighPriority()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => todo.priority === 'High' && !todo.complete);
@@ -34,6 +37,7 @@ export function getHighPriority() {
 
 // Filter for completed:
 export function getCompletedTodos() {
+    console.log('running getCompletedTodos()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => todo.complete);
@@ -41,12 +45,14 @@ export function getCompletedTodos() {
 
 // Get names of all lists
 export function getProjectNames() {
+    console.log('running getProjectNames()')
     const projects = loadData('projects') || [];
     return projects.map(project => project.name);
 }
 
 // Render all in order
 export function getUncompletedByDueDate() {
+    console.log('running getUncompletedByDueDate()')
     const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.todos || []);
     return todos
@@ -56,6 +62,7 @@ export function getUncompletedByDueDate() {
 
 // Logic for rendering project list on sidebar:
 export function appendProjectNames() {
+    console.log('running appendProjectNames()')
     const projectList = document.getElementById('project_list');
     projectList.textContent = '';
     const projects = getProjectNames();
@@ -74,6 +81,7 @@ export function appendProjectNames() {
 
 // Logic for displaying todos on content
 export function renderTodos(project) {
+    console.log('running renderTodos(project)')
     // Clear the content div:
     const content = document.getElementById('content');
     content.textContent = '';

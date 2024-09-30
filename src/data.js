@@ -14,7 +14,7 @@ const todos1 = [
     new Todos("Clean the house", "2024-10-05", "low", "Dust, vacuum, and organize rooms", false),
 ];
 
-// Sample data for Todoss in the "Work Projects" project
+// Sample data for Todos in the "Work Projects" project
 const todos2 = [
     new Todos("Book flight tickets", "2024-09-28", "high", "Look for the cheapest fares and book them", false),
     new Todos("Attend meeting with client", "2024-10-01", "medium", "Prepare the presentation and agenda", false),
@@ -32,20 +32,18 @@ export const defaultProjects = [
     new Projects("Work Projects", todos2),
 ];
 
-// Save projects to storage or localStorage if needed
-export function saveProjectsToLocalStorage() {
-    localStorage.setItem('projects', JSON.stringify(defaultProjects));
-}
-
 // Call this function to initialize projects and todos
 export function initialiseData() {
-    const existingProjects = loadData('projects');
-    if (!existingProjects) {
-        saveProjectsToLocalStorage();
+    if (!localStorage) {
+        saveData('projects', defaultProjects);
+        console.log('No local storage found, so defaultProjects was initialised')
+    } else {
+        loadData('projects');
+        console.log('Local storage found and loaded')
     }
 }
 
-// Putting these to make the scope global:
+// // Putting these to make the scope global:
 
-window.initialiseData = initialiseData;
-window.saveProjectsToLocalStorage = saveProjectsToLocalStorage;
+// window.initialiseData = initialiseData;
+// window.saveProjectsToLocalStorage = saveProjectsToLocalStorage;
