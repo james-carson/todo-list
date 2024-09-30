@@ -1,4 +1,4 @@
-import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, appendProjectNames, renderTodos } from './functions.js';
+import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, appendProjectNames, renderStaticTodos, renderDynamicTodos } from './functions.js';
 
 // Added function wrapper to use on DOM loading:
 export function attachEventListeners() {
@@ -8,7 +8,7 @@ export function attachEventListeners() {
     dueTodayButton.addEventListener('click', () => {
         console.log('Due Today Clicked')
         const dueTodayTodos = getTodosDueToday();
-        renderTodos(dueTodayTodos, 'Due Today');
+        renderStaticTodos(dueTodayTodos, 'Due Today');
     });
 
     // Add event listener for clicks for This Week:
@@ -16,7 +16,7 @@ export function attachEventListeners() {
     console.log('Due This Week Clicked')
     dueThisWeekButton.addEventListener('click', () => {
         const dueThisWeekTodos = getTodosDueThisWeek();
-        renderTodos(dueThisWeekTodos, 'Due This Week');
+        renderStaticTodos(dueThisWeekTodos, 'Due This Week');
     });
 
     // Add event listener for clicks for High Priority:
@@ -24,7 +24,7 @@ export function attachEventListeners() {
     console.log('High Priority Clicked')
     highPriorityButton.addEventListener('click', () => {
         const highPriorityTodos = getHighPriority();
-        renderTodos(highPriorityTodos, 'High Priority');
+        renderStaticTodos(highPriorityTodos, 'High Priority');
     });
 
     // Add event listener for clicks for Completed:
@@ -32,6 +32,6 @@ export function attachEventListeners() {
     console.log('Completed Clicked')
     completedButton.addEventListener('click', () => {
         const completedTodos = getCompletedTodos();
-        renderTodos(completedTodos, 'Completed');
+        renderStaticTodos(completedTodos, 'Completed');
     });
 };
