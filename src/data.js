@@ -33,17 +33,19 @@ export const defaultProjects = [
 ];
 
 // Save projects to storage or localStorage if needed
-function saveProjectsToLocalStorage() {
-    localStorage.setItem('projects', JSON.stringify(projects));
+export function saveProjectsToLocalStorage() {
+    localStorage.setItem('projects', JSON.stringify(defaultProjects));
 }
 
 // Call this function to initialize projects and todos
-function initializeData() {
+export function initialiseData() {
     const existingProjects = loadData('projects');
     if (!existingProjects) {
         saveProjectsToLocalStorage();
     }
 }
 
-// Call initializeData() when your application starts
-initializeData();
+// Putting these to make the scope global:
+
+window.initialiseData = initialiseData;
+window.saveProjectsToLocalStorage = saveProjectsToLocalStorage;

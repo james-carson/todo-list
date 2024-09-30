@@ -1,10 +1,9 @@
 import { saveData, loadData } from './storage.js';
-import { defaultProjects } from './data';
+import { saveProjectsToLocalStorage, defaultProjects, initialiseData } from './data.js';
 import { appendProjectNames } from './functions.js'
 import './styles.css';
-
-// May need to change 'projects' to something else later, depending on list of projects name, currently 'Project'
-
+    
+initialiseData();
 
 // Checking for existence and assigning an empty array if there isn't one - avoids a crash:
 let projects = loadData('projects') || [];
@@ -20,6 +19,10 @@ saveData('projects', projects);
 document.addEventListener('DOMContentLoaded', () => {
     appendProjectNames();
 });
+
+// Putting window to make the scope global:
+
+window.appendProjectNames = appendProjectNames;
 
 // Storing for later - this logic would add a new todo to storage:
 // projects[0].todos.push(newTodo);
