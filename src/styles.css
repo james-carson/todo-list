@@ -334,6 +334,10 @@ h1 {
     justify-self: flex-end;
 }
 
+#completed_list:hover {
+text-decoration: line-through;
+}
+
 #content {
     height: 100%;
     width: 100%;
@@ -342,4 +346,28 @@ h1 {
     flex-direction: column;
     background-color: var(--bg-black);
     color: white;
+    padding: 2.5vh 2.5vw;
+}
+
+#content h2 {
+    margin-bottom: 2vh;
+}
+
+.todo_div {
+    padding: 1vh 1vw;
+    display: flex;
+    border-bottom: 0.1px solid white;
+    gap: 1vw;
+    width: 80%;
+    margin-left: 5%;
+}
+
+.todo_grid{
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    width: 100%;
+}
+
+.todo_due_date, .todo_priority {
+    text-align: end;
 }

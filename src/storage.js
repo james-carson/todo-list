@@ -9,7 +9,6 @@ export const saveData = (key, data) => {
 // Load projects and todos from localStorage, including rehydrating them so that their methods can be used:
 export function loadData() {
     const data = JSON.parse(localStorage.getItem('projects')) || [];
-    
     // Rehydrating them!
     return data.map(project => new Projects(project.name, project.todos));
 }
