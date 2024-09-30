@@ -1,16 +1,13 @@
 import { loadData, saveData } from './storage';
+// Are these 2 necessary if loadData is being used?
 import { Todo } from './todo';
 import { Projects } from './project';
+
 import { isToday, isThisWeek } from 'date-fns';
 
-// Import dummy data for testing:
-import { todos } from './todo';
-
-// *** TODO: Will need to use loadData to make sure that the latest version is being used later ***
-
 // Filter lists by date (and uncompleted)
-
-function getTodosDueToday(todos) {
+function getTodosDueToday() {
+    const todos = loadData('todos') || [];
     return todos.filter(todo => {
         // Convert dueDate to Date object:
         const dueDate = new Date(todo.dueDate);
@@ -20,30 +17,35 @@ function getTodosDueToday(todos) {
 }
 
 // Filter lists for high priority (and uncompleted)
+function getHighPriority() {
+    const todos = loadData('todos') || [];
+    return todos.filter(todo => todo.priority === 'High' && !todo.complete);
+}
 
 // Same as above, but with this week rather than today:
-function getTodosDueThisWeek(todos) {
+function getTodosDueThisWeek() {
+    const todos = loadData('todos') || [];
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
         return isThisWeek(dueDate) && !todo.completed;
     });
 }
 
-// Filter for completed
-
-function getCompletedTodos(todos) {
+// Filter for completed:
+function getCompletedTodos() {
+    const todos = loadData('todos') || [];
     return todos.filter(todo => todo.complete);
 }
 
 // Get names of all lists
-
-function getProjectNames(projects) {
+function getProjectNames() {
+    const projects = loadData('projects') || [];
     return projects.map(project => project.name);
 }
 
 // Render all in order
-
-function getUncompletedByDueDate(todos) {
+function getUncompletedByDueDate() {
+    const todos = loadData('todos') || [];
     return todos
         // Filter for incomplete:
         .filter(todo => !todo.complete)
@@ -51,24 +53,55 @@ function getUncompletedByDueDate(todos) {
         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 }
 
-// Add event listeners for clicks
-
+// Add event listener for clicks for Due Today:
 const dueTodayButton = document.getElementById('due_today');
 dueTodayButton.addEventListener('click', () => {
-    const dueTodayTodos = getTodosDueToday(todos);
+    const dueTodayTodos = getTodosDueToday();
     renderTodos(dueTodayTodos, 'Due Today');
-}
+});
 
-)
+// Add event listener for clicks for This Week:
+const dueThisWeekButton = document.getElementById('due_this_week');
+dueThisWeekButton.addEventListener('click', () => {
+    const dueThisWeekTodos = getTodosDueThisWeek();
+    renderTodos(dueThisWeekTodos, 'Due This Week');
+});
 
-// NEXT: Set up logic for all event listeners: ***
+// Add event listener for clicks for High Priority:
+const highPriorityButton = document.getElementById('high_priority');
+highPriorityButton.addEventListener('click', () => {
+    const highPriorityTodos = getHighPriority();
+    renderTodos(highPriorityTodos, 'High Priority');
+});
 
+// Add event listener for clicks for Completed:
+const completedButton = document.getElementById('completed_list');
+completedButton.addEventListener('click', () => {
+    const completedTodos = getCompletedTodos();
+    renderTodos(completedTodos, 'Completed');
+});
 
+// Logic for rendering project list on sidebar:
+const projectList = document.getElementById('project_list');
 
+function appendProjectNames() {
+    projectList.textContent = '';
+    const projectNames = getProjectNames();
 
+    projectNames.forEach(projectName => {
+        const projectItem = document.createElement('div');
+        projectItem.textContent = projectName;
+        projectItem.classList.add('project_name');
+        projectList.appendChild(projectItem);
+    });
+};
+
+// Event listener to append the Project Names:
+document.addEventListener('DOMContentLoaded', () => {
+    appendProjectNames();
+});
 
 // Logic for displaying todos on content
-
 function renderTodos(todos, projectName) {
     // Clear the content div:
     const content = getElementById('content');
