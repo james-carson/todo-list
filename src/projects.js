@@ -1,28 +1,28 @@
 export class Projects {
 
     // Constructor for Projects:
-    constructor(name, todoList) {
+    constructor(name, todos) {
         this.name = name
-        this.todoList = todoList
+        this.todos = todos
     }
 
     // Add a todo to the project
     addTodo(todo) {
-        this.todoList.push(todo);
+        this.todos.push(todo);
     }
 
     // Remove a todo from the project by index or reference
     removeTodo(todoIndex) {
-        this.todoList.splice(todoIndex, 1);
+        this.todos.splice(todoIndex, 1);
     }
 
     // Get all todos so that they can be viewed
     getTodos() {
-        return this.todoList;
+        return this.todos;
     }
 
     // Get a specific todo by index - Is this useful? Better to sort by dates etc?
     getTodoByIndex(index) {
-        return this.todoList[index];
+        return this.todos[index];
     }
 }

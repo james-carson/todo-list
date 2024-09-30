@@ -5,7 +5,8 @@ import { Projects } from './projects';
 
 // Filter lists by date (and uncompleted)
 export function getTodosDueToday() {
-    const todos = loadData('projects') || [];
+    const projects = loadData('projects') || [];
+    const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
         // Convert dueDate to Date object:
         const dueDate = new Date(todo.dueDate);
@@ -14,24 +15,27 @@ export function getTodosDueToday() {
     });
 }
 
-// Filter lists for high priority (and uncompleted)
-export function getHighPriority() {
-    const todos = loadData('projects') || [];
-    return todos.filter(todo => todo.priority === 'High' && !todo.complete);
-}
-
 // Same as above, but with this week rather than today:
 export function getTodosDueThisWeek() {
-    const todos = loadData('projects') || [];
+    const projects = loadData('projects') || [];
+    const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
         return isThisWeek(dueDate) && !todo.complete;
     });
 }
 
+// Filter lists for high priority (and uncompleted)
+export function getHighPriority() {
+    const projects = loadData('projects') || [];
+    const todos = projects.flatMap(project => project.todos || []);
+    return todos.filter(todo => todo.priority === 'High' && !todo.complete);
+}
+
 // Filter for completed:
 export function getCompletedTodos() {
-    const todos = loadData('projects') || [];
+    const projects = loadData('projects') || [];
+    const todos = projects.flatMap(project => project.todos || []);
     return todos.filter(todo => todo.complete);
 }
 
@@ -43,11 +47,10 @@ export function getProjectNames() {
 
 // Render all in order
 export function getUncompletedByDueDate() {
-    const todos = loadData('projects') || [];
+    const projects = loadData('projects') || [];
+    const todos = projects.flatMap(project => project.todos || []);
     return todos
-        // Filter for incomplete:
         .filter(todo => !todo.complete)
-        // Sort by due date
         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 };
 
