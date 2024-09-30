@@ -1,4 +1,5 @@
 import { saveData, loadData } from './storage.js';
+import './data.js';
 import './style.css';
 
 // May need to change 'projects' to something else later, depending on list of projects name, currently 'Project'
