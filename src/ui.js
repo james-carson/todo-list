@@ -1,8 +1,4 @@
 import { loadData, saveData } from './storage';
-// Are these 2 necessary if loadData is being used?
-import { Todo } from './todo';
-import { Projects } from './project';
-
 import { isToday, isThisWeek } from 'date-fns';
 
 // Filter lists by date (and uncompleted)
@@ -12,7 +8,7 @@ function getTodosDueToday() {
         // Convert dueDate to Date object:
         const dueDate = new Date(todo.dueDate);
         // Check if the todo is due today and is also uncompleted:
-        return isToday(dueDate) && !todo.completed;
+        return isToday(dueDate) && !todo.complete;
     });
 }
 
@@ -27,7 +23,7 @@ function getTodosDueThisWeek() {
     const todos = loadData('todos') || [];
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
-        return isThisWeek(dueDate) && !todo.completed;
+        return isThisWeek(dueDate) && !todo.complete;
     });
 }
 
@@ -86,12 +82,16 @@ const projectList = document.getElementById('project_list');
 
 function appendProjectNames() {
     projectList.textContent = '';
-    const projectNames = getProjectNames();
+    const projects = getProjectNames();
 
-    projectNames.forEach(projectName => {
+    projects.forEach(project => {
         const projectItem = document.createElement('div');
-        projectItem.textContent = projectName;
+        projectItem.textContent = project.name;
         projectItem.classList.add('project_name');
+        // Adding event listener to listen for clicks here:
+        projectItem.addEventListener('click', () => {
+            renderTodos(project);
+        });
         projectList.appendChild(projectItem);
     });
 };
@@ -102,17 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Logic for displaying todos on content
-function renderTodos(todos, projectName) {
+function renderTodos(project) {
     // Clear the content div:
-    const content = getElementById('content');
-    content.TextContent = '';
+    const content = document.getElementById('content');
+    content.textContent = '';
 
     // Add a project title:
     const projectTitle = document.createElement('h2');
-    projectTitle.textContent = projectName;
+    projectTitle.textContent = project.name;
     content.appendChild(projectTitle);
 
-    todos.forEach(todo => {
+    project.getTodos().forEach(todo => {
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo_div');  // Class for CSS grid styling
@@ -123,7 +123,7 @@ function renderTodos(todos, projectName) {
         // This explains what to happen when checked:
         checkbox.checked = todo.complete;
         checkbox.addEventListener('change', () => {
-            todo.complete = checkbox.checked;
+            todo.toggleComplete();
             // This part saves the data to storage.js using the imported function: 
             saveData();
             //    Removes todo when checked after 2 seconds:
