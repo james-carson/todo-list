@@ -1,4 +1,4 @@
-class Projects {
+export class Projects {
 
     // Constructor for Projects:
     constructor(name, todoList) {
