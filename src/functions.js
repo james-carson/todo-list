@@ -9,7 +9,7 @@ import flagImage from './images/flag.svg';
 export function getTodosDueToday() {
     console.log('running getTodosDueToday()')
     const projects = loadData() || [];
-    const todos = projects.flatMap(project => project.todos || []);
+    const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => {
         // Convert dueDate to Date object:
         const dueDate = new Date(todo.dueDate);
@@ -22,7 +22,7 @@ export function getTodosDueToday() {
 export function getTodosDueThisWeek() {
     console.log('running getTodosDueThisWeek()')
     const projects = loadData() || [];
-    const todos = projects.flatMap(project => project.todos || []);
+    const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
         return isThisWeek(dueDate) && !todo.complete;
@@ -33,7 +33,7 @@ export function getTodosDueThisWeek() {
 export function getHighPriority() {
     console.log('running getHighPriority()')
     const projects = loadData() || [];
-    const todos = projects.flatMap(project => project.todos || []);
+    const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => todo.priority === 'high' && !todo.complete);
 }
 
@@ -41,7 +41,7 @@ export function getHighPriority() {
 export function getCompletedTodos() {
     console.log('running getCompletedTodos()')
     const projects = loadData() || [];
-    const todos = projects.flatMap(project => project.todos || []);
+    const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => todo.complete);
 }
 
@@ -57,7 +57,7 @@ export function getProjectNames() {
 export function getUncompletedByDueDate() {
     console.log('running getUncompletedByDueDate()')
     const projects = loadData() || [];
-    const todos = projects.flatMap(project => project.todos || []);
+    const todos = projects.flatMap(project => project.getTodos() || []);
     return todos
         .filter(todo => !todo.complete)
         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
