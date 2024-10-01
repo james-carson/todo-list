@@ -2,6 +2,8 @@ import { loadData, saveData } from './storage';
 import { isToday, isThisWeek } from 'date-fns';
 import { Todos } from './todos';
 import { Projects } from './projects';
+import flagImage from './images/flag.svg';
+
 
 // Filter lists by date (and uncompleted)
 export function getTodosDueToday() {
@@ -137,9 +139,22 @@ export function renderStaticTodos(todos, title) {
 
         // Add the priority:
         const priority = document.createElement('div');
-        priority.classList.add('todo_priority');
-        priority.textContent = `${todo.priority}`;
+        // If the priority is high, add the class 'todo_priority_high'
+        if (todo.priority === 'high') {
+            priority.classList.add('todo_priority_high');
+        // Or, if it's medium, add 'todo_priority_medium'
+        } else if (todo.priority === 'medium') {
+            priority.classList.add('todo_priority_medium');
+        // Or, if it's low, add 'todo_priority_low'
+        } else {
+            priority.classList.add('todo_priority_low');
+        }
         todoGrid.appendChild(priority);
+
+        const priority_flag = document.createElement('img');
+        priority_flag.src = flagImage
+        priority_flag.classList.add('priority_flag');
+        priority.appendChild(priority_flag)
 
         // Add an edit button - NOT FUNCTIONAL YET!
         const editTodo = document.createElement('div');
@@ -208,9 +223,22 @@ export function renderDynamicTodos(project, title = '') {
 
         // Add the priority:
         const priority = document.createElement('div');
-        priority.classList.add('todo_priority');
-        priority.textContent = `${todo.priority}`;
+        // If the priority is high, add the class 'todo_priority_high'
+        if (todo.priority === 'high') {
+            priority.classList.add('todo_priority_high');
+        // Or, if it's medium, add 'todo_priority_medium'
+        } else if (todo.priority === 'medium') {
+            priority.classList.add('todo_priority_medium');
+        // Or, if it's low, add 'todo_priority_low'
+        } else {
+            priority.classList.add('todo_priority_low');
+        }
         todoGrid.appendChild(priority);
+
+        const priority_flag = document.createElement('img');
+        priority_flag.src = flagImage
+        priority_flag.classList.add('priority_flag');
+        priority.appendChild(priority_flag)
 
         // Add an edit button - NOT FUNCTIONAL YET!
         const editTodo = document.createElement('div');
