@@ -310,7 +310,7 @@ h1 {
     padding: 2vh 2vw;
 }
 
-#sidebar div:hover {
+#sidebar div:hover, .todo_edit:hover {
     cursor: pointer;
 }
 
@@ -362,12 +362,16 @@ text-decoration: line-through;
     margin-left: 5%;
 }
 
-.todo_grid{
+.todo_grid {
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
+    grid-template-columns: 3fr 1fr 0.5fr 0.5fr;
     width: 100%;
 }
 
-.todo_due_date, .todo_priority {
+.todo_due_date, .todo_priority, .todo_edit {
     text-align: end;
+}
+
+.todo_edit {
+    font-weight: 700;
 }

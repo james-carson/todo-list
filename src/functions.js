@@ -91,8 +91,10 @@ export function renderStaticTodos(todos, title) {
     // Add a project title:
     const projectTitle = document.createElement('h2');
     projectTitle.textContent = title;
+    projectTitle.classList.add('project_title');
     content.appendChild(projectTitle);
 
+    // Loop through the todos and render them:
     todos.forEach(todo => {
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
@@ -116,6 +118,7 @@ export function renderStaticTodos(todos, title) {
         });
         todoDiv.appendChild(checkbox);
 
+        // Add a grid for layout purposes:
         const todoGrid = document.createElement('div');
         todoGrid.classList.add('todo_grid');
         todoDiv.appendChild(todoGrid);
@@ -135,8 +138,14 @@ export function renderStaticTodos(todos, title) {
         // Add the priority:
         const priority = document.createElement('div');
         priority.classList.add('todo_priority');
-        priority.textContent = `Priority: ${todo.priority}`;
+        priority.textContent = `${todo.priority}`;
         todoGrid.appendChild(priority);
+
+        // Add an edit button - NOT FUNCTIONAL YET!
+        const editTodo = document.createElement('div');
+        editTodo.classList.add('todo_edit');
+        editTodo.textContent = 'Edit'
+        todoGrid.appendChild(editTodo);
 
         // Append the completed todo div to the content area:
         content.appendChild(todoDiv);
@@ -146,7 +155,6 @@ export function renderStaticTodos(todos, title) {
 // Dynamic render version:
 export function renderDynamicTodos(project, title = '') {
     console.log('running renderDynamicTodos');
-
     // Clear the content div:
     const content = document.getElementById('content');
     content.textContent = '';
@@ -181,23 +189,34 @@ export function renderDynamicTodos(project, title = '') {
         });
         todoDiv.appendChild(checkbox);
 
+        // Add a grid for layout purposes:
+        const todoGrid = document.createElement('div');
+        todoGrid.classList.add('todo_grid');
+        todoDiv.appendChild(todoGrid);
+
         // Add the title of the todo:
         const todoTitle = document.createElement('div');
         todoTitle.classList.add('todo_title');
         todoTitle.textContent = todo.title;
-        todoDiv.appendChild(todoTitle);
+        todoGrid.appendChild(todoTitle);
 
         // Add the due date:
         const dueDate = document.createElement('div');
         dueDate.classList.add('todo_due_date');
         dueDate.textContent = `Due: ${todo.dueDate}`;
-        todoDiv.appendChild(dueDate);
+        todoGrid.appendChild(dueDate);
 
         // Add the priority:
         const priority = document.createElement('div');
         priority.classList.add('todo_priority');
-        priority.textContent = `Priority: ${todo.priority}`;
-        todoDiv.appendChild(priority);
+        priority.textContent = `${todo.priority}`;
+        todoGrid.appendChild(priority);
+
+        // Add an edit button - NOT FUNCTIONAL YET!
+        const editTodo = document.createElement('div');
+        editTodo.classList.add('todo_edit');
+        editTodo.textContent = 'Edit'
+        todoGrid.appendChild(editTodo);
 
         // Append the todo div to the content area:
         content.appendChild(todoDiv);
