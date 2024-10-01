@@ -1,3 +1,4 @@
+// Here we have a class for todos, which constructs new projects (which include todos) and contains methods
 export class Projects {
 
     // Constructor for Projects:

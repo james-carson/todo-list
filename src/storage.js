@@ -1,39 +1,44 @@
 import { Projects } from './projects';
 import { Todos } from './todos';
 
-// Save projects to localStorage
-export function saveData(projects) {
-    localStorage.setItem('projects', JSON.stringify(projects));
+// Save projects to localStorage, with a key and its data
+export function saveData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
 }
 
-// As Todos and Projects are Classes, their methods are not saved when they are added to 
-// localStorage (I have seen this termed as 'dehration'). This attempts to solve this 
-// issue by mapping the data upon loading it, then setting (re-setting) its prototype
-// So that it 'regains' its methods. If this doesn't work, changing the classes to 
-// factory functions would be the next step, although I want to try to make classes work.
-export function loadData() {
-    const savedProjects = JSON.parse(localStorage.getItem('projects')) || [];
+export function loadData(key) {
+    // Create a variable, savedProjects, which either parses the data from localStorage,
+    // Or creates an empty array if there isn't any (to avoid a crash)
+    const savedData = JSON.parse(localStorage.getItem(key)) || [];
     
-    return savedProjects.map(storedProject => {
-        const project = new Projects(storedProject.name, []); // Initialize with an empty array for todos
-        Object.setPrototypeOf(project, Projects.prototype);
+    // Checks if savedData exists and is an array...
+    if (!Array.isArray(savedData)) {
+    // And if this is true (it's not an array) returns an empty array
+        return []; 
+    }
+    // Maps over the data (in whichever form) and runs a function on each item
+    return savedData.map(loadedProject => {
+        // Creates a new variable, project, and creates a new Project class using the name
+        // to populate it along with an empty array where the todos will go soon.
+        const project = new Projects(loadedProject.name, []);
         
-        storedProject.todos.forEach(storedTodo => { // Use 'todos' to match your Projects class
+        // For each of these new projects...
+        loadedProject.todos.forEach(savedTodo => {
+            // Creates a new Todo using the information from the loaded data
             const todo = new Todos(
-                storedTodo.title,
-                storedTodo.dueDate,
-                storedTodo.priority,
-                storedTodo.notes,
-                storedTodo.complete
+                savedTodo.title,
+                savedTodo.dueDate,
+                savedTodo.priority,
+                savedTodo.notes,
+                savedTodo.complete
             );
-            Object.setPrototypeOf(todo, Todos.prototype);
+            // Adds the relevant todo to the relevant project
             project.addTodo(todo);
         });
-        
         return project;
     });
 }
-
+// ^^This seems to be working at the momet^^
 
 window.saveData = saveData;
 window.loadData = loadData;

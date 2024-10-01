@@ -5,15 +5,25 @@ import { Projects } from './projects';
 import flagImage from './images/flag.svg';
 
 
-// Filter lists by date (and uncompleted)
+// Filter lists by date (and uncompleted):
+// Export the function to be used elsewhere
 export function getTodosDueToday() {
+    // Console log for testing
     console.log('running getTodosDueToday()')
-    const projects = loadData() || [];
+    // Create a variable, projects, which is populated with loaded data from localStorage
+    const projects = loadData('projects') || [];
+    // Create a variable, projects, made from taking the projects variable, which is
+    // now an array, and maps (performs a function on every item of the array), in this
+    // case the getTodos method (returns this.todos) within the Project class. This simply gets all the todos
+    // from each of the projects. It then flattens this array, which results in a list of
+    // all of the todos from every project.
     const todos = projects.flatMap(project => project.getTodos() || []);
+    // This list is then filtered by...
     return todos.filter(todo => {
-        // Convert dueDate to Date object:
+        // Converting dueDate to a Date object...
         const dueDate = new Date(todo.dueDate);
-        // Check if the todo is due today and is also uncompleted:
+        // and checking if the todo is due today and is also uncompleted, then
+        // returning those that match
         return isToday(dueDate) && !todo.complete;
     });
 }
@@ -21,7 +31,7 @@ export function getTodosDueToday() {
 // Same as above, but with this week rather than today:
 export function getTodosDueThisWeek() {
     console.log('running getTodosDueThisWeek()')
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => {
         const dueDate = new Date(todo.dueDate);
@@ -32,7 +42,7 @@ export function getTodosDueThisWeek() {
 // Filter lists for high priority (and uncompleted)
 export function getHighPriority() {
     console.log('running getHighPriority()')
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => todo.priority === 'high' && !todo.complete);
 }
@@ -40,7 +50,7 @@ export function getHighPriority() {
 // Filter for completed:
 export function getCompletedTodos() {
     console.log('running getCompletedTodos()')
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.getTodos() || []);
     return todos.filter(todo => todo.complete);
 }
@@ -48,7 +58,7 @@ export function getCompletedTodos() {
 // Get names of all lists
 export function getProjectNames() {
     console.log('running getProjectNames()')
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
     console.log(`Here is the data: ${projects}`)
     return projects;
 }
@@ -56,7 +66,7 @@ export function getProjectNames() {
 // Render all in order
 export function getUncompletedByDueDate() {
     console.log('running getUncompletedByDueDate()')
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
     const todos = projects.flatMap(project => project.getTodos() || []);
     return todos
         .filter(todo => !todo.complete)
@@ -68,7 +78,7 @@ export function appendProjectNames() {
     console.log('running appendProjectNames()')
     const projectList = document.getElementById('project_list');
     projectList.textContent = '';
-    const projects = loadData() || [];
+    const projects = loadData('projects') || [];
 
     projects.forEach(project => {
         const projectItem = document.createElement('h3');
@@ -108,17 +118,22 @@ export function renderStaticTodos(todos, title) {
         // This explains what to happen when checked:
         checkbox.checked = todo.complete;
         checkbox.addEventListener('change', () => {
+            let currentProjects = loadData('projects')
+            // I NEED TO ENSURE THAT I AM TOGGLING THE CORRECT COMPLETE SECTION
             todo.toggleComplete();
             // This part saves the data to storage.js using the imported function: 
-            saveData();
+            // I NEED TO ENSURE THAT CURRENTPROJECTS IS THE UPDATED VERSION OF THE DATA
+            saveData('projects', currentProjects);
             //    Removes todo when checked after 2 seconds:
-            if (todo.complete) {
-                setTimeout(() => {
-                    todoDiv.remove();
-                }, 2000);
-            }
+            // if (todo.complete) {
+            //     setTimeout(() => {
+            //         todoDiv.remove();
+            //     }, 2000);
+            // }
         });
         todoDiv.appendChild(checkbox);
+
+        // TOGGLING IS NOT YET WORKING! THE TODOS ARE DISAPPEARING AND NOT REAPPEARING IN THE COMPLETED SECTION
 
         // Add a grid for layout purposes:
         const todoGrid = document.createElement('div');
@@ -194,13 +209,17 @@ export function renderDynamicTodos(project, title = '') {
         checkbox.type = 'checkbox';
         checkbox.checked = todo.complete;
         checkbox.addEventListener('change', () => {
+
+            // THIS PART NEEDS TO BE WORKED ON - TOGGLING NOT WORKING!
+
+            let currentProjects = loadData('projects')
             todo.toggleComplete();
-            saveData();  // Save the data after toggling
-            if (todo.complete) {
-                setTimeout(() => {
-                    todoDiv.remove();
-                }, 2000);
-            }
+            saveData('projects', currentProjects);  // TOGGLING IS NOT WORKING YET
+            // if (todo.complete) {
+            //     setTimeout(() => {
+            //         todoDiv.remove();
+            //     }, 2000);
+            // }
         });
         todoDiv.appendChild(checkbox);
 

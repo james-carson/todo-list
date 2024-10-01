@@ -32,17 +32,20 @@ export const defaultProjects = [
     new Projects("Work Projects", todos2),
 ];
 
-// Call this function to initialize projects and todos
+// Call this function to initialise projects and todos
 export function initialiseData() {
     // Create a variable to load the data into:
-    const storedProjects = loadData();
+    const storedProjects = loadData('projects');
     // If there is no data
     if (!storedProjects || storedProjects.length === 0) {
         saveData('projects', defaultProjects);
         console.log('No local storage found, so defaultProjects was initialised')
     // If data exists:
     } else {
-        loadData();
         console.log('Local storage found and loaded')
+        return storedProjects;
     }
 }
+// ^^This seems to now be working correctly^^
+
+window.initialiseData = initialiseData;

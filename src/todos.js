@@ -1,6 +1,7 @@
+// Here we have a class for todos, which constructs new todos and contains methods
 export class Todos {
 
-// Todo item constructor:
+    // Todo item constructor:
     constructor(title, dueDate, priority, notes, complete) {
         this.title = title
         this.dueDate = dueDate
@@ -9,18 +10,16 @@ export class Todos {
         this.complete = complete
     }
 
-// Method to edit items:
+    // Method to edit items: -- SHOULD THIS BE MOVED OUT OF THE CLASS?
     editTodo(newTitle, newDueDate, newPriority, newNotes) {
         this.title = newTitle || this.title;
         this.dueDate = newDueDate || this.dueDate;
         this.priority = newPriority || this.priority;
         this.notes = newNotes || this.notes;
-}
+    }
 
-// Method to toggle todo as complete/incomplete:
-toggleComplete() {
-    this.complete = !this.complete;
-}
-
-// Deleting will be done through Projects
+    // Method to toggle todo as complete/incomplete  -- SHOULD THIS BE MOVED OUT OF THE CLASS?
+    toggleComplete() {
+        this.complete = !this.complete;
+    }
 }
