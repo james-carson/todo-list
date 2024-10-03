@@ -3,6 +3,7 @@ import { isToday, isThisWeek } from 'date-fns';
 import { Todos } from './todos';
 import { Projects } from './projects';
 import flagImage from './images/flag.svg';
+import { appendProjectNames } from './ui.js'
 
 
 // Filter lists by date (and uncompleted):
@@ -71,27 +72,6 @@ export function getUncompletedByDueDate() {
     return todos
         .filter(todo => !todo.complete)
         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-};
-
-// Logic for rendering project list on sidebar:
-export function appendProjectNames() {
-    console.log('running appendProjectNames()')
-    const projectList = document.getElementById('project_list');
-    projectList.textContent = '';
-    const projects = loadData('projects') || [];
-
-    projects.forEach(project => {
-        const projectItem = document.createElement('h3');
-        projectItem.textContent = project.name;
-        console.log(`The name of this project is ${project.name}`)
-        projectItem.classList.add('project_name');
-
-        // Adding event listener to listen for clicks here:
-        projectItem.addEventListener('click', () => {
-            renderTodos(project.getTodos(), project.name);
-        });
-        projectList.appendChild(projectItem);
-    });
 };
 
 // Render todos onto content - must be passed a list of todos, not a project:
@@ -213,3 +193,8 @@ window.getUncompletedByDueDate = getUncompletedByDueDate;
 window.appendProjectNames = appendProjectNames;
 window.renderTodos = renderTodos;
 window.toggleComplete = toggleComplete;
+
+
+
+
+// IT IS UPDATED THE CHECKBOX ABOVE THE ONE CLICKED! HOW?!?!?!!
