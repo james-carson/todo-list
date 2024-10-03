@@ -1,7 +1,39 @@
+// functions.js will house the main functions that will help the app to run, and that are not associated
+// ...with the UI, dummy data, or initialisation from the 'main' file
 
+function getTodosDueToday() {
 
+}
 
+function getOverdueTodos() {
 
+}
+
+function getTodosDueThisWeek() {
+
+}
+
+function getHighPriorityTodos() {
+
+}
+
+function getCompletedTodos() {
+
+}
+
+function getTodosForSpecificProject(projectName) {
+
+}
+
+function getAllTodos() {
+
+}
+
+function getAllProjectNames() {
+    // Load data
+    // Create variable that will contain all project names
+    // Return it
+}
 
 //  ------------------------------------------------------------------------------------------------------
 

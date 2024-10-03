@@ -1,6 +1,66 @@
+// ui.js contains the functions that will manipulate the DOM. These will usually be used internally or
+// ...through index.js
 
+// Does this need inputs, or is it going to use the loaded data every time anyway?
+function renderSidebar(projects) {
+    // Load data
+    // Define the project list element
+    // Get a list of projects (getProjectNames)
+    // For each...
+    // -Create a div element
+    // -Populate the text content with the project name
+    // -Append it to the project list
+    // Append the click listeners
+}
 
+function renderContent(project) {
+    // Load data
+    // Define the content area
+    // Get the specified project (from input)
+    // Append the project name
+    // Get the todos for this specific project
+    // For each of them, create the required divs and append them to the content area
+    // Append the click listeners - both edit and checkbox
+}
 
+// Not sure that the below is needed
+function attachAllUiEventListeners() {
+    attachSidebarClickListeners();
+    attachCheckboxClickListeners();
+    attachEditButtonClickListeners();
+}
+
+function attachSidebarClickListeners() {
+
+}
+
+function attachCheckboxClickListeners() {
+
+}
+
+function attachEditButtonClickListeners() {
+
+}
+
+function loadDefaultView() {
+    // Load data
+    // Create variable to store combined list of todos
+    // Get all overdue todos
+    // Get all todos due today
+    // Sort them by due date
+    // render the content using this variable as the project
+}
+
+function updateScreen() {
+    // Load data
+    renderSidebar(); //Needs some input here!
+    renderContent();
+    attachAllUiEventListeners();
+}
+
+function launchTodoPopup() {
+    // Not sure yet!
+}
 
 
 //  ------------------------------------------------------------------------------------------------------

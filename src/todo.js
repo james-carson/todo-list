@@ -3,7 +3,9 @@
 // Todo class, including a constructor. No methods; functions will be handled separately.
 export class Todo {
     constructor(id, title, dueDate, priority, notes, completed) {
+        // ID needs to be able to accept input from dummy data
         this.id = id
+        // Don't create any until this is sorted!
         this.title = title
         this.dueDate = dueDate
         this.priority = priority

@@ -1,9 +1,9 @@
 // project.js contains the Project class, its constuctor, and functions to manipulate existing objects, including todos.
 
 // Project class, including a constructor. No methods; functions will be handled separately.
-export class Projects {
+export class Project {
     // Projects constructor:
-    constructor(name, todoList) {
+    constructor(id, name, todoList) {
         this.id = id
         this.name = name
         // This property contains the todos - it's important to remember that these are arrays
@@ -43,7 +43,6 @@ function createProject() {
     // Assign a blank array to todoList
     // Save data
 }
-
 
 
 //  ------------------------------------------------------------------------------------------------------

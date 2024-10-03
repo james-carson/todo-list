@@ -17,6 +17,11 @@ export function loadData(key) {
     // Return the project object for each loop
 }
 
+function clearStorage () {
+    // Check for existing data
+    // Assign an empty array to the data under the name 'projects'
+}
+
 function setTodoCounter() {
     // Create a variable to store the todoCounter
     // Set it to 0

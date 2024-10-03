@@ -1,4 +1,7 @@
+// Index.js is the main page which runs functions at the highest levels, including running initialisation
+// ...functions and loading the CSS
 
+import './styles.css';
 
 
 
