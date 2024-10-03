@@ -1,4 +1,4 @@
-import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, appendProjectNames, renderTodos } from './functions.js';
+import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, renderTodos } from './functions.js';
 import { loadData } from './storage.js'
 
 // Set 'Due This Week' as default
@@ -61,3 +61,29 @@ export function attachEventListeners() {
         updateView();
     });
 };
+
+// Logic for rendering project list on sidebar:
+export function appendProjectNames() {
+    console.log('running appendProjectNames()')
+    const projectList = document.getElementById('project_list');
+    projectList.textContent = '';
+    const projects = loadData('projects') || [];
+
+    projects.forEach(project => {
+        const projectItem = document.createElement('h3');
+        projectItem.textContent = project.name;
+        console.log(`The name of this project is ${project.name}`)
+        projectItem.classList.add('project_name');
+
+        // Adding event listener to listen for clicks here:
+        projectItem.addEventListener('click', () => {
+            currentView = { type: 'project', name: project.name };
+            updateView();
+        });
+        projectList.appendChild(projectItem);
+    });
+};
+
+export function loadDefaultView() {
+    updateView();
+}
