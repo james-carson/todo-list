@@ -4,7 +4,9 @@ import { saveData } from "./storage"
 export class Todos {
 
     // Todo item constructor:
-    constructor(title, dueDate, priority, notes, complete) {
+    constructor(id, title, dueDate, priority, notes, complete) {
+        // New addition: This gives the todo a unique id so it can be identified when editing:
+        this.id = Date.now();
         this.title = title
         this.dueDate = dueDate
         this.priority = priority
@@ -23,7 +25,14 @@ export class Todos {
     // Method to toggle todo as complete/incomplete  -- SHOULD THIS BE MOVED OUT OF THE CLASS?
     toggleComplete() {
         let currentProjects = loadData('projects');
-        this.complete = !this.complete;
+        // Find the current project:
+        let project = currentProjects.find(project => project.todoList.some(todo => todo.id === this.id));
+        let todo = project.todoList.find(todo => todo.id === this.id);
+
+        if (todo) {
+            this.complete = !this.complete;
+        }
+        
         saveData('projects', currentProjects);
     }
 }

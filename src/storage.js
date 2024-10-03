@@ -26,6 +26,7 @@ export function loadData(key) {
         loadedProject.todos.forEach(savedTodo => {
             // Creates a new Todo using the information from the loaded data
             const todo = new Todos(
+                savedTodo.id,
                 savedTodo.title,
                 savedTodo.dueDate,
                 savedTodo.priority,
@@ -35,6 +36,7 @@ export function loadData(key) {
             // Adds the relevant todo to the relevant project
             project.addTodo(todo);
         });
+        console.log(project)
         return project;
     });
 }

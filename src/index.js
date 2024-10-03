@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     attachEventListeners();
     console.log(`appendProjectNames() and attachEventListeners() ran successfully after DOM Content Loaded`)
     const dueThisWeekTodos = getTodosDueThisWeek();
-    renderStaticTodos(dueThisWeekTodos, 'Due This Week');
+    renderTodos(dueThisWeekTodos, 'Due This Week');
     console.log('Due This Week loaded as default');
 });
 

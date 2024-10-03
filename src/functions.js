@@ -85,17 +85,19 @@ export function appendProjectNames() {
         projectItem.textContent = project.name;
         console.log(`The name of this project is ${project.name}`)
         projectItem.classList.add('project_name');
+
         // Adding event listener to listen for clicks here:
         projectItem.addEventListener('click', () => {
-            renderDynamicTodos(project, project.name);
+            renderTodos(project.getTodos(), project.name);
         });
         projectList.appendChild(projectItem);
     });
 };
 
-// Static render version:
-export function renderStaticTodos(todos, title) {
-    console.log('running renderStaticTodos(project)')
+// Render todos onto content - must be passed a list of todos, not a project:
+export function renderTodos(todos, title = '') {
+    console.log('running renderTodos(todos, title = \'\'')
+
     // Clear the content div:
     const content = document.getElementById('content');
     content.textContent = '';
@@ -117,23 +119,18 @@ export function renderStaticTodos(todos, title) {
         checkbox.type = 'checkbox';
         // This explains what to happen when checked:
         checkbox.checked = todo.complete;
+        // Adding an event listener that saves the change
         checkbox.addEventListener('change', () => {
             // let currentProjects = loadData('projects')
-            // I NEED TO ENSURE THAT I AM TOGGLING THE CORRECT COMPLETE SECTION
             todo.toggleComplete();
-            // This part saves the data to storage.js using the imported function: 
-            // I NEED TO ENSURE THAT CURRENTPROJECTS IS THE UPDATED VERSION OF THE DATA
-            // saveData('projects', currentProjects);
             //    Removes todo when checked after 2 seconds:
-            // if (todo.complete) {
-            //     setTimeout(() => {
-            //         todoDiv.remove();
-            //     }, 2000);
-            // }
+            if (todo.complete) {
+                setTimeout(() => {
+                    todoDiv.remove();
+                }, 2000);
+            }
         });
         todoDiv.appendChild(checkbox);
-
-        // TOGGLING IS NOT YET WORKING! THE TODOS ARE DISAPPEARING AND NOT REAPPEARING IN THE COMPLETED SECTION
 
         // Add a grid for layout purposes:
         const todoGrid = document.createElement('div');
@@ -182,94 +179,6 @@ export function renderStaticTodos(todos, title) {
     });
 };
 
-// Dynamic render version:
-export function renderDynamicTodos(project, title = '') {
-    console.log('running renderDynamicTodos');
-    // Clear the content div:
-    const content = document.getElementById('content');
-    content.textContent = '';
-
-    // Add a project title:
-    const projectTitle = document.createElement('h2');
-    projectTitle.textContent = title;
-    projectTitle.classList.add('project_title');
-    content.appendChild(projectTitle);
-
-    // Get todos from the project:
-    const todos = project.getTodos();
-
-    // Loop through the todos and render them:
-    todos.forEach(todo => {
-        // Create a div for each todo:
-        const todoDiv = document.createElement('div');
-        todoDiv.classList.add('todo_div');  // Class for CSS grid styling
-
-        // Create a checkbox for completion:
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = todo.complete;
-        checkbox.addEventListener('change', () => {
-
-            // THIS PART NEEDS TO BE WORKED ON - TOGGLING NOT WORKING!
-
-            let currentProjects = loadData('projects')
-            todo.toggleComplete();
-            saveData('projects', currentProjects);  // TOGGLING IS NOT WORKING YET
-            // if (todo.complete) {
-            //     setTimeout(() => {
-            //         todoDiv.remove();
-            //     }, 2000);
-            // }
-        });
-        todoDiv.appendChild(checkbox);
-
-        // Add a grid for layout purposes:
-        const todoGrid = document.createElement('div');
-        todoGrid.classList.add('todo_grid');
-        todoDiv.appendChild(todoGrid);
-
-        // Add the title of the todo:
-        const todoTitle = document.createElement('div');
-        todoTitle.classList.add('todo_title');
-        todoTitle.textContent = todo.title;
-        todoGrid.appendChild(todoTitle);
-
-        // Add the due date:
-        const dueDate = document.createElement('div');
-        dueDate.classList.add('todo_due_date');
-        dueDate.textContent = `Due: ${todo.dueDate}`;
-        todoGrid.appendChild(dueDate);
-
-        // Add the priority:
-        const priority = document.createElement('div');
-        // If the priority is high, add the class 'todo_priority_high'
-        if (todo.priority === 'high') {
-            priority.classList.add('todo_priority_high');
-        // Or, if it's medium, add 'todo_priority_medium'
-        } else if (todo.priority === 'medium') {
-            priority.classList.add('todo_priority_medium');
-        // Or, if it's low, add 'todo_priority_low'
-        } else {
-            priority.classList.add('todo_priority_low');
-        }
-        todoGrid.appendChild(priority);
-
-        const priority_flag = document.createElement('img');
-        priority_flag.src = flagImage
-        priority_flag.classList.add('priority_flag');
-        priority.appendChild(priority_flag)
-
-        // Add an edit button - NOT FUNCTIONAL YET!
-        const editTodo = document.createElement('div');
-        editTodo.classList.add('todo_edit');
-        editTodo.textContent = 'Edit'
-        todoGrid.appendChild(editTodo);
-
-        // Append the todo div to the content area:
-        content.appendChild(todoDiv);
-    });
-}
-
 window.getTodosDueToday = getTodosDueToday;
 window.getTodosDueThisWeek = getTodosDueThisWeek;
 window.getHighPriority = getHighPriority;
@@ -277,5 +186,4 @@ window.getCompletedTodos = getCompletedTodos;
 window.getProjectNames = getProjectNames;
 window.getUncompletedByDueDate = getUncompletedByDueDate;
 window.appendProjectNames = appendProjectNames;
-window.renderStaticTodos = renderStaticTodos;
-window.renderDynamicTodos = renderDynamicTodos;
+window.renderTodos = renderTodos;
