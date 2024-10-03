@@ -2,7 +2,7 @@
 // ...through index.js
 
 // Does this need inputs, or is it going to use the loaded data every time anyway?
-function renderSidebar(projects) {
+function renderSidebar() {
     // Load data
     // Define the project list element
     // Get a list of projects (getProjectNames)
@@ -28,6 +28,7 @@ function attachAllUiEventListeners() {
     attachSidebarClickListeners();
     attachCheckboxClickListeners();
     attachEditButtonClickListeners();
+    console.log('All UI event listeners appended');
 }
 
 function attachSidebarClickListeners() {
@@ -48,14 +49,17 @@ function loadDefaultView() {
     // Get all overdue todos
     // Get all todos due today
     // Sort them by due date
-    // render the content using this variable as the project
+    // return this data so that it can be used by renderCOntent
 }
 
-function updateScreen() {
+// Input is set to blank by default
+function updateScreen(project = '') {
     // Load data
-    renderSidebar(); //Needs some input here!
-    renderContent();
+    renderSidebar();
+    // If the project input was blank, then the default view (overdue and today) will be loaded instead
+    renderContent(project || loadDefaultView());
     attachAllUiEventListeners();
+    console.log('Screen updated')
 }
 
 function launchTodoPopup() {

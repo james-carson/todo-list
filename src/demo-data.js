@@ -1,8 +1,8 @@
 // demo-data.js is used for dummy data, which can be used for testing and for demos. Later, this can be used
 // ...for a demo mode. functions will be be used to create and export the dummy data
 
-import { Todos } from './todos.js';
-import { Project } from './projects.js';
+import { Todo } from './todo.js';
+import { Project } from './project.js';
 import { saveData, loadData } from './storage.js';
 
 // Sample data for todos in the "Personal Tasks" project

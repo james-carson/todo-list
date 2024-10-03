@@ -4,6 +4,7 @@
 // Save projects to localStorage, with a key and its data
 export function saveData(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
+    console.log('Data saved')
 }
 
 // Load projects to localStorage, using a key, and revive the data from JSON data to create 'new' objects
@@ -58,10 +59,6 @@ function addProjectCounter(key) {
     // Create a variable to store the projectCounter and retrieve it from memory
     // Save it
     // Return it
-}
-
-function saveTodoCounter(key, counter) {
-    // Save the counter to localStorage using its key
 }
 
 
