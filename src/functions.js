@@ -118,12 +118,12 @@ export function renderStaticTodos(todos, title) {
         // This explains what to happen when checked:
         checkbox.checked = todo.complete;
         checkbox.addEventListener('change', () => {
-            let currentProjects = loadData('projects')
+            // let currentProjects = loadData('projects')
             // I NEED TO ENSURE THAT I AM TOGGLING THE CORRECT COMPLETE SECTION
             todo.toggleComplete();
             // This part saves the data to storage.js using the imported function: 
             // I NEED TO ENSURE THAT CURRENTPROJECTS IS THE UPDATED VERSION OF THE DATA
-            saveData('projects', currentProjects);
+            // saveData('projects', currentProjects);
             //    Removes todo when checked after 2 seconds:
             // if (todo.complete) {
             //     setTimeout(() => {

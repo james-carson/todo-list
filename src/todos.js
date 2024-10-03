@@ -1,3 +1,5 @@
+import { saveData } from "./storage"
+
 // Here we have a class for todos, which constructs new todos and contains methods
 export class Todos {
 
@@ -20,6 +22,8 @@ export class Todos {
 
     // Method to toggle todo as complete/incomplete  -- SHOULD THIS BE MOVED OUT OF THE CLASS?
     toggleComplete() {
+        let currentProjects = loadData('projects');
         this.complete = !this.complete;
+        saveData('projects', currentProjects);
     }
 }
