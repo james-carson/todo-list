@@ -96,7 +96,7 @@ export function appendProjectNames() {
 
 // Render todos onto content - must be passed a list of todos, not a project:
 export function renderTodos(todos, title = '') {
-    console.log('running renderTodos(todos, title = \'\'')
+    console.log(`running renderTodos(${todos}, ${title}`)
 
     // Clear the content div:
     const content = document.getElementById('content');
@@ -119,16 +119,11 @@ export function renderTodos(todos, title = '') {
         checkbox.type = 'checkbox';
         // This explains what to happen when checked:
         checkbox.checked = todo.complete;
+
         // Adding an event listener that saves the change
-        checkbox.addEventListener('change', () => {
+        checkbox.addEventListener('click', () => {
             // let currentProjects = loadData('projects')
-            todo.toggleComplete();
-            //    Removes todo when checked after 2 seconds:
-            if (todo.complete) {
-                setTimeout(() => {
-                    todoDiv.remove();
-                }, 2000);
-            }
+            toggleComplete(todo.id);
         });
         todoDiv.appendChild(checkbox);
 
@@ -179,6 +174,36 @@ export function renderTodos(todos, title = '') {
     });
 };
 
+// Function to toggle todo as complete/incomplete  -- SHOULD THIS BE MOVED OUT OF THE CLASS?
+function toggleComplete(todoId) {
+    const currentProjects = loadData('projects');
+
+    // console.log(`Searching for todo with ID ${todoId}`);
+
+    // Loop through the projects to find the todo by ID
+    for (let project of currentProjects) {
+        // console.log(`Checking project: ${project.name}`);
+        // console.log(`Todos in ${project.name}:`, project.todos.map(t => t.id));
+
+        // Find the todo in the project
+        const todo = project.todos.find(todo => todo.id === todoId);
+        // console.log(`Found todo for ID ${todoId}:`, todo);
+
+        if (todo) {
+            // Toggle the completion status
+            todo.complete = !todo.complete;
+            console.log(`Todo with ID ${todoId} has been updated to ${todo.complete}`);
+
+            // Save the updated projects back to localStorage
+            saveData('projects', currentProjects);
+            // console.log('todo has been toggled and data has been saved.')
+            return;
+        } else {
+            console.log(`No todo found in project ${project.name} with ID ${todoId}`);
+        }
+    }
+};
+
 window.getTodosDueToday = getTodosDueToday;
 window.getTodosDueThisWeek = getTodosDueThisWeek;
 window.getHighPriority = getHighPriority;
@@ -187,3 +212,4 @@ window.getProjectNames = getProjectNames;
 window.getUncompletedByDueDate = getUncompletedByDueDate;
 window.appendProjectNames = appendProjectNames;
 window.renderTodos = renderTodos;
+window.toggleComplete = toggleComplete;
