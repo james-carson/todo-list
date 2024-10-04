@@ -1,30 +1,33 @@
-
 // Storage.js deals with localStorage, including saving, loading, and handling ID counters
 
 import { Project } from "./project";
+import { Todo } from './todo';
 
 // Save projects to localStorage, with a key and its data
 export function saveData(key, data) {
+    // Convert the data to JSON data, and save it by the key.
     localStorage.setItem(key, JSON.stringify(data));
     console.log('Data saved')
 }
 
 // Load projects to localStorage, using a key, and revive the data from JSON data to create 'new' objects
 export function loadData(key) {
-    console.log(`Initiated ${loadData(key)}`)
-    // Create a temporary variable to load the JSON data into
+    console.log(`Initiated loadData(${key})`)
+    // Create a temporary variable to load the JSON data into, and load it
     currentData = JSON.parse(localStorage.getItem('key'));
     console.log('Current data loaded');
     
-    // Should I be checking if savedData is an array? It should always be an array
+    // **Should I be checking if savedData is an array? It should always be an array**
+    // No error handling yet
 
     // Start mapping the first level of projects, by project name, to revive the data
     return currentData.map(projectToMap => {
         // Create a 'new' project, titled with its own name, with a blank array to put its todos back into
         const revivedProject = new Project(projectToMap.name, []);
-        console.log(`Successfully re-created todo ${projectToMap.name}`);
+        console.log(`Successfully re-created todo ${revivedProject.name}`);
+        
         // Now we need to map each todo and put it into the array, reviving each as we go.
-        projectToMap.todoList.array.forEach(todoToMap => {
+        projectToMap.todoList.forEach(todoToMap => {
             // Create each todo
             const revivedTodo = new Todo(
                 // Use original properties
@@ -35,56 +38,106 @@ export function loadData(key) {
                 todoToMap.notes,
                 todoToMap.completed
             );
-            console.log(`Successfully re-created todo ${revivedTodo.name}`);
+            console.log(`Successfully re-created todo ${revivedTodo.title}`);
             // Add the revived todo back into the revived project
-        revivedProject.addTodo(revivedTodo.name);
-        console.log(`${revivedTodo.name} added back into ${revivedProject.name}`);
+        revivedProject.addTodo(revivedTodo);
+        console.log(`${revivedTodo.title} added back into ${revivedProject.name}`);
         });
         return revivedProject;
     });
 }
 
 function clearStorage () {
-    // Check for existing data
-    // Assign an empty array to the data under the name 'projects'
+    console.log('Console is about to be cleared!')
+    // Clear the console
+    console.clear();
+    console.log('Console has just been cleared');
 }
 
 function setTodoCounter() {
-    // Create a variable to store the todoCounter
-    // Set it to 0
+    console.log('Initialised setTodoCounter().')
+    // Create a todo counter variable and set it to 0
+    let todoCounter = 0
+    // Save the new data as 'todoCounter'
+    saveData('todoCounter', todoCounter);
+    console.log('Todo Counter has been setup at 0.')
+    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+    return todoCounter;
 }
 
 function getTodoCounter(key) {
-    // Create a variable to store the todoCounter and retrieve it from memory
-    // If it doesn't exist, set it
-    // Return it
+    console.log(`Initited getTodoCounter(${key}).`);
+    // Load Todo Counter data into a variable
+    const todoCounter = loadData(key);
+    // Check the counter exists and is a valid number
+    if (todoCounter !== null && !isNaN(todoCounter)) {
+        console.log(`Todo Counter is ${todoCounter}.`)
+        // If it is, return it
+        return todoCounter;
+    } else {
+        console.log('No Todo Counter exists, so set to 0.')
+        // If it isn't create it.
+        return setTodoCounter();
+    }
 }
 
-function addTodoCounter(key) {
-    // Create a variable to store the todoCounter and retrieve it from memory
-    // Save it
-    // Return it
+function addToTodoCounter(key) {
+    console.log(`Initited addToTodoCounter(${key})`);
+    // Load Todo Counter data
+    const todoCounter = loadData(key);
+    // Increment by 1
+    todoCounter++;
+    // Save the new data
+    saveData(key, todoCounter);
+    console.log(`Todo Counter is now ${todoCounter}.`)
+    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+    return todoCounter;
 }
 
 function saveTodoCounter(key, counter) {
-    // Save the counter to localStorage using its key
+    // Is this necessary, or can I just use saveData?
 }
 
+// *** Do I need these project counters, or can I just use a generic counter data and set the key when saving/loading? ***
+
 function setProjectCounter() {
-    // Create a variable to store the projectCounter
-    // Set it to 0
+    console.log('Initialised setProjectCounter().')
+    // Create a project counter variable and set it to 0
+    let projectCounter = 0
+    // Save the new data as 'projectCounter'
+    saveData('projectCounter', projectCounter);
+    console.log('Project Counter has been setup at 0.')
+    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+    return projectCounter;
 }
 
 function getProjectCounter(key) {
-    // Create a variable to store the projectCounter and retrieve it from memory
-    // If it doesn't exist, set it
-    // Return it
+    console.log(`Initited getProjectCounter(${key}).`);
+    // Load Project Counter data into a variable
+    const projectCounter = loadData(key);
+    // Check the counter exists and is a valid number
+    if (projectCounter !== null && !isNaN(projectCounter)) {
+        console.log(`Project Counter is ${projectCounter}.`)
+        // If it is, return it
+        return projectCounter;
+    } else {
+        console.log('No Project Counter exists, so set to 0.')
+        // If it isn't create it.
+        return setProjectCounter();
+    }
 }
 
 function addProjectCounter(key) {
-    // Create a variable to store the projectCounter and retrieve it from memory
-    // Save it
-    // Return it
+    console.log(`Initited addToProjectCounter(${key})`);
+    // Load Project Counter data
+    const projectCounter = loadData(key);
+    // Increment by 1
+    projectCounter++;
+    // Save the new data
+    saveData(key, projectCounter);
+    console.log(`Project Counter is now ${projectCounter}.`)
+    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+    return projectCounter;
 }
 
 
