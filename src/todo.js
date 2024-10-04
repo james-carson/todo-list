@@ -1,8 +1,9 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
+// Update - adding methods back in fo simplicity of later functions
 export class Todo {
-    constructor(id, title, dueDate, priority, notes, completed) {
+    constructor(id, title, dueDate, priority, notes, completed = 'false') {
         // ID needs to be able to accept input from dummy data
         this.id = id
         // Don't create any until this is sorted!
@@ -12,9 +13,25 @@ export class Todo {
         this.notes = notes
         this.completed = completed
     }
+
+editTodo(newTitle, newDueDate, newPriority, newNotes) {
+    // Updates each todo property to the new provided value, or defaults to the original if none provided.
+    // ID not necessary as this is unique and shoul not/cannot be changed
+    this.title = newTitle || this.title;
+    this.dueDate = newDueDate || this.dueDate;
+    this.priority = newPriority || this.priority;
+    this.notes = newNotes || this.notes
+    // No need for completed as this will be handled separately
+}
+
+toggleTodoCompleted() {
+    // Toggle the completed value, which is Boolean, to its opposite
+    this.completed = !this.completed;
+}
+
 };
 
-function createTodo(todoCounter) {
+function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.
     // Load data
     // Get todo counter number
     // Add one to it and assign this as ID
@@ -22,19 +39,7 @@ function createTodo(todoCounter) {
     // Save data
 }
 
-function editTodo(todoID) {
-    // Load data
-    // ID todo by ID
-    // Edit todo properties
-    // Save data
-}
 
-function toggleTodoCompleted(todoID) {
-    // Load data
-    // ID todo by ID
-    // Edit todo properties
-    // Save data
-}
 
 // TODO: Create relevant functions
 
