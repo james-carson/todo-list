@@ -1,6 +1,8 @@
 
 // Storage.js deals with localStorage, including saving, loading, and handling ID counters
 
+import { Project } from "./project";
+
 // Save projects to localStorage, with a key and its data
 export function saveData(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
@@ -9,13 +11,37 @@ export function saveData(key, data) {
 
 // Load projects to localStorage, using a key, and revive the data from JSON data to create 'new' objects
 export function loadData(key) {
+    console.log(`Initiated ${loadData(key)}`)
     // Create a temporary variable to load the JSON data into
-    // Check for the existence of data and assign an empty array if there isn't any
-    // Create a new variable to store the project data and using map create a 'new' Project object...
-    // using its ID to populate it along with an empty array where the todos will soon go
-    // Within this, do the same with todos, using their ID
-    // Add each todo to the relevant project array
-    // Return the project object for each loop
+    currentData = JSON.parse(localStorage.getItem('key'));
+    console.log('Current data loaded');
+    
+    // Should I be checking if savedData is an array? It should always be an array
+
+    // Start mapping the first level of projects, by project name, to revive the data
+    return currentData.map(projectToMap => {
+        // Create a 'new' project, titled with its own name, with a blank array to put its todos back into
+        const revivedProject = new Project(projectToMap.name, []);
+        console.log(`Successfully re-created todo ${projectToMap.name}`);
+        // Now we need to map each todo and put it into the array, reviving each as we go.
+        projectToMap.todoList.array.forEach(todoToMap => {
+            // Create each todo
+            const revivedTodo = new Todo(
+                // Use original properties
+                todoToMap.id,
+                todoToMap.title,
+                todoToMap.dueDate,
+                todoToMap.priority,
+                todoToMap.notes,
+                todoToMap.completed
+            );
+            console.log(`Successfully re-created todo ${revivedTodo.name}`);
+            // Add the revived todo back into the revived project
+        revivedProject.addTodo(revivedTodo.name);
+        console.log(`${revivedTodo.name} added back into ${revivedProject.name}`);
+        });
+        return revivedProject;
+    });
 }
 
 function clearStorage () {
