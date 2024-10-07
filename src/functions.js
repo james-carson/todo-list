@@ -1,6 +1,7 @@
 // functions.js will house the main functions that will help the app to run, and that are not associated
 // ...with the UI, dummy data, or initialisation from the 'main' file
 
+import { isThisWeek } from "date-fns";
 import { Project } from "./project";
 import { saveData, loadData, setCounter, getCounter, addToCounter } from "./storage"
 
@@ -18,6 +19,7 @@ function getAllTodos() {
     console.log('Finished running getAllTodos()')
     return allTodos
 }
+// ^^Should be fine
 
 function getTodosDueToday() {
     console.log('Initiated getTodosDueToday()')
@@ -32,6 +34,7 @@ function getTodosDueToday() {
         return isToday(dueDate) && !todo.complete;
     });
 };
+// ^^Should be fine
 
 function getOverdueTodos() {
     console.log('Initiated getOverdueTodos()')
@@ -47,26 +50,43 @@ function getOverdueTodos() {
     });
     console.log('Finished running getOverdueTodos()')
 }
+// ^^Should be fine
 
 function getTodosDueThisWeek() {
     console.log('Initiated getTodosDueThisWeek()')
-    
+    // Load Data in getAllTodos and assign to a variable
+    const allTodos = getAllTodos();
+    // This list is then filtered by...
+    return allTodos.filter(todo => {
+        // Converting dueDate to a Date object...
+        const dueDate = new Date(todo.dueDate);
+        // and checking if the todo is due today and is also uncompleted, then
+        // returning those that match
+        return isThisWeek(dueDate) && !todo.complete;
+    });
     console.log('Finished running getTodosDueThisWeek()')
-}
+};
+// ^^Should be fine
 
 function getHighPriorityTodos() {
     console.log('Initiated getHighPriorityTodos()')
-    // Load Data
-    const loadedData = loadData('projects');
+    // Load Data in getAllTodos and assign to a variable
+    const allTodos = getAllTodos();
+    // This list is then filtered by...
+    return allTodos.filter(todo => todo.priority === 'high' && !todo.complete);
     console.log('Finished running getHighPriorityTodos()')
-}
+};
+// ^^Should be fine
 
 function getCompletedTodos() {
     console.log('Initiated getCompletedTodos()')
     // Load Data
-    const loadedData = loadData('projects');
+    const allTodos = getAllTodos();
+    // This list is then filtered by...
+    return allTodos.filter(todo => todo.complete);
     console.log('Finished running getCompletedTodos()')
 }
+// ^^Should be fine
 
 // Is this necessary? Or just use the method?
 // function getTodosForSpecificProject(projectName) {
@@ -87,16 +107,18 @@ function getAllProjectNames() {
     // Return it
 
 }
+// ^^Should be fine
 
 function getNextId(type) {
     return addToCounter(type);
 }
+// ^^Should be fine
 
 function createProject(name) {
     const newProject = new Project(getNextId('project'), name, [])
     return newProject;
 }
-
+// ^^Should be fine
 
 
 //  ------------------------------------------------------------------------------------------------------
