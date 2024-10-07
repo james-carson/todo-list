@@ -47,98 +47,98 @@ export function loadData(key) {
     });
 }
 
-function clearStorage () {
+export function clearStorage () {
     console.log('Console is about to be cleared!')
     // Clear the console
     console.clear();
     console.log('Console has just been cleared');
 }
 
-function setTodoCounter() {
-    console.log('Initialised setTodoCounter().')
-    // Create a todo counter variable and set it to 0
-    let todoCounter = 0
-    // Save the new data as 'todoCounter'
-    saveData('todoCounter', todoCounter);
-    console.log('Todo Counter has been setup at 0.')
+export function setCounter(key) {
+    console.log(`Initialised setCounter(${key}).`)
+    // Create a counter variable and set it to 0
+    let counter = 0
+    // Save the new data as 'counter' using the correct key
+    saveData(key, counter);
+    console.log(`Counter for ${key} has been setup at 0.`)
     // Return the number - ***Do I need to do this, or is the act of doing it enough?***
-    return todoCounter;
+    return counter;
 }
 
-function getTodoCounter(key) {
-    console.log(`Initited getTodoCounter(${key}).`);
+export function getCounter(key) {
+    console.log(`Initited getCounter(${key}).`);
     // Load Todo Counter data into a variable
-    const todoCounter = loadData(key);
+    const counter = loadData(key);
     // Check the counter exists and is a valid number
-    if (todoCounter !== null && !isNaN(todoCounter)) {
-        console.log(`Todo Counter is ${todoCounter}.`)
+    if (counter !== null && !isNaN(counter)) {
+        console.log(`Counter is ${counter}.`)
         // If it is, return it
-        return todoCounter;
+        return counter;
     } else {
         console.log('No Todo Counter exists, so set to 0.')
         // If it isn't create it.
-        return setTodoCounter();
+        return setCounter();
     }
 }
 
-function addToTodoCounter(key) {
-    console.log(`Initited addToTodoCounter(${key})`);
+export function addToCounter(key) {
+    console.log(`Initiated addToCounter(${key})`);
     // Load Todo Counter data
-    const todoCounter = loadData(key);
+    const counter = loadData(key);
     // Increment by 1
-    todoCounter++;
+    counter++;
     // Save the new data
-    saveData(key, todoCounter);
-    console.log(`Todo Counter is now ${todoCounter}.`)
-    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
-    return todoCounter;
+    saveData(key, counter);
+    console.log(`${key} Counter is now ${counter}.`)
+    // Return the number - ***Do I need to do this, or is the act of doing it enough?*** I think I need it
+    return counter;
 }
 
-function saveTodoCounter(key, counter) {
-    // Is this necessary, or can I just use saveData?
+export function saveCounter(key, counter) {
+    saveData(key, counter);
 }
 
 // *** Do I need these project counters, or can I just use a generic counter data and set the key when saving/loading? ***
+// UPDATE: Moving to generic counters
+// function setProjectCounter() {
+//     console.log('Initialised setProjectCounter().')
+//     // Create a project counter variable and set it to 0
+//     let projectCounter = 0
+//     // Save the new data as 'projectCounter'
+//     saveData('projectCounter', projectCounter);
+//     console.log('Project Counter has been setup at 0.')
+//     // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+//     return projectCounter;
+// }
 
-function setProjectCounter() {
-    console.log('Initialised setProjectCounter().')
-    // Create a project counter variable and set it to 0
-    let projectCounter = 0
-    // Save the new data as 'projectCounter'
-    saveData('projectCounter', projectCounter);
-    console.log('Project Counter has been setup at 0.')
-    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
-    return projectCounter;
-}
+// function getProjectCounter(key) {
+//     console.log(`Initited getProjectCounter(${key}).`);
+//     // Load Project Counter data into a variable
+//     const projectCounter = loadData(key);
+//     // Check the counter exists and is a valid number
+//     if (projectCounter !== null && !isNaN(projectCounter)) {
+//         console.log(`Project Counter is ${projectCounter}.`)
+//         // If it is, return it
+//         return projectCounter;
+//     } else {
+//         console.log('No Project Counter exists, so set to 0.')
+//         // If it isn't create it.
+//         return setProjectCounter();
+//     }
+// }
 
-function getProjectCounter(key) {
-    console.log(`Initited getProjectCounter(${key}).`);
-    // Load Project Counter data into a variable
-    const projectCounter = loadData(key);
-    // Check the counter exists and is a valid number
-    if (projectCounter !== null && !isNaN(projectCounter)) {
-        console.log(`Project Counter is ${projectCounter}.`)
-        // If it is, return it
-        return projectCounter;
-    } else {
-        console.log('No Project Counter exists, so set to 0.')
-        // If it isn't create it.
-        return setProjectCounter();
-    }
-}
-
-function addProjectCounter(key) {
-    console.log(`Initited addToProjectCounter(${key})`);
-    // Load Project Counter data
-    const projectCounter = loadData(key);
-    // Increment by 1
-    projectCounter++;
-    // Save the new data
-    saveData(key, projectCounter);
-    console.log(`Project Counter is now ${projectCounter}.`)
-    // Return the number - ***Do I need to do this, or is the act of doing it enough?***
-    return projectCounter;
-}
+// function addProjectCounter(key) {
+//     console.log(`Initited addToProjectCounter(${key})`);
+//     // Load Project Counter data
+//     const projectCounter = loadData(key);
+//     // Increment by 1
+//     projectCounter++;
+//     // Save the new data
+//     saveData(key, projectCounter);
+//     console.log(`Project Counter is now ${projectCounter}.`)
+//     // Return the number - ***Do I need to do this, or is the act of doing it enough?***
+//     return projectCounter;
+// }
 
 
 

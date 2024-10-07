@@ -44,12 +44,10 @@ function attachEditButtonClickListeners() {
 }
 
 function loadDefaultView() {
-    // Load data
-    // Create variable to store combined list of todos
-    // Get all overdue todos
-    // Get all todos due today
-    // Sort them by due date
-    // return this data so that it can be used by renderCOntent
+    const defaultTodos = getOverdueTodos()
+    // Need to now use renderContent(defaultTodos)
+    
+    // This should render the correct (overdue) todos onto the content area.
 }
 
 // Input is set to blank by default
