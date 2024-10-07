@@ -17,6 +17,8 @@ function initialiseApp() {
         console.log('App initialised')
 })};
 
+// What else needs to go inside here? All Event Listeners?
+
 initialiseApp();
 
 
