@@ -2,6 +2,7 @@
 // ...through index.js
 
 import { getAllProjectNames, getOverdueTodos } from './functions.js';
+import flagImage from './images/flag.svg';
 
 // Does this need inputs, or is it going to use the loaded data every time anyway?
 function renderSidebar() {
@@ -39,14 +40,89 @@ function renderSidebar() {
     });
 }
 
-function renderContent(project) {
-    // Define the content area
+function renderContent(project, todos) {
+    console.log(`running renderContent(${project}, ${todos}`)
+
+    // Define the content area and clear it
+    const content = document.getElementById('content');
+    content.textContent = '';
+
     // Get the specified project (from input)
-    // Append the project name
+    // Append the project name as a title
+    const projectTitle = document.createElement('h2');
+    projectTitle.textContent = project;
+    projectTitle.classList.add('project_title');
+    content.appendChild(projectTitle);
+
     // Get the todos for this specific project
     // For each of them, create the required divs and append them to the content area
-    // Append the click listeners - both edit and checkbox
-}
+    todos.forEach(todo => {
+        // Create a div for each todo:
+        const todoDiv = document.createElement('div');
+        todoDiv.classList.add('todo_div');  // Class for CSS grid styling
+
+        // Create a checkbox for completion:
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        // This explains what to happen when checked:
+        checkbox.checked = todo.complete;
+
+        // Adding an event listener that saves the change
+        checkbox.addEventListener('click', () => {
+            // Do I need to ID this todo somehow?
+            toggleTodoCompleted();
+        });
+        todoDiv.appendChild(checkbox);
+
+        // Add a grid for layout purposes:
+        const todoGrid = document.createElement('div');
+        todoGrid.classList.add('todo_grid');
+        todoDiv.appendChild(todoGrid);
+
+        // Add the title of the todo:
+        const todoTitle = document.createElement('div');
+        todoTitle.classList.add('todo_title');
+        todoTitle.textContent = todo.title;
+        todoGrid.appendChild(todoTitle);
+
+        // Add the due date:
+        const dueDate = document.createElement('div');
+        dueDate.classList.add('todo_due_date');
+        dueDate.textContent = `Due: ${todo.dueDate}`;
+        todoGrid.appendChild(dueDate);
+
+        // Add the priority:
+        const priority = document.createElement('div');
+        // If the priority is high, add the class 'todo_priority_high'
+        if (todo.priority === 'high') {
+            priority.classList.add('todo_priority_high');
+            // Or, if it's medium, add 'todo_priority_medium'
+        } else if (todo.priority === 'medium') {
+            priority.classList.add('todo_priority_medium');
+            // Or, if it's low, add 'todo_priority_low'
+        } else {
+            priority.classList.add('todo_priority_low');
+        }
+        todoGrid.appendChild(priority);
+
+        const priority_flag = document.createElement('img');
+        priority_flag.src = flagImage
+        priority_flag.classList.add('priority_flag');
+        priority.appendChild(priority_flag)
+
+        // Add an edit button - NOT FUNCTIONAL YET!
+        const editTodo = document.createElement('div');
+        editTodo.classList.add('todo_edit');
+        editTodo.textContent = 'Edit'
+        todoGrid.appendChild(editTodo);
+
+        // Append the completed todo div to the content area:
+        content.appendChild(todoDiv);
+
+        // Append the click listeners - both edit and checkbox:
+        // As a function or specified here?
+    });
+};
 
 // Not sure that the below is needed
 function attachAllUiEventListeners() {
@@ -68,12 +144,17 @@ function attachEditButtonClickListeners() {
 
 }
 
+// I AM HERE: NEED TO WORK OUT HOW TO ID THE PROJECTS? 
+// TODOS COMING UP AS OBJECT OBJECT
+
+
 export function loadDefaultView() {
     console.log('Initialised loadDefaultView()')
     const defaultTodos = getOverdueTodos()
+    // This returns an array of todo objects, which can be passed into another function
     console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
-    renderContent(defaultTodos);
+    renderContent('Inbox', defaultTodos);
     console.log('renderContent attempted with defaultTodos')
     // This should render the correct (overdue) todos onto the content area.
 }
@@ -85,10 +166,17 @@ export function updateScreen(project = '') {
     renderSidebar();
     console.log('Sidebar rendered within updateScreen()');
     // If the project input was blank, then the default view (overdue and today) will be loaded instead
-    renderContent(project || loadDefaultView());
+    if (project.length !== 0) {
+        renderContent(project);
+        console.log(`${project} rendered.`)
+    } else {
+        loadDefaultView();
+        console.log('Rendered using loadDefaultView()');
+    }
     console.log('Content Rendered within updateScreen()')
-    attachAllUiEventListeners();
-    console.log('Event listeners attached within updateScreen()')
+    // attachAllUiEventListeners();
+    // console.log('Event listeners attached within updateScreen()')
+    console.log('updateScreen() would have attached event listeners here - not ready yet!')
     console.log('Screen updated')
 }
 

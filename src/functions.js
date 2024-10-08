@@ -120,6 +120,7 @@ function createProject(name) {
 }
 // ^^Should be fine
 
+window.getOverdueTodos = getOverdueTodos;
 
 //  ------------------------------------------------------------------------------------------------------
 
