@@ -1,6 +1,7 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
 import { loadData, saveData } from "./storage"
+import { refreshContent } from "./ui"
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
 // Update - adding methods back in fo simplicity of later functions
@@ -33,20 +34,30 @@ export function toggleTodoCompleted(todoId) {
     console.log(`Initiated toggleTodoCompleted(${todoId})`)
     // Load current data
     let currentData = loadData('projects');
-    console.log(`Current data loaded: ${JSON.stringify(currentData)}`);
+    // console.log(`Current data loaded: ${JSON.stringify(currentData)}`);
 
     // Find the current todo by its id:
-    console.log('Initiating loop to find todo')
+    // console.log('Initiating loop to find todo')
     for (let project of currentData) {
         const todoById = project.todoList.find(todoToChange => todoToChange.id === todoId);
         if (todoById) {
-            console.log(`${JSON.stringify(todoById)} found in project: ${JSON.stringify(project)}`)
+            // console.log(`${JSON.stringify(todoById)} found in project: ${JSON.stringify(project)}`)
             // Toggle the completed value, which is Boolean, to its opposite
             todoById.completed = !todoById.completed;
-            console.log(`${JSON.stringify(todoById)} completed status is now ${todoById.completed}`)
+            // console.log(`${JSON.stringify(todoById)} completed status is now ${todoById.completed}`)
             // Save the updated data
             saveData('projects', currentData);
             console.log(`Todo with ID ${todoId} has been updated.`);
+
+
+
+            // Refresh the content area
+            refreshContent();
+
+            // THIS IS WHERE I AM AT THE MOMENT - REFRESH CONTENT NEEDS TO KEEP TRACK OF MORE, SUCH AS PROJECT TYPE!
+
+
+
             return;
         } else {
             console.log(`Todo with ID ${todoId} cannot be found`);

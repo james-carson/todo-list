@@ -31,6 +31,8 @@ export function getTodosDueToday() {
         const dueDate = new Date(todo.dueDate);
         // and checking if the todo is due today and is also uncompleted, then
         // returning those that match
+        console.log('dueDate:', dueDate);
+        console.log('isToday:', isToday());
         return isToday(dueDate) && !todo.complete;
     });
 };

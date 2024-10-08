@@ -6,6 +6,10 @@ import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 import { loadData } from './storage.js';
 
+// Global variables to keep track of the current project and todos:
+let currentProject = '';
+let currentTodos = [];
+
 function renderSidebar() {
     console.log('Initialised renderSidebar()')
 
@@ -46,6 +50,10 @@ function renderSidebar() {
 
 function renderContent(projectName, todos) {
     console.log(`running renderContent(${projectName}, ${todos}`)
+
+    // Update the global variables to keep track of what's being displayed
+    currentProject = projectName;
+    currentTodos = todos;
 
     // Define the content area and clear it
     const content = document.getElementById('content');
@@ -128,6 +136,11 @@ function renderContent(projectName, todos) {
     });
 };
 
+export function refreshContent() {
+    const updatedTodos = getTodosForSpecificProject(currentProject);
+    renderContent(currentProject, updatedTodos);
+}
+
 export function attachStaticSidebarClickListeners() {
     // ID the 'buttons' (divs)
     const dueTodayButton = document.getElementById('due_today');
@@ -140,6 +153,7 @@ export function attachStaticSidebarClickListeners() {
     dueTodayButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getTodosDueToday();
+        console.log(`Due Today: ${todos}`)
         // Pass this through the renderContent()
         renderContent('Due Today', todos);
     });
@@ -176,34 +190,42 @@ export function loadDefaultView() {
     console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
     console.log('renderContent attempted with defaultTodos')
-    return 'Welcome to Todo(L)ist', defaultTodos;
+    return {
+        projectName: 'Overdue Todos',
+        todos: defaultTodos
+    };
     // This should render the correct (overdue) todos onto the content area when fed into renderContent
 }
 
 // Input is set to blank by default
-export function updateScreen(staticProject = '', staticTodos, dynamicProject = '', defaultProject = '') {
+export function updateScreen(staticProject = '', staticTodos = '', dynamicProject = '', defaultProject = '') {
     console.log('Initialised updateScreen');
     // Load data
     renderSidebar();
     console.log('Sidebar rendered within updateScreen()');
+
+    // Initialise the variables that will be fed into renderContent
+    let projectName;
+    let todos;
+
     // If the project input was blank, then the default view (overdue and today) will be loaded instead
     if (defaultProject) {
-        return loadDefaultView();
+        const defaultViewData = loadDefaultView();
+        projectName = defaultViewData.projectName;
+        todos = defaultViewData.todos;
+        console.log('Rendering default todos using renderContent(getOverdueTodos())');
     } else if (dynamicProject) {
-        const todos = getTodosForSpecificProject(dynamicProject);
-        return dynamicProject, todos;
-        console.log(`Project with ID ${dynamicProject} rendered.`)
+        projectName = dynamicProject;
+        todos = getTodosForSpecificProject(dynamicProject);
+        console.log(`Dynamic roject with name ${dynamicProject} rendered.`)
     } else if (staticProject) {
-        return staticProject, staticTodos;
-        console.log('Rendered default todos using renderContent(getOverdueTodos())');
+        projectName = staticProject;
+        todos = staticTodos;
+        console.log(`Static project with name ${staticProject} rendered.`)
     }
-    renderContent(project, todos)
+    renderContent(projectName, todos)
     console.log('Content Rendered within updateScreen(). Screen updated')
 }
-
-// THIS IS WHERE I AM: GETTING updateScreen() TO WORK!
-// ALSO STATIC TODOS ARE NOT RENDERING!
-
 
 function launchTodoPopup() {
     // Not sure yet!
