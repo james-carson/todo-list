@@ -1,12 +1,11 @@
 // ui.js contains the functions that will manipulate the DOM. These will usually be used internally or
 // ...through index.js
 
-import { getAllProjectNames, getOverdueTodos } from './functions.js';
+import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 import { loadData } from './storage.js';
 
-// Does this need inputs, or is it going to use the loaded data every time anyway?
 function renderSidebar() {
     console.log('Initialised renderSidebar()')
 
@@ -29,63 +28,24 @@ function renderSidebar() {
 
         // Append the click listeners
 
-        // Haven't decided how to work this yet!
-
-        // projectItem.addEventListener('click', () => {
-        //     currentView = { type: 'project', name: project.name };
-        //     updateView();
-
-        // attachSidebarClickListeners()
+        projectItem.addEventListener('click', () => {
+            // Find the todos for this project using its name
+            const todos = getTodosForSpecificProject(project)
+            // Pass this through the renderContent()
+            renderContent(project, todos);
+        });
 
         // -Append it to the project list
         projectList.appendChild(projectItem);
     });
+
+    console.log('Attaching static sidebar listeners')
+    attachStaticSidebarClickListeners();
+    console.log('Completed running renderSidebar()')
 }
 
-function renderContent(projectByNameOrID = '', todosIdentifier = '') {
-    // Load data:
-    const loadedData = loadData('projects');
-
-    // The project needs to firstly be identified
-    const project = (() => {
-        // First, check for a matching project ID:
-        const projectById = loadedData.find(project => project.id === projectByNameOrID);
-        if (projectById) {
-            return projectById;
-        } else {
-            console.log(`Project cannot be identified by ID. Attempting to identify by name...`);
-        }
-        
-        // If not, check for it by ID:
-        const projectByName = loadedData.find(project => project.name === projectByNameOrID);
-        if (projectByName) {
-            return projectByName;
-        } // else return an error
-        else {
-            console.error(`Project with identifier ${projectByNameOrID} cannot be found`);
-            return null;
-        };
-    })();
-
-    if (!project) {
-        console.error('No project found. Terminating function.')
-        return;
-    }
-
-    // Then, if todos are provided, use them:
-    const todos = (() => {
-        if (Array.isArray(todosIdentifier) && todosIdentifier.length > 0) {
-            return todosIdentifier;
-        } // else find them
-        else if (!todosIdentifier) {
-            return project.todoList;
-        } else {
-            console.error(`Todos with identifier ${todosIdentifier} cannot be found`);
-            return [];
-        }
-    })();
-
-    console.log(`running renderContent(${project}, ${todos}`)
+function renderContent(projectName, todos) {
+    console.log(`running renderContent(${projectName}, ${todos}`)
 
     // Define the content area and clear it
     const content = document.getElementById('content');
@@ -94,7 +54,7 @@ function renderContent(projectByNameOrID = '', todosIdentifier = '') {
     // Get the specified project (from input)
     // Append the project name as a title
     const projectTitle = document.createElement('h2');
-    projectTitle.textContent = project;
+    projectTitle.textContent = projectName;
     projectTitle.classList.add('project_title');
     content.appendChild(projectTitle);
 
@@ -168,14 +128,46 @@ function renderContent(projectByNameOrID = '', todosIdentifier = '') {
     });
 };
 
-// Not sure that the below is needed
-function attachAllUiEventListeners() {
-    attachSidebarClickListeners();
-    attachCheckboxClickListeners();
-    attachEditButtonClickListeners();
-    console.log('All UI event listeners appended');
-}
+export function attachStaticSidebarClickListeners() {
+    // ID the 'buttons' (divs)
+    const dueTodayButton = document.getElementById('due_today');
+    const dueThisWeekButton = document.getElementById('due_this_week');
+    const overdueTodosButton = document.getElementById('overdue_todos');
+    const highPriorityButton = document.getElementById('high_priority');
+    const completedButton = document.getElementById('completed_list');
 
+    // Attach event listeners that run renderContent() on click
+    dueTodayButton.addEventListener('click', () => {
+        // Find the todos for this project using its name
+        const todos = getTodosDueToday();
+        // Pass this through the renderContent()
+        renderContent('Due Today', todos);
+    });
+    dueThisWeekButton.addEventListener('click', () => {
+        // Find the todos for this project using its name
+        const todos = getTodosDueThisWeek();
+        // Pass this through the renderContent()
+        renderContent('Due This Week', todos);
+    });
+    overdueTodosButton.addEventListener('click', () => {
+        // Find the todos for this project using its name
+        const todos = getOverdueTodos();
+        // Pass this through the renderContent()
+        renderContent('Overdue', todos);
+    });
+    highPriorityButton.addEventListener('click', () => {
+        // Find the todos for this project using its name
+        const todos = getHighPriorityTodos();
+        // Pass this through the renderContent()
+        renderContent('High Priority', todos);
+    });
+    completedButton.addEventListener('click', () => {
+        // Find the todos for this project using its name
+        const todos = getCompletedTodos();
+        // Pass this through the renderContent()
+        renderContent('Completed', todos);
+    });
+}
 
 export function loadDefaultView() {
     console.log('Initialised loadDefaultView()')
@@ -183,123 +175,78 @@ export function loadDefaultView() {
     // This returns an array of todo objects, which can be passed into another function
     console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
-    renderContent('Welcome to Todo(L)ist', defaultTodos);
     console.log('renderContent attempted with defaultTodos')
-    // This should render the correct (overdue) todos onto the content area.
+    return 'Welcome to Todo(L)ist', defaultTodos;
+    // This should render the correct (overdue) todos onto the content area when fed into renderContent
 }
 
 // Input is set to blank by default
-export function updateScreen(projectID = '') {
+export function updateScreen(staticProject = '', staticTodos, dynamicProject = '', defaultProject = '') {
     console.log('Initialised updateScreen');
     // Load data
     renderSidebar();
     console.log('Sidebar rendered within updateScreen()');
     // If the project input was blank, then the default view (overdue and today) will be loaded instead
-    if (projectID.length !== 0) {
-        renderContent(projectID, todos);
-        console.log(`Project with ID ${projectID} rendered.`)
-    } else {
-        loadDefaultView();
-        console.log('Rendered using loadDefaultView()');
+    if (defaultProject) {
+        return loadDefaultView();
+    } else if (dynamicProject) {
+        const todos = getTodosForSpecificProject(dynamicProject);
+        return dynamicProject, todos;
+        console.log(`Project with ID ${dynamicProject} rendered.`)
+    } else if (staticProject) {
+        return staticProject, staticTodos;
+        console.log('Rendered default todos using renderContent(getOverdueTodos())');
     }
+    renderContent(project, todos)
     console.log('Content Rendered within updateScreen(). Screen updated')
 }
+
+// THIS IS WHERE I AM: GETTING updateScreen() TO WORK!
+// ALSO STATIC TODOS ARE NOT RENDERING!
+
 
 function launchTodoPopup() {
     // Not sure yet!
 }
 
+// PREVIOUS CODE USED FOR SEARCHING BY PROJECT NAME/ID AND TODO:
+// // Load data:
+    // const loadedData = loadData('projects');
 
-//  ------------------------------------------------------------------------------------------------------
+    // // The project needs to firstly be identified
+    // const project = (() => {
+    //     // First, check for a matching project ID:
+    //     const projectById = loadedData.find(project => project.id === projectIdentifier);
+    //     if (projectById) {
+    //         return projectById;
+    //     } else {
+    //         console.log(`Project cannot be identified by ID. Attempting to identify by name...`);
+    //     }
+        
+    //     // If not, check for it by ID:
+    //     const projectByName = loadedData.find(project => project.name === projectIdentifier);
+    //     if (projectByName) {
+    //         return projectByName;
+    //     } // else return an error
+    //     else {
+    //         console.error(`Project with identifier ${projectIdentifier} cannot be found`);
+    //     };
+    // })();
 
+    // if (!project) {
+    //     console.error('No project found. Terminating function.')
+    //     return;
+    // }
 
-
-// import { getTodosDueToday, getHighPriority, getTodosDueThisWeek, getCompletedTodos, getProjectNames, getUncompletedByDueDate, renderTodos } from './functions.js';
-// import { loadData } from './storage.js'
-
-// // Set 'Due This Week' as default
-// let currentView = { type: 'filtered', name: 'Due This Week' };
-
-// export function updateView() {
-//     if (currentView.type === 'filtered') {
-//         if (currentView.name === 'Due Today') {
-//             const updatedTodos = getTodosDueToday();
-//             renderTodos(updatedTodos, 'Due Today');
-//         } else if (currentView.name === 'Due This Week') {
-//             const updatedTodos = getTodosDueThisWeek();
-//             renderTodos(updatedTodos, 'Due This Week');
-//         } else if (currentView.name === 'High Priority') {
-//             const updatedTodos = getHighPriority();
-//             renderTodos(updatedTodos, 'High Priority');
-//         } else if (currentView.name === 'Completed') {
-//             const updatedTodos = getCompletedTodos();
-//             renderTodos(updatedTodos, 'Completed')
-//         };
-//     } else if (currentView.type === 'project') {
-//         const project = loadData('projects').find(p => p.name === currentView.name);
-//         renderTodos(project.getTodos(), project.name);
-//     }
-// };
-
-
-// // Added function wrapper to use on DOM loading:
-// export function attachEventListeners() {
-
-//     // Add event listener for clicks for Due Today:
-//     const dueTodayButton = document.getElementById('due_today');
-//     dueTodayButton.addEventListener('click', () => {
-//         console.log('Due Today Clicked')
-//         currentView = { type: 'filtered', name: 'Due Today' };
-//         updateView();
-//     });
-
-//     // Add event listener for clicks for This Week:
-//     const dueThisWeekButton = document.getElementById('due_this_week');
-//     console.log('Due This Week Clicked')
-//     dueThisWeekButton.addEventListener('click', () => {
-//         currentView = { type: 'filtered', name: 'Due This Week' };
-//         updateView();
-//     });
-
-//     // Add event listener for clicks for High Priority:
-//     const highPriorityButton = document.getElementById('high_priority');
-//     console.log('High Priority Clicked')
-//     highPriorityButton.addEventListener('click', () => {
-//         currentView = { type: 'filtered', name: 'High Priority' };
-//         updateView();
-//     });
-
-//     // Add event listener for clicks for Completed:
-//     const completedButton = document.getElementById('completed_list');
-//     console.log('Completed Clicked')
-//     completedButton.addEventListener('click', () => {
-//         currentView = { type: 'filtered', name: 'Completed' };
-//         updateView();
-//     });
-// };
-
-// // Logic for rendering project list on sidebar:
-// export function appendProjectNames() {
-//     console.log('running appendProjectNames()')
-//     const projectList = document.getElementById('project_list');
-//     projectList.textContent = '';
-//     const projects = loadData('projects') || [];
-
-//     projects.forEach(project => {
-//         const projectItem = document.createElement('h3');
-//         projectItem.textContent = project.name;
-//         console.log(`The name of this project is ${project.name}`)
-//         projectItem.classList.add('project_name');
-
-//         // Adding event listener to listen for clicks here:
-//         projectItem.addEventListener('click', () => {
-//             currentView = { type: 'project', name: project.name };
-//             updateView();
-//         });
-//         projectList.appendChild(projectItem);
-//     });
-// };
-
-// export function loadDefaultView() {
-//     updateView();
-// }
+    // // Then, if todos are provided, use them:
+    // const todos = (() => {
+    //     if (Array.isArray(todosIdentifier) && todosIdentifier.length > 0) {
+    //         return todosIdentifier;
+    //     } // else find them
+    //     else if (!todosIdentifier) {
+    //         return project.todoList;
+    //     } else {
+    //         console.error(`Todos with identifier ${todosIdentifier} cannot be found`);
+    //         return [];
+    //     }
+    // })();

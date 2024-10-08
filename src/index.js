@@ -15,32 +15,9 @@ function initialiseApp() {
         console.log('Demo Data set within initialiseApp()');
         // Load the default view: updateScreen()
         // loadData is used in getAllTodos(), which is always ran when rendering, so shouldn't be needed here.
-        updateScreen();
+        updateScreen('', '', '', 'default');
         console.log('updateScreen ran within initialiseApp()');
         console.log('App initialised')
 })};
 
-// What else needs to go inside here? All Event Listeners?
-
 initialiseApp();
-
-
-//  ------------------------------------------------------------------------------------------------------
-
-
-
-// import { saveData, loadData } from './storage.js';
-// import { defaultProjects, initialiseData } from './data.js';
-// import { attachEventListeners, appendProjectNames, loadDefaultView } from './ui.js'
-// import './styles.css';
-
-// initialiseData();
-
-// // Event listener to append the Project Names:
-// document.addEventListener('DOMContentLoaded', () => {
-//     appendProjectNames();
-//     attachEventListeners();
-//     console.log(`appendProjectNames() and attachEventListeners() ran successfully after DOM Content Loaded`)
-//     loadDefaultView();
-//     console.log('Due This Week loaded as default');
-// });
