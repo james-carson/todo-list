@@ -13,10 +13,8 @@ function initialiseApp() {
         // For now, set the demo Data - later, when there is demo mode, ask which dataset should be used
         setDemoData();
         console.log('Demo Data set within initialiseApp()');
-        // loadData() is redundant at the moment, but shouldn't be later
-        loadData('projects');
-        console.log('loadProjects ran inside initialiseApp()');
         // Load the default view: updateScreen()
+        // loadData is used in getAllTodos(), which is always ran when rendering, so shouldn't be needed here.
         updateScreen();
         console.log('updateScreen ran within initialiseApp()');
         console.log('App initialised')

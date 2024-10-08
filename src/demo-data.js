@@ -7,32 +7,32 @@ import { saveData, loadData } from './storage.js';
 
 // Sample data for todos in the "Personal Tasks" project
 const demoTodos1 = [
-    new Todo("t-0", "Buy groceries", "2024-09-26", "high", "Get milk, bread, eggs, and fruits", false),
-    new Todo("t-1", "Plan birthday party", "2024-09-26", "low", "Send out invitations, book the venue, and order cake", false),
-    new Todo("t-2", "Finish project report", "2024-09-27", "medium", "Complete the draft and send it for review", false),
-    new Todo("t-3", "Book dentist appointment", "2024-09-30", "high", "Teeth cleaning and check-up", false),
-    new Todo("t-4", "Do laundry", "2024-09-29", "low", "Wash and fold clothes", false),
-    new Todo("t-5", "Exercise", "2024-09-27", "medium", "Go for a run or hit the gym", false),
-    new Todo("t-6", "Read a book", "2024-10-02", "medium", "Finish 'The Great Gatsby'", false),
-    new Todo("t-7", "Clean the house", "2024-10-05", "low", "Dust, vacuum, and organize rooms", false),
+    new Todo("td-0", "Buy groceries", "2024-09-26", "high", "Get milk, bread, eggs, and fruits", false),
+    new Todo("td-1", "Plan birthday party", "2024-09-26", "low", "Send out invitations, book the venue, and order cake", false),
+    new Todo("td-2", "Finish project report", "2024-09-27", "medium", "Complete the draft and send it for review", false),
+    new Todo("td-3", "Book dentist appointment", "2024-09-30", "high", "Teeth cleaning and check-up", false),
+    new Todo("td-4", "Do laundry", "2024-09-29", "low", "Wash and fold clothes", false),
+    new Todo("td-5", "Exercise", "2024-09-27", "medium", "Go for a run or hit the gym", false),
+    new Todo("td-6", "Read a book", "2024-10-02", "medium", "Finish 'The Great Gatsby'", false),
+    new Todo("td-7", "Clean the house", "2024-10-05", "low", "Dust, vacuum, and organize rooms", false),
 ];
 
 // Sample data for todos in the "Work Projects" project
 const demoTodos2 = [
-    new Todo("t-8", "Book flight tickets", "2024-09-28", "high", "Look for the cheapest fares and book them", false),
-    new Todo("t-9", "Attend meeting with client", "2024-10-01", "medium", "Prepare the presentation and agenda", false),
-    new Todo("t-10", "Call the plumber", "2024-09-25", "low", "Fix the kitchen sink and bathroom faucet", true),
-    new Todo("t-11", "Update project timeline", "2024-09-29", "medium", "Revise the deadlines based on the team's feedback", false),
-    new Todo("t-12", "Submit budget proposal", "2024-10-03", "high", "Ensure all expenses are included and submitted on time", false),
-    new Todo("t-13", "Conduct team meeting", "2024-10-02", "medium", "Discuss project progress and assign new tasks", false),
-    new Todo("t-14", "Prepare quarterly report", "2024-10-05", "high", "Gather data and analyze performance metrics", false),
-    new Todo("t-16", "Review code changes", "2024-09-30", "medium", "Ensure all changes are compliant with coding standards", false),
+    new Todo("td-8", "Book flight tickets", "2024-09-28", "high", "Look for the cheapest fares and book them", false),
+    new Todo("td-9", "Attend meeting with client", "2024-10-01", "medium", "Prepare the presentation and agenda", false),
+    new Todo("td-10", "Call the plumber", "2024-09-25", "low", "Fix the kitchen sink and bathroom faucet", true),
+    new Todo("td-11", "Update project timeline", "2024-09-29", "medium", "Revise the deadlines based on the team's feedback", false),
+    new Todo("td-12", "Submit budget proposal", "2024-10-03", "high", "Ensure all expenses are included and submitted on time", false),
+    new Todo("td-13", "Conduct team meeting", "2024-10-02", "medium", "Discuss project progress and assign new tasks", false),
+    new Todo("td-14", "Prepare quarterly report", "2024-10-05", "high", "Gather data and analyze performance metrics", false),
+    new Todo("td-16", "Review code changes", "2024-09-30", "medium", "Ensure all changes are compliant with coding standards", false),
 ];
 
 // // Sample data for projects
 export const demoProjects = [
-    new Project("p-0", "Personal Tasks", demoTodos1),
-    new Project("p-1", "Work Projects", demoTodos2),
+    new Project("pd-0", "Personal Tasks", demoTodos1),
+    new Project("pd-1", "Work Projects", demoTodos2),
 ];
 
 export function setDemoData() {

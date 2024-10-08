@@ -2,6 +2,7 @@
 // ...through index.js
 
 import { getAllProjectNames, getOverdueTodos } from './functions.js';
+import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 
 // Does this need inputs, or is it going to use the loaded data every time anyway?
@@ -70,7 +71,7 @@ function renderContent(project, todos) {
         // Adding an event listener that saves the change
         checkbox.addEventListener('click', () => {
             // Do I need to ID this todo somehow?
-            toggleTodoCompleted();
+            toggleTodoCompleted(todo.id);
         });
         todoDiv.appendChild(checkbox);
 
@@ -132,21 +133,6 @@ function attachAllUiEventListeners() {
     console.log('All UI event listeners appended');
 }
 
-function attachSidebarClickListeners() {
-
-}
-
-function attachCheckboxClickListeners() {
-
-}
-
-function attachEditButtonClickListeners() {
-
-}
-
-// I AM HERE: NEED TO WORK OUT HOW TO ID THE PROJECTS? 
-// TODOS COMING UP AS OBJECT OBJECT
-
 
 export function loadDefaultView() {
     console.log('Initialised loadDefaultView()')
@@ -154,30 +140,26 @@ export function loadDefaultView() {
     // This returns an array of todo objects, which can be passed into another function
     console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
-    renderContent('Inbox', defaultTodos);
+    renderContent('Welcome to Todo(L)ist', defaultTodos);
     console.log('renderContent attempted with defaultTodos')
     // This should render the correct (overdue) todos onto the content area.
 }
 
 // Input is set to blank by default
-export function updateScreen(project = '') {
+export function updateScreen(projectID = '') {
     console.log('Initialised updateScreen');
     // Load data
     renderSidebar();
     console.log('Sidebar rendered within updateScreen()');
     // If the project input was blank, then the default view (overdue and today) will be loaded instead
-    if (project.length !== 0) {
-        renderContent(project);
-        console.log(`${project} rendered.`)
+    if (projectID.length !== 0) {
+        renderContent(projectID, todos);
+        console.log(`Project with ID ${projectID} rendered.`)
     } else {
         loadDefaultView();
         console.log('Rendered using loadDefaultView()');
     }
-    console.log('Content Rendered within updateScreen()')
-    // attachAllUiEventListeners();
-    // console.log('Event listeners attached within updateScreen()')
-    console.log('updateScreen() would have attached event listeners here - not ready yet!')
-    console.log('Screen updated')
+    console.log('Content Rendered within updateScreen(). Screen updated')
 }
 
 function launchTodoPopup() {
