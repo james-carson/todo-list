@@ -14,34 +14,32 @@ export function saveData(key, data) {
 export function loadData(key) {
     console.log(`Initiated loadData(${key})`)
     // Create a temporary variable to load the JSON data into, and load it
-    currentData = JSON.parse(localStorage.getItem('key'));
-    console.log('Current data loaded');
-    
-    // **Should I be checking if savedData is an array? It should always be an array**
-    // No error handling yet
+    let currentData = JSON.parse(localStorage.getItem(key));
+    console.log(`Current data loaded: ${currentData}`);
 
     // Start mapping the first level of projects, by project name, to revive the data
     return currentData.map(projectToMap => {
+        // console.log('Reviving project:', projectToMap);
         // Create a 'new' project, titled with its own name, with a blank array to put its todos back into
-        const revivedProject = new Project(projectToMap.name, []);
-        console.log(`Successfully re-created todo ${revivedProject.name}`);
+        const revivedProject = new Project(projectToMap.id, projectToMap.name, []);
+        // console.log(`Successfully re-created project ${revivedProject.name}`);
         
         // Now we need to map each todo and put it into the array, reviving each as we go.
         projectToMap.todoList.forEach(todoToMap => {
             // Create each todo
-            const revivedTodo = new Todo(
+            let revivedTodo = new Todo(
                 // Use original properties
                 todoToMap.id,
                 todoToMap.title,
                 todoToMap.dueDate,
                 todoToMap.priority,
                 todoToMap.notes,
-                todoToMap.completed
+                todoToMap.completed,
             );
-            console.log(`Successfully re-created todo ${revivedTodo.title}`);
+            // console.log(`Successfully re-created todo ${revivedTodo.title}`);
             // Add the revived todo back into the revived project
         revivedProject.addTodo(revivedTodo);
-        console.log(`${revivedTodo.title} added back into ${revivedProject.name}`);
+        // console.log(`${revivedTodo.title} added back into ${revivedProject.name}`);
         });
         return revivedProject;
     });
@@ -190,5 +188,5 @@ export function saveCounter(key, counter) {
 // }
 // // ^^This seems to be working at the momet^^
 
-// window.saveData = saveData;
-// window.loadData = loadData;
+window.saveData = saveData;
+window.loadData = loadData;

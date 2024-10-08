@@ -6,7 +6,7 @@ import { loadData, saveData } from "./storage"
 // Update - adding methods back in fo simplicity of later functions
 export class Project {
     // Projects constructor:
-    constructor(id, name, todoList) {
+    constructor(id, name, todoList = []) {
         this.id = id
         this.name = name
         // This property contains the todos - it's important to remember that this is an array of objects

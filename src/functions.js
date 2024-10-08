@@ -36,7 +36,7 @@ function getTodosDueToday() {
 };
 // ^^Should be fine
 
-function getOverdueTodos() {
+export function getOverdueTodos() {
     console.log('Initiated getOverdueTodos()')
     // Load Data in getAllTodos and assign to a variable
     const allTodos = getAllTodos();
@@ -96,7 +96,7 @@ function getCompletedTodos() {
 //     console.log('Finished running getTodosForSpecificProject(${projectName}')
 // }
 
-function getAllProjectNames() {
+export function getAllProjectNames() {
     console.log('Initiated getAllProjectNames()');
     // Load Data
     const loadedData = loadData('projects');

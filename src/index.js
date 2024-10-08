@@ -3,17 +3,22 @@
 
 import { setDemoData } from './demo-data.js'
 import { loadData } from './storage';
+import { updateScreen } from './ui.js';
 import './styles.css';
 
 function initialiseApp() {
     // Add event listener for DOM loaded
     document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Content loaded, initialising initialiseApp()');
         // For now, set the demo Data - later, when there is demo mode, ask which dataset should be used
         setDemoData();
+        console.log('Demo Data set within initialiseApp()');
         // loadData() is redundant at the moment, but shouldn't be later
-        loadData();
+        loadData('projects');
+        console.log('loadProjects ran inside initialiseApp()');
         // Load the default view: updateScreen()
         updateScreen();
+        console.log('updateScreen ran within initialiseApp()');
         console.log('App initialised')
 })};
 

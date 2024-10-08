@@ -1,20 +1,45 @@
 // ui.js contains the functions that will manipulate the DOM. These will usually be used internally or
 // ...through index.js
 
+import { getAllProjectNames, getOverdueTodos } from './functions.js';
+
 // Does this need inputs, or is it going to use the loaded data every time anyway?
 function renderSidebar() {
-    // Load data
+    console.log('Initialised renderSidebar()')
+
     // Define the project list element
+    const projectList = document.getElementById('project_list');
+    projectList.textContent = '';
+
     // Get a list of projects (getProjectNames)
+    const currentProjects = getAllProjectNames();
+    console.log(`currentProjects variable initialised as ${currentProjects}`);
+
     // For each...
-    // -Create a div element
-    // -Populate the text content with the project name
-    // -Append it to the project list
-    // Append the click listeners
+    currentProjects.forEach(project => {
+        // -Create a div element  
+        const projectItem = document.createElement('h3');
+        // -Populate the text content with the project name
+        projectItem.textContent = project;
+        console.log(`The name of this project is ${project}`)
+        projectItem.classList.add('project_name');
+
+        // Append the click listeners
+
+        // Haven't decided how to work this yet!
+
+        // projectItem.addEventListener('click', () => {
+        //     currentView = { type: 'project', name: project.name };
+        //     updateView();
+
+        // attachSidebarClickListeners()
+
+        // -Append it to the project list
+        projectList.appendChild(projectItem);
+    });
 }
 
 function renderContent(project) {
-    // Load data
     // Define the content area
     // Get the specified project (from input)
     // Append the project name
@@ -43,20 +68,27 @@ function attachEditButtonClickListeners() {
 
 }
 
-function loadDefaultView() {
+export function loadDefaultView() {
+    console.log('Initialised loadDefaultView()')
     const defaultTodos = getOverdueTodos()
+    console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
-    
+    renderContent(defaultTodos);
+    console.log('renderContent attempted with defaultTodos')
     // This should render the correct (overdue) todos onto the content area.
 }
 
 // Input is set to blank by default
-function updateScreen(project = '') {
+export function updateScreen(project = '') {
+    console.log('Initialised updateScreen');
     // Load data
     renderSidebar();
+    console.log('Sidebar rendered within updateScreen()');
     // If the project input was blank, then the default view (overdue and today) will be loaded instead
     renderContent(project || loadDefaultView());
+    console.log('Content Rendered within updateScreen()')
     attachAllUiEventListeners();
+    console.log('Event listeners attached within updateScreen()')
     console.log('Screen updated')
 }
 

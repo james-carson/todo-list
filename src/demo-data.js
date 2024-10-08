@@ -37,7 +37,7 @@ export const demoProjects = [
 
 export function setDemoData() {
     saveData('projects', demoProjects);
-    console.log('Demo data saved into localStorage')
+    console.log(`Demo data saved into localStorage: ${demoProjects}`)
 };
 
 
