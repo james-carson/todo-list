@@ -4,6 +4,7 @@
 import { getAllProjectNames, getOverdueTodos } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
+import { loadData } from './storage.js';
 
 // Does this need inputs, or is it going to use the loaded data every time anyway?
 function renderSidebar() {
@@ -41,7 +42,49 @@ function renderSidebar() {
     });
 }
 
-function renderContent(project, todos) {
+function renderContent(projectByNameOrID = '', todosIdentifier = '') {
+    // Load data:
+    const loadedData = loadData('projects');
+
+    // The project needs to firstly be identified
+    const project = (() => {
+        // First, check for a matching project ID:
+        const projectById = loadedData.find(project => project.id === projectByNameOrID);
+        if (projectById) {
+            return projectById;
+        } else {
+            console.log(`Project cannot be identified by ID. Attempting to identify by name...`);
+        }
+        
+        // If not, check for it by ID:
+        const projectByName = loadedData.find(project => project.name === projectByNameOrID);
+        if (projectByName) {
+            return projectByName;
+        } // else return an error
+        else {
+            console.error(`Project with identifier ${projectByNameOrID} cannot be found`);
+            return null;
+        };
+    })();
+
+    if (!project) {
+        console.error('No project found. Terminating function.')
+        return;
+    }
+
+    // Then, if todos are provided, use them:
+    const todos = (() => {
+        if (Array.isArray(todosIdentifier) && todosIdentifier.length > 0) {
+            return todosIdentifier;
+        } // else find them
+        else if (!todosIdentifier) {
+            return project.todoList;
+        } else {
+            console.error(`Todos with identifier ${todosIdentifier} cannot be found`);
+            return [];
+        }
+    })();
+
     console.log(`running renderContent(${project}, ${todos}`)
 
     // Define the content area and clear it
