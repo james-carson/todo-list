@@ -16,7 +16,9 @@ export function getAllTodos() {
     // from each of the projects. It then flattens this array, which results in a flat array of
     // all of the todos from every project.
     const allTodos = loadedData.flatMap(project => project.todoList);
-    console.log('Finished running getAllTodos()')
+    
+    // console.log('Finished running getAllTodos()')
+    
     return allTodos
 }
 
@@ -30,8 +32,10 @@ export function getTodosDueToday() {
         const dueDate = new Date(todo.dueDate);
         // and checking if the todo is due today and is also uncompleted, then
         // returning those that match
-        console.log('dueDate:', dueDate);
-        console.log('isToday:', isToday());
+
+        // console.log('dueDate:', dueDate);
+        // console.log('isToday:', isToday());
+
         return isToday(dueDate) && !todo.complete;
     });
 };
@@ -89,7 +93,7 @@ export function getTodosForSpecificProject(projectName) {
 
     // If it's found...
     if (projectByName) {
-        console.log(`Project found: ${projectName}, Todos: ${projectByName.todoList}`);
+        // console.log(`Project found: ${projectName}, Todos: ${projectByName.todoList}`);
         return projectByName.todoList
     } else {
         console.error(`Project with name "${projectName}" not found.`);
@@ -103,7 +107,7 @@ export function getAllProjectNames() {
     const loadedData = loadData('projects');
     // Create variable that will contain all project names
     const allNames = loadedData.map(project => project.name);
-    console.log('Finished running getAllProjectNames()', allNames)
+    // console.log('Finished running getAllProjectNames()', allNames)
     return allNames;
     // Return it
 

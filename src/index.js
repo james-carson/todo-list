@@ -3,7 +3,7 @@
 
 import { setDemoData } from './demo-data.js'
 import { loadData } from './storage';
-import { loadDefaultView, updateScreen } from './ui.js';
+import { renderSidebar, updateScreen } from './ui.js';
 import './styles.css';
 
 function initialiseApp() {
@@ -12,13 +12,11 @@ function initialiseApp() {
         console.log('DOM Content loaded, initialising initialiseApp()');
         // For now, set the demo Data - later, when there is demo mode, ask which dataset should be used
         setDemoData();
-        console.log('Demo Data set within initialiseApp()');
-        // Load the default view: updateScreen()
-        // loadData is used in getAllTodos(), which is always ran when rendering, so shouldn't be needed here.
-        const {typeInput, projectInput, todosInput} = loadDefaultView()
-        updateScreen(typeInput, projectInput, todosInput);
-        console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
-        console.log('App initialised')
+        renderSidebar();
+        // console.log('Demo Data set within initialiseApp()');
+        updateScreen('default', '', []);
+        // console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
+        // console.log('App initialised')
     })
 };
 

@@ -24,7 +24,7 @@ export function getCurrentTodos() {
     return currentTodos;
 }
 
-function renderSidebar() {
+export function renderSidebar() {
     console.log('Initialised renderSidebar()')
 
     // Define the project list element
@@ -33,7 +33,8 @@ function renderSidebar() {
 
     // Get a list of projects (getProjectNames)
     const currentProjects = getAllProjectNames();
-    console.log(`currentProjects variable initialised as ${currentProjects}`);
+
+    // console.log(`currentProjects variable initialised as ${currentProjects}`);
 
     // For each...
     currentProjects.forEach(project => {
@@ -41,7 +42,9 @@ function renderSidebar() {
         const projectItem = document.createElement('h3');
         // -Populate the text content with the project name
         projectItem.textContent = project;
-        console.log(`The name of this project is ${project}`)
+        
+        // console.log(`The name of this project is ${project}`)
+
         projectItem.classList.add('project_name');
 
         // Append the click listeners
@@ -55,9 +58,7 @@ function renderSidebar() {
         projectList.appendChild(projectItem);
     });
 
-    console.log('Attaching static sidebar listeners')
     attachStaticSidebarClickListeners();
-    console.log('Completed running renderSidebar()')
 }
 
 function renderContent(project, todos) {
@@ -159,7 +160,7 @@ export function attachStaticSidebarClickListeners() {
     dueTodayButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getTodosDueToday();
-        console.log(`Due Today: ${todos}`)
+        // console.log(`Due Today: ${todos}`)
         // Pass this through the renderContent()
         updateScreen('static', 'Due Today', todos);
     });
@@ -189,27 +190,23 @@ export function attachStaticSidebarClickListeners() {
     });
 }
 
-export function loadDefaultView() {
-    console.log('Initialised loadDefaultView()')
-    const defaultTodos = getOverdueTodos()
-    // This returns an array of todo objects, which can be passed into another function
-    // console.log(`defaultTodos initialised as ${defaultTodos}`)
-    // Need to now use renderContent(defaultTodos)
-    // console.log('renderContent attempted with defaultTodos')
-    return {
-        typeInput: 'default',
-        projectInput: 'Welcome to Todo(L)ist',
-        todosInput: defaultTodos
-    };
-    // This should render the correct (overdue) todos onto the content area when fed into renderContent
-}
+// export function loadDefaultView() {
+//     console.log('Initialised loadDefaultView()')
+//     const defaultTodos = getOverdueTodos()
+//     // This returns an array of todo objects, which can be passed into another function
+//     // console.log(`defaultTodos initialised as ${defaultTodos}`)
+//     // Need to now use renderContent(defaultTodos)
+//     // console.log('renderContent attempted with defaultTodos')
+//     return {
+//         typeInput: 'default',
+//         projectInput: 'Welcome to Todo(L)ist',
+//         todosInput: defaultTodos
+//     };
+//     // This should render the correct (overdue) todos onto the content area when fed into renderContent
+// }
 
 // Input is set to blank by default
 export function updateScreen(typeInput = '', projectInput = '', todosInput = '') {
-
-    renderSidebar();
-    // console.log('Sidebar rendered within updateScreen()');
-
     // Initialise the variables that will be fed into renderContent
     let project;
     let todos;
@@ -217,11 +214,10 @@ export function updateScreen(typeInput = '', projectInput = '', todosInput = '')
     if (typeInput === 'default') {
         console.log('Input was deemed as default')
         // Perform actions
-        const defaultViewData = loadDefaultView();
-        project = defaultViewData.projectInput;
-        todos = defaultViewData.todosInput;
+        project = 'Welcome to Todo(L)ist!'
+        todos = getOverdueTodos();
         // Update global values
-        currentType = typeInput;
+        currentType = 'default';
         currentProject = project;
         currentTodos = todos;
     } else if (typeInput === 'static') {
@@ -231,7 +227,7 @@ export function updateScreen(typeInput = '', projectInput = '', todosInput = '')
         todos = todosInput;
         // console.log(`Static project with name ${project} rendered.`)
         // Update global values
-        currentType = typeInput;
+        currentType = 'static';
         currentProject = project;
         currentTodos = todos;
     } else if (typeInput === 'dynamic') {
@@ -241,7 +237,7 @@ export function updateScreen(typeInput = '', projectInput = '', todosInput = '')
         todos = getTodosForSpecificProject(projectInput);
         // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update global values
-        currentType = typeInput;
+        currentType = 'dynamic';
         currentProject = project;
         currentTodos = todos;
     } else {
@@ -249,7 +245,7 @@ export function updateScreen(typeInput = '', projectInput = '', todosInput = '')
     }
     // Now, render the content...
     renderContent(project, todos)
-    console.log('Content Rendered within updateScreen(). Screen updated')
+    // console.log('Content Rendered within updateScreen(). Screen updated')
 }
 
 function launchTodoPopup() {

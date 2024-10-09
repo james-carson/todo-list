@@ -15,7 +15,7 @@ export function loadData(key) {
     console.log(`Initiated loadData(${key})`)
     // Create a temporary variable to load the JSON data into, and load it
     let currentData = JSON.parse(localStorage.getItem(key));
-    console.log(`Current data loaded: ${currentData}`);
+    // console.log(`Current data loaded: ${currentData}`);
 
     // Start mapping the first level of projects, by project name, to revive the data
     return currentData.map(projectToMap => {

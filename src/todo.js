@@ -37,25 +37,26 @@ export function toggleTodoCompleted(todoId) {
     // Get the current global values:
     const currentType = getCurrentType();
     const currentProject = getCurrentProject();
+    const currentTodos = getCurrentTodos();
 
     // Find the current todo by its id:
     for (let project of currentData) {
         const todoById = project.todoList.find(todoToChange => todoToChange.id === todoId);
         if (todoById) {
+            console.log(todoById);
             // Toggle the completed value, which is Boolean, to its opposite
             todoById.completed = !todoById.completed;
             // Save the updated data
             saveData('projects', currentData);
-            console.log(`Todo with ID ${todoId} has been updated.`);
+            // console.log(`Todo with ID ${todoId} has been updated.`);
             const updatedTodos = project.todoList;
 
             // Refresh the content area
             updateScreen(currentType, currentProject, updatedTodos)
             return;
-        } else {
-            console.log(`Todo with ID ${todoId} cannot be found`);
         }
     }
+    console.error(`Todo with ID ${todoId} cannot be found`);
 };
 
 function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.

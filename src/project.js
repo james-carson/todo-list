@@ -14,25 +14,7 @@ export class Project {
     }
 
     addTodo(todo) {
-        // Returning to a more simple, isolated method using push:
         this.todoList.push(todo);
-
-        // Too complicated and too tightly coupled - removing this:
-
-        // // Load data
-        // currentData = loadData('projects');
-        // // ID project by ID
-        // const projectById = currentData.find(project => project.id === this.id);
-        // // Checking for a match
-        // if (projectById) {
-        //     // Push todo to project by ID
-        //     projectById.todoList.push(todo)
-        //     // Save data
-        //     saveData('projects', currentData)
-        //     console.log(`Todo added to project "${this.name}" and data saved.`);
-        // } else {
-        //     console.error(`Project with ID ${this.id} not found.`);
-        // }
     }
 
     deleteTodo(todoIndex) {
@@ -118,10 +100,6 @@ export class Project {
     getTodoIndex(todoId) {
         return this.todoList.findIndex(todo => todo.id === todoId);
     }
-
-    // getTodoIdByName(todoName) {
-    //     // Use the todo's name to find its ID - is this necessary?
-    // }
 
     // Necessary?
     getTodoList() {
