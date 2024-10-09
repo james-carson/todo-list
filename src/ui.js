@@ -4,20 +4,7 @@
 import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
-import { loadData, saveState, loadState } from './storage.js';
-
-// Getter functions so that they can be exported to todo.js:
-export function getCurrentType() {
-    return currentType;
-}
-
-export function getCurrentProject() {
-    return currentProject;
-}
-
-export function getCurrentTodos() {
-    return currentTodos;
-}
+import { loadData, saveState, loadState, saveProject, loadProject } from './storage.js';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -206,6 +193,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         todos = getOverdueTodos();
         // Update state
         saveState('state', 'default');
+        saveProject('project', project);
     } else if (currentState === 'static') {
         // console.log('Input was deemed as static')
         // Perform actions
@@ -214,6 +202,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // console.log(`Static project with name ${project} rendered.`)
         // Update state
         saveState('state', 'static');
+        saveProject('project', project);
     } else if (currentState === 'dynamic') {
         // console.log('Input was deemed as dynamic')
         // Perform actions
@@ -222,6 +211,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update state
         saveState('state', 'dynamic');
+        saveProject('project', project);
     } else {
         console.error('updateScreen() not run correctly')
     }

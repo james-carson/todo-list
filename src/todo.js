@@ -1,6 +1,6 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
-import { loadData, saveData } from "./storage"
+import { loadData, loadState, saveData } from "./storage"
 import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos } from "./ui"
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
@@ -35,9 +35,8 @@ export function toggleTodoCompleted(todoId) {
     let currentData = loadData('projects');
 
     // Get the current global values:
-    const currentType = getCurrentType();
-    const currentProject = getCurrentProject();
-    const currentTodos = getCurrentTodos();
+    const currentType = loadState('state');
+    const currentProject = loadData('project');
 
     // Find the current todo by its id:
     for (let project of currentData) {
@@ -52,7 +51,7 @@ export function toggleTodoCompleted(todoId) {
             const updatedTodos = project.todoList;
 
             // Refresh the content area
-            updateScreen(currentType, currentProject, updatedTodos)
+            updateScreen(currentProject, updatedTodos)
             return;
         }
     }

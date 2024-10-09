@@ -57,6 +57,18 @@ export function loadState(key) {
     return JSON.parse(localStorage.getItem(key));
 }
 
+export function saveProject(key, project) {
+    // Convert the state object to JSON data, and save it by the key.
+    localStorage.setItem(key, JSON.stringify(project));
+    console.log('State saved')
+}
+
+export function loadProject(key) {
+    console.log(`Initiated loadData(${key})`)
+    // Create a temporary variable to load the JSON data into, and load it
+    return JSON.parse(localStorage.getItem(key));
+}
+
 export function clearStorage() {
     console.log('Console is about to be cleared!')
     // Clear the console
