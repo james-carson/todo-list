@@ -46,7 +46,7 @@ export function renderSidebar() {
     attachStaticSidebarClickListeners();
 }
 
-function renderContent(project, todos) {
+export function renderContent(project, todos) {
     console.log(`running renderContent(${project}, ${todos}`)
 
     // Define the content area and clear it

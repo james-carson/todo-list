@@ -1,7 +1,7 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
-import { loadData, loadState, saveData } from "./storage"
-import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos } from "./ui"
+import { loadData, loadState, saveData, loadProject, saveState } from "./storage"
+import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos, renderContent } from "./ui"
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
 // Update - adding methods back in fo simplicity of later functions
@@ -35,8 +35,7 @@ export function toggleTodoCompleted(todoId) {
     let currentData = loadData('projects');
 
     // Get the current global values:
-    const currentType = loadState('state');
-    const currentProject = loadData('project');
+    const currentProject = loadProject('project');
 
     // Find the current todo by its id:
     for (let project of currentData) {
@@ -47,8 +46,9 @@ export function toggleTodoCompleted(todoId) {
             todoById.completed = !todoById.completed;
             // Save the updated data
             saveData('projects', currentData);
+            saveState('state', 'refresh');
             // console.log(`Todo with ID ${todoId} has been updated.`);
-            const updatedTodos = project.todoList;
+            const updatedTodos = currentData.todoList;
 
             // Refresh the content area
             updateScreen(currentProject, updatedTodos)
@@ -57,6 +57,9 @@ export function toggleTodoCompleted(todoId) {
     }
     console.error(`Todo with ID ${todoId} cannot be found`);
 };
+
+// I AM HERE YET AGAIN - GETTING TOGGLING TO WORK!
+
 
 function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.
     // Load data
