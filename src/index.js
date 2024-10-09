@@ -3,7 +3,7 @@
 
 import { setDemoData } from './demo-data.js'
 import { loadData } from './storage';
-import { updateScreen } from './ui.js';
+import { loadDefaultView, updateScreen } from './ui.js';
 import './styles.css';
 
 function initialiseApp() {
@@ -15,8 +15,8 @@ function initialiseApp() {
         console.log('Demo Data set within initialiseApp()');
         // Load the default view: updateScreen()
         // loadData is used in getAllTodos(), which is always ran when rendering, so shouldn't be needed here.
-        updateScreen('', '', '', 'true');
-        console.log('updateScreen ran within initialiseApp()');
+        updateScreen(loadDefaultView());
+        console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
         console.log('App initialised')
 })};
 
