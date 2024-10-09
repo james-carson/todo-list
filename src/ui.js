@@ -7,9 +7,22 @@ import flagImage from './images/flag.svg';
 import { loadData } from './storage.js';
 
 // Global variables to keep track of the current project and todos:
+let currentType = '';
 let currentProject = '';
 let currentTodos = [];
-let currentType = '';
+
+// Getter functions so that they can be exported to todo.js:
+export function getCurrentType() {
+    return currentType;
+}
+
+export function getCurrentProject() {
+    return currentProject;
+}
+
+export function getCurrentTodos() {
+    return currentTodos;
+}
 
 function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -49,10 +62,6 @@ function renderSidebar() {
 
 function renderContent(project, todos) {
     console.log(`running renderContent(${project}, ${todos}`)
-
-    // Update the global variables to keep track of what's being displayed
-    currentProject = project;
-    currentTodos = todos;
 
     // Define the content area and clear it
     const content = document.getElementById('content');
@@ -129,17 +138,14 @@ function renderContent(project, todos) {
 
         // Append the completed todo div to the content area:
         content.appendChild(todoDiv);
-
-        // Append the click listeners - both edit and checkbox:
-        // As a function or specified here?
     });
 };
 
 // This may not be needed - updateScreen may be enough!
-export function refreshContent() {
-    const updatedTodos = getTodosForSpecificProject(currentProject);
-    renderContent(currentProject, updatedTodos);
-}
+// export function refreshContent() {
+//     const updatedTodos = getTodosForSpecificProject(currentProject);
+//     renderContent(currentProject, updatedTodos);
+// }
 
 export function attachStaticSidebarClickListeners() {
     // ID the 'buttons' (divs)
@@ -187,9 +193,9 @@ export function loadDefaultView() {
     console.log('Initialised loadDefaultView()')
     const defaultTodos = getOverdueTodos()
     // This returns an array of todo objects, which can be passed into another function
-    console.log(`defaultTodos initialised as ${defaultTodos}`)
+    // console.log(`defaultTodos initialised as ${defaultTodos}`)
     // Need to now use renderContent(defaultTodos)
-    console.log('renderContent attempted with defaultTodos')
+    // console.log('renderContent attempted with defaultTodos')
     return {
         typeInput: 'default',
         projectInput: 'Welcome to Todo(L)ist',
@@ -200,39 +206,40 @@ export function loadDefaultView() {
 
 // Input is set to blank by default
 export function updateScreen(typeInput = '', projectInput = '', todosInput = '') {
-    console.log('Initialised updateScreen');
-    // Load data - Probably not needed!
+
     renderSidebar();
-    console.log('Sidebar rendered within updateScreen()');
+    // console.log('Sidebar rendered within updateScreen()');
 
     // Initialise the variables that will be fed into renderContent
     let project;
     let todos;
 
-    if (typeInput = 'default') {
+    if (typeInput === 'default') {
+        console.log('Input was deemed as default')
         // Perform actions
         const defaultViewData = loadDefaultView();
         project = defaultViewData.projectInput;
         todos = defaultViewData.todosInput;
-        console.log('Rendering default todos using renderContent(getOverdueTodos())');
         // Update global values
         currentType = typeInput;
         currentProject = project;
         currentTodos = todos;
-    } else if (typeInput = 'static') {
+    } else if (typeInput === 'static') {
+        // console.log('Input was deemed as static')
         // Perform actions
         project = projectInput;
         todos = todosInput;
-        console.log(`Static project with name ${project} rendered.`)
+        // console.log(`Static project with name ${project} rendered.`)
         // Update global values
         currentType = typeInput;
         currentProject = project;
         currentTodos = todos;
-    } else if (typeInput = 'dynamic') {
+    } else if (typeInput === 'dynamic') {
+        // console.log('Input was deemed as dynamic')
         // Perform actions
         project = projectInput;
         todos = getTodosForSpecificProject(projectInput);
-        console.log(`Dynamic project with name ${projectInput} rendered.`)
+        // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update global values
         currentType = typeInput;
         currentProject = project;
@@ -245,78 +252,6 @@ export function updateScreen(typeInput = '', projectInput = '', todosInput = '')
     console.log('Content Rendered within updateScreen(). Screen updated')
 }
 
-// Input is set to blank by default
-// export function updateScreen(staticProject = '', staticTodos = '', dynamicProject = '', defaultProject = '') {
-//     console.log('Initialised updateScreen');
-//     // Load data
-//     renderSidebar();
-//     console.log('Sidebar rendered within updateScreen()');
-
-//     // Initialise the variables that will be fed into renderContent
-//     let projectName;
-//     let todos;
-
-//     // If the project input was blank, then the default view (overdue and today) will be loaded instead
-//     if (defaultProject) {
-//         const defaultViewData = loadDefaultView();
-//         projectName = defaultViewData.projectName;
-//         todos = defaultViewData.todos;
-//         console.log('Rendering default todos using renderContent(getOverdueTodos())');
-//     } else if (dynamicProject) {
-//         projectName = dynamicProject;
-//         todos = getTodosForSpecificProject(dynamicProject);
-//         console.log(`Dynamic roject with name ${dynamicProject} rendered.`)
-//     } else if (staticProject) {
-//         projectName = staticProject;
-//         todos = staticTodos;
-//         console.log(`Static project with name ${staticProject} rendered.`)
-//     }
-//     renderContent(projectName, todos)
-//     console.log('Content Rendered within updateScreen(). Screen updated')
-// }
-
 function launchTodoPopup() {
     // Not sure yet!
 }
-
-// PREVIOUS CODE USED FOR SEARCHING BY PROJECT NAME/ID AND TODO:
-// // Load data:
-    // const loadedData = loadData('projects');
-
-    // // The project needs to firstly be identified
-    // const project = (() => {
-    //     // First, check for a matching project ID:
-    //     const projectById = loadedData.find(project => project.id === projectIdentifier);
-    //     if (projectById) {
-    //         return projectById;
-    //     } else {
-    //         console.log(`Project cannot be identified by ID. Attempting to identify by name...`);
-    //     }
-        
-    //     // If not, check for it by ID:
-    //     const projectByName = loadedData.find(project => project.name === projectIdentifier);
-    //     if (projectByName) {
-    //         return projectByName;
-    //     } // else return an error
-    //     else {
-    //         console.error(`Project with identifier ${projectIdentifier} cannot be found`);
-    //     };
-    // })();
-
-    // if (!project) {
-    //     console.error('No project found. Terminating function.')
-    //     return;
-    // }
-
-    // // Then, if todos are provided, use them:
-    // const todos = (() => {
-    //     if (Array.isArray(todosIdentifier) && todosIdentifier.length > 0) {
-    //         return todosIdentifier;
-    //     } // else find them
-    //     else if (!todosIdentifier) {
-    //         return project.todoList;
-    //     } else {
-    //         console.error(`Todos with identifier ${todosIdentifier} cannot be found`);
-    //         return [];
-    //     }
-    // })();

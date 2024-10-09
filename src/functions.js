@@ -19,7 +19,6 @@ export function getAllTodos() {
     console.log('Finished running getAllTodos()')
     return allTodos
 }
-// ^^Should be fine
 
 export function getTodosDueToday() {
     console.log('Initiated getTodosDueToday()')
@@ -36,7 +35,6 @@ export function getTodosDueToday() {
         return isToday(dueDate) && !todo.complete;
     });
 };
-// ^^Should be fine
 
 export function getOverdueTodos() {
     console.log('Initiated getOverdueTodos()')
@@ -48,11 +46,9 @@ export function getOverdueTodos() {
         const dueDate = new Date(todo.dueDate);
         // and checking if the todo is due before today and is also uncompleted, then
         // returning those that match
-        return dueDate < new Date() && !todo.complete;
+        return dueDate < new Date() && !todo.completed;
     });
-    console.log('Finished running getOverdueTodos()')
 }
-// ^^Should be fine
 
 export function getTodosDueThisWeek() {
     console.log('Initiated getTodosDueThisWeek()')
@@ -64,31 +60,25 @@ export function getTodosDueThisWeek() {
         const dueDate = new Date(todo.dueDate);
         // and checking if the todo is due today and is also uncompleted, then
         // returning those that match
-        return isThisWeek(dueDate) && !todo.complete;
+        return isThisWeek(dueDate) && !todo.completed;
     });
-    console.log('Finished running getTodosDueThisWeek()')
 };
-// ^^Should be fine
 
 export function getHighPriorityTodos() {
     console.log('Initiated getHighPriorityTodos()')
     // Load Data in getAllTodos and assign to a variable
     const allTodos = getAllTodos();
     // This list is then filtered by...
-    return allTodos.filter(todo => todo.priority === 'high' && !todo.complete);
-    console.log('Finished running getHighPriorityTodos()')
+    return allTodos.filter(todo => todo.priority === 'high' && !todo.completed);
 };
-// ^^Should be fine
 
 export function getCompletedTodos() {
     console.log('Initiated getCompletedTodos()')
     // Load Data
     const allTodos = getAllTodos();
     // This list is then filtered by...
-    return 'Completed', allTodos.filter(todo => todo.complete);
-    console.log('Finished running getCompletedTodos()')
+    return 'Completed', allTodos.filter(todo => todo.completed);
 }
-// ^^Should be fine
 
 export function getTodosForSpecificProject(projectName) {
     console.log(`Initiated getTodosForSpecificProject(${projectName})`)
@@ -105,7 +95,6 @@ export function getTodosForSpecificProject(projectName) {
         console.error(`Project with name "${projectName}" not found.`);
         return [];
     }
-    console.log('Finished running getTodosForSpecificProject(${projectName}')
 }
 
 export function getAllProjectNames() {
@@ -119,17 +108,14 @@ export function getAllProjectNames() {
     // Return it
 
 }
-// ^^Should be fine
 
 function getNextId(type) {
     return addToCounter(type);
 }
-// ^^Should be fine
 
 function createProject(name) {
     const newProject = new Project(getNextId('project'), name, [])
     return newProject;
 }
-// ^^Should be fine
 
 window.getOverdueTodos = getOverdueTodos;

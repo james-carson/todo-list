@@ -15,9 +15,11 @@ function initialiseApp() {
         console.log('Demo Data set within initialiseApp()');
         // Load the default view: updateScreen()
         // loadData is used in getAllTodos(), which is always ran when rendering, so shouldn't be needed here.
-        updateScreen(loadDefaultView());
+        const {typeInput, projectInput, todosInput} = loadDefaultView()
+        updateScreen(typeInput, projectInput, todosInput);
         console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
         console.log('App initialised')
-})};
+    })
+};
 
 initialiseApp();
