@@ -3,7 +3,7 @@
 
 import { isToday, isThisWeek } from "date-fns";
 import { Project } from "./project";
-import { saveData, loadData, setCounter, getCounter, addToCounter } from "./storage"
+import { saveData, loadData, saveState, loadState, setCounter, getCounter, addToCounter } from "./storage"
 
 // Completed:
 export function getAllTodos() {
@@ -81,7 +81,7 @@ export function getCompletedTodos() {
     // Load Data
     const allTodos = getAllTodos();
     // This list is then filtered by...
-    return 'Completed', allTodos.filter(todo => todo.completed);
+    return allTodos.filter(todo => todo.completed);
 }
 
 export function getTodosForSpecificProject(projectName) {

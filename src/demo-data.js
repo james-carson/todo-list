@@ -3,7 +3,7 @@
 
 import { Todo } from './todo.js';
 import { Project } from './project.js';
-import { saveData, loadData } from './storage.js';
+import { saveData, loadData, saveState } from './storage.js';
 
 // Sample data for todos in the "Personal Tasks" project
 const demoTodos1 = [
@@ -37,5 +37,6 @@ export const demoProjects = [
 
 export function setDemoData() {
     saveData('projects', demoProjects);
+    saveState('state', 'default');
     console.log(`Demo data saved into localStorage: ${demoProjects}`)
 };

@@ -4,12 +4,7 @@
 import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
-import { loadData } from './storage.js';
-
-// Global variables to keep track of the current project and todos:
-let currentType = '';
-let currentProject = '';
-let currentTodos = [];
+import { loadData, saveState, loadState } from './storage.js';
 
 // Getter functions so that they can be exported to todo.js:
 export function getCurrentType() {
@@ -51,7 +46,10 @@ export function renderSidebar() {
 
         projectItem.addEventListener('click', () => {
             // Find the todos for this project using its name
-            updateScreen('dynamic', project)
+             // Save the current state so that the correct todos are used:
+            saveState('state', 'dynamic')
+            // Pass this through updateScreen
+            updateScreen(project, []);
         });
 
         // -Append it to the project list
@@ -90,7 +88,6 @@ function renderContent(project, todos) {
 
         // Adding an event listener that saves the change
         checkbox.addEventListener('click', () => {
-            // Do I need to ID this todo somehow?
             toggleTodoCompleted(todo.id);
         });
         todoDiv.appendChild(checkbox);
@@ -142,12 +139,6 @@ function renderContent(project, todos) {
     });
 };
 
-// This may not be needed - updateScreen may be enough!
-// export function refreshContent() {
-//     const updatedTodos = getTodosForSpecificProject(currentProject);
-//     renderContent(currentProject, updatedTodos);
-// }
-
 export function attachStaticSidebarClickListeners() {
     // ID the 'buttons' (divs)
     const dueTodayButton = document.getElementById('due_today');
@@ -161,85 +152,76 @@ export function attachStaticSidebarClickListeners() {
         // Find the todos for this project using its name
         const todos = getTodosDueToday();
         // console.log(`Due Today: ${todos}`)
-        // Pass this through the renderContent()
-        updateScreen('static', 'Due Today', todos);
+        // Save the current state so that the correct todos are used:
+        saveState('state', 'static')
+        // Pass this through updateScreen
+        updateScreen('Due Today', todos);
     });
+
     dueThisWeekButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getTodosDueThisWeek();
-        // Pass this through the renderContent()
-        updateScreen('static', 'Due This Week', todos);
+         // Save the current state so that the correct todos are used:
+         saveState('state', 'static')
+         // Pass this through updateScreen
+        updateScreen('Due This Week', todos);
     });
     overdueTodosButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getOverdueTodos();
-        // Pass this through the renderContent()
-        updateScreen('static', 'Overdue', todos);
+         // Save the current state so that the correct todos are used:
+         saveState('state', 'static')
+         // Pass this through updateScreen
+        updateScreen('Overdue', todos);
     });
     highPriorityButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getHighPriorityTodos();
-        // Pass this through the renderContent()
-        updateScreen('static', 'High Priority', todos);
+         // Save the current state so that the correct todos are used:
+         saveState('state', 'static')
+         // Pass this through updateScreen
+        updateScreen('High Priority', todos);
     });
     completedButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const todos = getCompletedTodos();
-        // Pass this through the renderContent()
-        updateScreen('static', 'Completed', todos);
+         // Save the current state so that the correct todos are used:
+         saveState('state', 'static')
+         // Pass this through updateScreen
+        updateScreen('Completed', todos);
     });
 }
 
-// export function loadDefaultView() {
-//     console.log('Initialised loadDefaultView()')
-//     const defaultTodos = getOverdueTodos()
-//     // This returns an array of todo objects, which can be passed into another function
-//     // console.log(`defaultTodos initialised as ${defaultTodos}`)
-//     // Need to now use renderContent(defaultTodos)
-//     // console.log('renderContent attempted with defaultTodos')
-//     return {
-//         typeInput: 'default',
-//         projectInput: 'Welcome to Todo(L)ist',
-//         todosInput: defaultTodos
-//     };
-//     // This should render the correct (overdue) todos onto the content area when fed into renderContent
-// }
-
 // Input is set to blank by default
-export function updateScreen(typeInput = '', projectInput = '', todosInput = '') {
+export function updateScreen(projectInput = '', todosInput = []) {
     // Initialise the variables that will be fed into renderContent
+    let currentState = loadState('state');
     let project;
     let todos;
 
-    if (typeInput === 'default') {
+    if (currentState === 'default') {
         console.log('Input was deemed as default')
         // Perform actions
         project = 'Welcome to Todo(L)ist!'
         todos = getOverdueTodos();
-        // Update global values
-        currentType = 'default';
-        currentProject = project;
-        currentTodos = todos;
-    } else if (typeInput === 'static') {
+        // Update state
+        saveState('state', 'default');
+    } else if (currentState === 'static') {
         // console.log('Input was deemed as static')
         // Perform actions
         project = projectInput;
         todos = todosInput;
         // console.log(`Static project with name ${project} rendered.`)
-        // Update global values
-        currentType = 'static';
-        currentProject = project;
-        currentTodos = todos;
-    } else if (typeInput === 'dynamic') {
+        // Update state
+        saveState('state', 'static');
+    } else if (currentState === 'dynamic') {
         // console.log('Input was deemed as dynamic')
         // Perform actions
         project = projectInput;
         todos = getTodosForSpecificProject(projectInput);
         // console.log(`Dynamic project with name ${projectInput} rendered.`)
-        // Update global values
-        currentType = 'dynamic';
-        currentProject = project;
-        currentTodos = todos;
+        // Update state
+        saveState('state', 'dynamic');
     } else {
         console.error('updateScreen() not run correctly')
     }

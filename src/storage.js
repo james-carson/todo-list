@@ -23,7 +23,7 @@ export function loadData(key) {
         // Create a 'new' project, titled with its own name, with a blank array to put its todos back into
         const revivedProject = new Project(projectToMap.id, projectToMap.name, []);
         // console.log(`Successfully re-created project ${revivedProject.name}`);
-        
+
         // Now we need to map each todo and put it into the array, reviving each as we go.
         projectToMap.todoList.forEach(todoToMap => {
             // Create each todo
@@ -38,14 +38,26 @@ export function loadData(key) {
             );
             // console.log(`Successfully re-created todo ${revivedTodo.title}`);
             // Add the revived todo back into the revived project
-        revivedProject.addTodo(revivedTodo);
-        // console.log(`${revivedTodo.title} added back into ${revivedProject.name}`);
+            revivedProject.addTodo(revivedTodo);
+            // console.log(`${revivedTodo.title} added back into ${revivedProject.name}`);
         });
         return revivedProject;
     });
 }
 
-export function clearStorage () {
+export function saveState(key, state) {
+    // Convert the state object to JSON data, and save it by the key.
+    localStorage.setItem(key, JSON.stringify(state));
+    console.log('State saved')
+}
+
+export function loadState(key) {
+    console.log(`Initiated loadData(${key})`)
+    // Create a temporary variable to load the JSON data into, and load it
+    return JSON.parse(localStorage.getItem(key));
+}
+
+export function clearStorage() {
     console.log('Console is about to be cleared!')
     // Clear the console
     console.clear();

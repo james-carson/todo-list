@@ -14,7 +14,7 @@ function initialiseApp() {
         setDemoData();
         renderSidebar();
         // console.log('Demo Data set within initialiseApp()');
-        updateScreen('default', '', []);
+        updateScreen();
         // console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
         // console.log('App initialised')
     })
