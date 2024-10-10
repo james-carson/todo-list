@@ -1,5 +1,6 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
+import { getCompletedTodos, getOverdueTodos } from "./functions"
 import { loadData, loadState, saveData, loadProject, saveState } from "./storage"
 import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos, renderContent } from "./ui"
 
@@ -33,9 +34,9 @@ export function toggleTodoCompleted(todoId) {
     console.log(`Initiated toggleTodoCompleted(${todoId})`)
     // Load current data
     let currentData = loadData('projects');
-
-    // Get the current global values:
-    const currentProject = loadProject('project');
+    let currentState = loadState('state');
+    const currentProject = loadState('currentProject');
+    let updatedTodos;
 
     // Find the current todo by its id:
     for (let project of currentData) {
@@ -46,12 +47,26 @@ export function toggleTodoCompleted(todoId) {
             todoById.completed = !todoById.completed;
             // Save the updated data
             saveData('projects', currentData);
-            saveState('state', 'refresh');
-            // console.log(`Todo with ID ${todoId} has been updated.`);
-            const updatedTodos = currentData.todoList;
 
+            if (currentState === 'default') {
+                updatedTodos = getOverdueTodos();
+            } else if (currentState === 'static') {
+                if (currentProject === 'Completed') {
+                    updatedTodos = getCompletedTodos();
+                } else {
+                    updatedTodos = // ????
+                    // RENDER TODOS FOR THE SAME STATIC PROJECT - HOW TO ID? USE PROJECT.ID?
+                }
+            } else if (currentState === 'dynamic') {
+                updatedTodos = // ????
+                // RENDER TODOS FOR THE SAME DYNAMIC PROJECT - HOW TO ID? USE PROJECT.ID?
+            };
+             
+            console.log(`Debugging: here is updatedTodos: ${updatedTodos}`);
+
+            saveState('state', 'refresh');
             // Refresh the content area
-            updateScreen(currentProject, updatedTodos)
+            updateScreen(currentProject, updatedTodos);
             return;
         }
     }

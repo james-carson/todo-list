@@ -193,7 +193,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         todos = getOverdueTodos();
         // Update state
         saveState('state', 'default');
-        saveProject('project', project);
+        saveState('currentProject', project);
     } else if (currentState === 'static') {
         // console.log('Input was deemed as static')
         // Perform actions
@@ -202,7 +202,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // console.log(`Static project with name ${project} rendered.`)
         // Update state
         saveState('state', 'static');
-        saveProject('project', project);
+        saveState('currentProject', project);
     } else if (currentState === 'dynamic') {
         // console.log('Input was deemed as dynamic')
         // Perform actions
@@ -211,7 +211,17 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update state
         saveState('state', 'dynamic');
-        saveProject('project', project);
+        saveState('currentProject', project);
+        // Not sure 'refresh' is needed rather than just static, but might be later:
+    } else if (currentState === 'refresh') {
+        // console.log('Input was deemed as dynamic')
+        // Perform actions
+        project = projectInput;
+        todos = todosInput;
+        // console.log(`Dynamic project with name ${projectInput} rendered.`)
+        // Update state
+        saveState('state', 'refresh');
+        saveState('currentProject', project);
     } else {
         console.error('updateScreen() not run correctly')
     }
