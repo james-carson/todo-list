@@ -84,6 +84,7 @@ export function getCompletedTodos() {
     return allTodos.filter(todo => todo.completed);
 }
 
+// Note - this does not filter for incomplete todos:
 export function getTodosForSpecificProject(projectName) {
     console.log(`Initiated getTodosForSpecificProject(${projectName})`)
     // Load Data
@@ -121,5 +122,3 @@ function createProject(name) {
     const newProject = new Project(getNextId('project'), name, [])
     return newProject;
 }
-
-window.getOverdueTodos = getOverdueTodos;

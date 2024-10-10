@@ -4,7 +4,7 @@
 import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
-import { loadData, saveState, loadState, saveProject, loadProject } from './storage.js';
+import { loadData, saveState, loadState } from './storage.js';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -16,21 +16,15 @@ export function renderSidebar() {
     // Get a list of projects (getProjectNames)
     const currentProjects = getAllProjectNames();
 
-    // console.log(`currentProjects variable initialised as ${currentProjects}`);
-
-    // For each...
+    // For each project...
     currentProjects.forEach(project => {
         // -Create a div element  
         const projectItem = document.createElement('h3');
         // -Populate the text content with the project name
         projectItem.textContent = project;
-        
-        // console.log(`The name of this project is ${project}`)
-
         projectItem.classList.add('project_name');
 
         // Append the click listeners
-
         projectItem.addEventListener('click', () => {
             // Find the todos for this project using its name
              // Save the current state so that the correct todos are used:
@@ -137,45 +131,55 @@ export function attachStaticSidebarClickListeners() {
     // Attach event listeners that run renderContent() on click
     dueTodayButton.addEventListener('click', () => {
         // Find the todos for this project using its name
+        const project = 'Due Today'
         const todos = getTodosDueToday();
         // console.log(`Due Today: ${todos}`)
         // Save the current state so that the correct todos are used:
         saveState('state', 'static')
+        saveState('currentProject', project)
         // Pass this through updateScreen
-        updateScreen('Due Today', todos);
+        updateScreen(project, todos);
     });
 
     dueThisWeekButton.addEventListener('click', () => {
         // Find the todos for this project using its name
+        const project = 'Due This Week'
         const todos = getTodosDueThisWeek();
          // Save the current state so that the correct todos are used:
-         saveState('state', 'static')
+        saveState('state', 'static')
+        saveState('currentProject', project)
          // Pass this through updateScreen
-        updateScreen('Due This Week', todos);
+        updateScreen(project, todos);
     });
     overdueTodosButton.addEventListener('click', () => {
         // Find the todos for this project using its name
+        const project = 'Overdue'
         const todos = getOverdueTodos();
          // Save the current state so that the correct todos are used:
-         saveState('state', 'static')
+        saveState('state', 'static')
+        saveState('currentProject', project)
          // Pass this through updateScreen
-        updateScreen('Overdue', todos);
+        updateScreen(project, todos);
     });
     highPriorityButton.addEventListener('click', () => {
         // Find the todos for this project using its name
+        const project = 'High Priority'
         const todos = getHighPriorityTodos();
          // Save the current state so that the correct todos are used:
-         saveState('state', 'static')
+        saveState('state', 'static')
+        saveState('currentProject', project)
          // Pass this through updateScreen
-        updateScreen('High Priority', todos);
+        updateScreen(project, todos);
     });
     completedButton.addEventListener('click', () => {
         // Find the todos for this project using its name
+        const project = 'Completed'
         const todos = getCompletedTodos();
          // Save the current state so that the correct todos are used:
-         saveState('state', 'static')
+        saveState('state', 'static')
+        saveState('currentProject', project)
          // Pass this through updateScreen
-        updateScreen('Completed', todos);
+        updateScreen(project, todos);
     });
 }
 
@@ -196,9 +200,13 @@ export function updateScreen(projectInput = '', todosInput = []) {
         saveState('currentProject', project);
     } else if (currentState === 'static') {
         // console.log('Input was deemed as static')
-        // Perform actions
-        project = projectInput;
-        todos = todosInput;
+        if (projectInput === 'Completed') {
+            project = projectInput;
+            todos = getCompletedTodos();
+        } else {
+            project = projectInput;
+            todos = todosInput.filter(todo => !todo.completed);
+        }
         // console.log(`Static project with name ${project} rendered.`)
         // Update state
         saveState('state', 'static');
@@ -207,27 +215,18 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // console.log('Input was deemed as dynamic')
         // Perform actions
         project = projectInput;
-        todos = getTodosForSpecificProject(projectInput);
+        const todosToFilter = getTodosForSpecificProject(projectInput);
+        todos = todosToFilter.filter(todo => !todo.completed);
         // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update state
         saveState('state', 'dynamic');
-        saveState('currentProject', project);
-        // Not sure 'refresh' is needed rather than just static, but might be later:
-    } else if (currentState === 'refresh') {
-        // console.log('Input was deemed as dynamic')
-        // Perform actions
-        project = projectInput;
-        todos = todosInput;
-        // console.log(`Dynamic project with name ${projectInput} rendered.`)
-        // Update state
-        saveState('state', 'refresh');
         saveState('currentProject', project);
     } else {
         console.error('updateScreen() not run correctly')
     }
     // Now, render the content...
     renderContent(project, todos)
-    // console.log('Content Rendered within updateScreen(). Screen updated')
+    console.log('Content Rendered within updateScreen(). Screen updated')
 }
 
 function launchTodoPopup() {

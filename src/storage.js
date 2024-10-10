@@ -45,6 +45,7 @@ export function loadData(key) {
     });
 }
 
+// Save state is used with two keys: 'state', which saves the current state/view type, and 'currentProject', which is self-explanatory.
 export function saveState(key, state) {
     // Convert the state object to JSON data, and save it by the key.
     localStorage.setItem(key, JSON.stringify(state));
@@ -52,18 +53,6 @@ export function saveState(key, state) {
 }
 
 export function loadState(key) {
-    console.log(`Initiated loadData(${key})`)
-    // Create a temporary variable to load the JSON data into, and load it
-    return JSON.parse(localStorage.getItem(key));
-}
-
-export function saveProject(key, project) {
-    // Convert the state object to JSON data, and save it by the key.
-    localStorage.setItem(key, JSON.stringify(project));
-    console.log('State saved')
-}
-
-export function loadProject(key) {
     console.log(`Initiated loadData(${key})`)
     // Create a temporary variable to load the JSON data into, and load it
     return JSON.parse(localStorage.getItem(key));
@@ -119,6 +108,3 @@ export function addToCounter(key) {
 export function saveCounter(key, counter) {
     saveData(key, counter);
 }
-
-window.saveData = saveData;
-window.loadData = loadData;

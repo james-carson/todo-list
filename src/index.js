@@ -13,10 +13,9 @@ function initialiseApp() {
         // For now, set the demo Data - later, when there is demo mode, ask which dataset should be used
         setDemoData();
         renderSidebar();
-        // console.log('Demo Data set within initialiseApp()');
         updateScreen();
         // console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
-        // console.log('App initialised')
+        console.log('App initialised')
     })
 };
 

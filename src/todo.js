@@ -1,6 +1,6 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
-import { getCompletedTodos, getOverdueTodos } from "./functions"
+import { getCompletedTodos, getHighPriorityTodos, getOverdueTodos, getTodosDueThisWeek, getTodosDueToday } from "./functions"
 import { loadData, loadState, saveData, loadProject, saveState } from "./storage"
 import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos, renderContent } from "./ui"
 
@@ -32,7 +32,7 @@ export class Todo {
 
 export function toggleTodoCompleted(todoId) {
     console.log(`Initiated toggleTodoCompleted(${todoId})`)
-    // Load current data
+    // Load variables for use later
     let currentData = loadData('projects');
     let currentState = loadState('state');
     const currentProject = loadState('currentProject');
@@ -47,24 +47,26 @@ export function toggleTodoCompleted(todoId) {
             todoById.completed = !todoById.completed;
             // Save the updated data
             saveData('projects', currentData);
-
+            // Check current state and filter throught
             if (currentState === 'default') {
                 updatedTodos = getOverdueTodos();
             } else if (currentState === 'static') {
-                if (currentProject === 'Completed') {
+                if (currentProject === 'Due Today') {
+                    updatedTodos = getTodosDueToday();
+                } else if (currentProject === 'Due This Week') {
+                    updatedTodos = getTodosDueThisWeek();
+                } else if (currentProject === 'Overdue') {
+                    updatedTodos = getOverdueTodos();
+                } else if (currentProject === 'High Priority') {
+                    updatedTodos = getHighPriorityTodos();
+                } else if (currentProject === 'Completed') {
                     updatedTodos = getCompletedTodos();
-                } else {
-                    updatedTodos = // ????
-                    // RENDER TODOS FOR THE SAME STATIC PROJECT - HOW TO ID? USE PROJECT.ID?
                 }
             } else if (currentState === 'dynamic') {
-                updatedTodos = // ????
-                // RENDER TODOS FOR THE SAME DYNAMIC PROJECT - HOW TO ID? USE PROJECT.ID?
+                // No todos needed, will be added in updateScreen
+                updatedTodos = [];
             };
              
-            console.log(`Debugging: here is updatedTodos: ${updatedTodos}`);
-
-            saveState('state', 'refresh');
             // Refresh the content area
             updateScreen(currentProject, updatedTodos);
             return;
@@ -73,9 +75,6 @@ export function toggleTodoCompleted(todoId) {
     console.error(`Todo with ID ${todoId} cannot be found`);
 };
 
-// I AM HERE YET AGAIN - GETTING TOGGLING TO WORK!
-
-
 function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.
     // Load data
     // Get todo counter number
@@ -83,5 +82,3 @@ function createTodo(todoCounter) { // Need to work out the counter functions bef
     // Add to project using func
     // Save data
 }
-
-window.toggleTodoCompleted = toggleTodoCompleted;
