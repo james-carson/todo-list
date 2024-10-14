@@ -18,14 +18,24 @@ export function renderSidebar() {
 
     // For each project...
     currentProjects.forEach(project => {
+
+        const projectHolder = document.createElement('div');
+        projectHolder.classList.add('project_holder');
+
         // -Create a div element  
         const projectItem = document.createElement('h3');
         // -Populate the text content with the project name
         projectItem.textContent = project;
         projectItem.classList.add('project_name');
+        projectHolder.appendChild(projectItem);
+
+        const projectEditButton = document.createElement('div');
+        projectEditButton.classList.add('project_edit_button')
+        projectEditButton.textContent = 'Edit';
+        projectHolder.appendChild(projectEditButton)
 
         // Append the click listeners
-        projectItem.addEventListener('click', () => {
+        projectHolder.addEventListener('click', () => {
             // Find the todos for this project using its name
              // Save the current state so that the correct todos are used:
             saveState('state', 'dynamic')
@@ -34,7 +44,7 @@ export function renderSidebar() {
         });
 
         // -Append it to the project list
-        projectList.appendChild(projectItem);
+        projectList.appendChild(projectHolder);
     });
 
     const addNewProjectButton = document.createElement('h3')

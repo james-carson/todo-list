@@ -344,9 +344,29 @@ h1 {
     color: white;
 }
 
+.project_holder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .projectItem {
     color: white;
     height: 200px;
+}
+
+#project_list .project_holder .project_edit_button {
+    color: var(--bg-grey);
+}
+
+#project_list .project_holder:hover .project_edit_button {
+    transition-delay: 0.5s;
+    color: white;
+}
+
+#project_list .project_holder .project_edit_button:hover {
+    transition-delay: 0s;
+    color: var(--text-grey);
 }
 
 #completed_list {
