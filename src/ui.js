@@ -177,6 +177,8 @@ export function renderContent(project, todos) {
     const content = document.getElementById('content');
     content.textContent = '';
 
+    todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
     // Get the specified project (from input)
     // Append the project name as a title
     const projectTitle = document.createElement('h2');

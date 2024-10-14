@@ -106,11 +106,13 @@ export class Project {
         return this.todoList;
     }
 
-    // This needs working on - OR IS IT NECESSARY?
-    // const newProject = new Project(name, todoList) {
-    // Load data?
-    // Get project counter
-    // Increase it by 1 and assign this as the project's ID
-    // Assign a blank array to todoList
-    // Save data
 };
+
+export function createNewProject(name) {
+        let currentData = loadData('projects');
+        const newProjectId = addToCounter('projectCounter');
+        const newProjectName = name;
+        const newProject = new Project (newProjectId, newProjectName, []);
+        currentData.push(newProject);
+        saveData('projects', currentData);
+    };

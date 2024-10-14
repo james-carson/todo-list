@@ -70,7 +70,7 @@ export function setCounter(key) {
     // Create a counter variable and set it to 0
     let counter = 0
     // Save the new data as 'counter' using the correct key
-    saveData(key, counter);
+    saveCounter(key, counter);
     console.log(`Counter for ${key} has been setup at 0.`)
     // Return the number - ***Do I need to do this, or is the act of doing it enough?***
     return counter;
@@ -79,7 +79,7 @@ export function setCounter(key) {
 export function getCounter(key) {
     console.log(`Initited getCounter(${key}).`);
     // Load Todo Counter data into a variable
-    const counter = loadData(key);
+    const counter = loadCounter(key);
     // Check the counter exists and is a valid number
     if (counter !== null && !isNaN(counter)) {
         console.log(`Counter is ${counter}.`)
@@ -88,23 +88,33 @@ export function getCounter(key) {
     } else {
         console.log('No Todo Counter exists, so set to 0.')
         // If it isn't create it.
-        return setCounter();
+        return setCounter(key);
     }
 }
 
 export function addToCounter(key) {
-    console.log(`Initiated addToCounter(${key})`);
+    console.log(`Initiated addToCounter()`);
     // Load Todo Counter data
-    const counter = loadData(key);
-    // Increment by 1
-    counter++;
+    const counter = loadCounter(key);
+    if (counter !== null && !isNaN(counter)) {
+        // Increment by 1
+        counter++;
+    } else if (!counter) {
+        setCounter(key);
+    }
     // Save the new data
-    saveData(key, counter);
+    saveCounter(key, counter);
     console.log(`${key} Counter is now ${counter}.`)
     // Return the number - ***Do I need to do this, or is the act of doing it enough?*** I think I need it
     return counter;
 }
 
 export function saveCounter(key, counter) {
-    saveData(key, counter);
+    localStorage.setItem(key, JSON.stringify(counter));
+}
+
+export function loadCounter(key) {
+    console.log(`Initiated loadCounter(${key})`)
+    // Create a temporary variable to load the JSON data into, and load it
+    return JSON.parse(localStorage.getItem(key));
 }
