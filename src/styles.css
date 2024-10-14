@@ -310,9 +310,13 @@ h1 {
     padding: 2vh 2vw;
 }
 
-#sidebar div:hover,
-.todo_edit:hover {
+#sidebar div:hover{
     cursor: pointer;
+    
+}
+
+#due_today:hover, #due_this_week:hover, #overdue_todos:hover, #high_priority:hover, #completed_list:hover, .project_name:hover, .add_new_project_button:hover {
+    color: var(--text-grey)
 }
 
 #sidebar div {
@@ -379,6 +383,10 @@ h1 {
     position: relative;
 }
 
+.todo_div:hover {
+    background-color: var(--bg-grey);
+}
+
 .todo_div + .todo_div::before {
     content: '';
     position: absolute;
@@ -396,7 +404,7 @@ h1 {
 }
 
 .todo_due_date,
-.todo_edit {
+.todo_delete {
     text-align: end;
 }
 
@@ -417,11 +425,44 @@ h1 {
     filter: brightness(0) saturate(100%) invert(21%) sepia(99%) saturate(6346%) hue-rotate(223deg) brightness(98%) contrast(77%);
 }
 
+.todo_delete{
+    color: var(--bg-black);
+    font-weight: 700;
+}
+
+.todo_grid:hover {
+    cursor: pointer;
+}
+
+.todo_grid:hover .todo_delete {
+    transition-delay: 0.5s;
+    color: white;
+}
+
+.todo_grid .todo_delete:hover {
+    transition-delay: 0s;
+    color: var(--td-red);
+}
+
 .priority_flag {
     height: 1.5em;
     width: auto;
 }
 
-.todo_edit {
-    font-weight: 700;
+.add_new_todo_button {
+    padding: 1vh 1vw;
+    display: flex;
+    /* border-bottom: 0.1px solid white; */
+    gap: 1vw;
+    width: 80%;
+    margin-left: 5%;
+    justify-content: center;
+    color: var(--text-grey);
+    border-top: 1px var(--bg-grey) solid;
+}
+
+.add_new_todo_button:hover {
+    color: white;
+    border: 1px var(--text-grey) dashed;
+    cursor: pointer;
 }

@@ -37,88 +37,18 @@ export function renderSidebar() {
         projectList.appendChild(projectItem);
     });
 
+    const addNewProjectButton = document.createElement('h3')
+    addNewProjectButton.textContent = '+ New Project'
+    addNewProjectButton.classList.add('add_new_project_button')
+    addNewProjectButton.addEventListener('click', () => {
+        // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT ADDS A NEW PROJECT TO THE DATABASE!
+    });
+    projectList.appendChild(addNewProjectButton);
+
+
+
     attachStaticSidebarClickListeners();
 }
-
-export function renderContent(project, todos) {
-    console.log(`running renderContent(${project}, ${todos}`)
-
-    // Define the content area and clear it
-    const content = document.getElementById('content');
-    content.textContent = '';
-
-    // Get the specified project (from input)
-    // Append the project name as a title
-    const projectTitle = document.createElement('h2');
-    projectTitle.textContent = project;
-    projectTitle.classList.add('project_title');
-    content.appendChild(projectTitle);
-
-    // Get the todos for this specific project
-    // For each of them, create the required divs and append them to the content area
-    todos.forEach(todo => {
-        // Create a div for each todo:
-        const todoDiv = document.createElement('div');
-        todoDiv.classList.add('todo_div');  // Class for CSS grid styling
-
-        // Create a checkbox for completion:
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        // This explains what to happen when checked:
-        checkbox.checked = todo.complete;
-
-        // Adding an event listener that saves the change
-        checkbox.addEventListener('click', () => {
-            toggleTodoCompleted(todo.id);
-        });
-        todoDiv.appendChild(checkbox);
-
-        // Add a grid for layout purposes:
-        const todoGrid = document.createElement('div');
-        todoGrid.classList.add('todo_grid');
-        todoDiv.appendChild(todoGrid);
-
-        // Add the title of the todo:
-        const todoTitle = document.createElement('div');
-        todoTitle.classList.add('todo_title');
-        todoTitle.textContent = todo.title;
-        todoGrid.appendChild(todoTitle);
-
-        // Add the due date:
-        const dueDate = document.createElement('div');
-        dueDate.classList.add('todo_due_date');
-        dueDate.textContent = `Due: ${todo.dueDate}`;
-        todoGrid.appendChild(dueDate);
-
-        // Add the priority:
-        const priority = document.createElement('div');
-        // If the priority is high, add the class 'todo_priority_high'
-        if (todo.priority === 'high') {
-            priority.classList.add('todo_priority_high');
-            // Or, if it's medium, add 'todo_priority_medium'
-        } else if (todo.priority === 'medium') {
-            priority.classList.add('todo_priority_medium');
-            // Or, if it's low, add 'todo_priority_low'
-        } else {
-            priority.classList.add('todo_priority_low');
-        }
-        todoGrid.appendChild(priority);
-
-        const priority_flag = document.createElement('img');
-        priority_flag.src = flagImage
-        priority_flag.classList.add('priority_flag');
-        priority.appendChild(priority_flag)
-
-        // Add an edit button - NOT FUNCTIONAL YET!
-        const editTodo = document.createElement('div');
-        editTodo.classList.add('todo_edit');
-        editTodo.textContent = 'Edit'
-        todoGrid.appendChild(editTodo);
-
-        // Append the completed todo div to the content area:
-        content.appendChild(todoDiv);
-    });
-};
 
 export function attachStaticSidebarClickListeners() {
     // ID the 'buttons' (divs)
@@ -193,7 +123,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
     if (currentState === 'default') {
         console.log('Input was deemed as default')
         // Perform actions
-        project = 'Welcome to Todo(L)ist!'
+        project = 'Welcome to Todo(L)ist! Here is your inbox:'
         todos = getOverdueTodos();
         // Update state
         saveState('state', 'default');
@@ -228,6 +158,104 @@ export function updateScreen(projectInput = '', todosInput = []) {
     renderContent(project, todos)
     console.log('Content Rendered within updateScreen(). Screen updated')
 }
+
+export function renderContent(project, todos) {
+    console.log(`running renderContent(${project}, ${todos}`)
+
+    // Define the content area and clear it
+    const content = document.getElementById('content');
+    content.textContent = '';
+
+    // Get the specified project (from input)
+    // Append the project name as a title
+    const projectTitle = document.createElement('h2');
+    projectTitle.textContent = project;
+    projectTitle.classList.add('project_title');
+    content.appendChild(projectTitle);
+
+    // Get the todos for this specific project
+    // For each of them, create the required divs and append them to the content area
+    todos.forEach(todo => {
+        // Create a div for each todo:
+        const todoDiv = document.createElement('div');
+        todoDiv.classList.add('todo_div');  // Class for CSS grid styling
+
+        // Create a checkbox for completion:
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        // This explains what to happen when checked:
+        checkbox.checked = todo.complete;
+
+        // Adding an event listener that saves the change
+        checkbox.addEventListener('click', () => {
+            toggleTodoCompleted(todo.id);
+        });
+        todoDiv.appendChild(checkbox);
+
+        // Add a grid for layout purposes:
+        const todoGrid = document.createElement('div');
+        todoGrid.classList.add('todo_grid');
+        todoDiv.appendChild(todoGrid);
+
+        // Add the title of the todo:
+        const todoTitle = document.createElement('div');
+        todoTitle.classList.add('todo_title');
+        todoTitle.textContent = todo.title;
+        todoTitle.addEventListener('click', () => {
+            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+        });
+        todoGrid.appendChild(todoTitle);
+
+        // Add the due date:
+        const dueDate = document.createElement('div');
+        dueDate.classList.add('todo_due_date');
+        dueDate.textContent = `Due: ${todo.dueDate}`;
+        dueDate.addEventListener('click', () => {
+            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+        });
+        todoGrid.appendChild(dueDate);
+
+        // Add the priority:
+        const priority = document.createElement('div');
+        // If the priority is high, add the class 'todo_priority_high'
+        if (todo.priority === 'high') {
+            priority.classList.add('todo_priority_high');
+            // Or, if it's medium, add 'todo_priority_medium'
+        } else if (todo.priority === 'medium') {
+            priority.classList.add('todo_priority_medium');
+            // Or, if it's low, add 'todo_priority_low'
+        } else {
+            priority.classList.add('todo_priority_low');
+        }
+        priority.addEventListener('click', () => {
+            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+        });
+        todoGrid.appendChild(priority);
+
+        const priority_flag = document.createElement('img');
+        priority_flag.src = flagImage
+        priority_flag.classList.add('priority_flag');
+        priority.appendChild(priority_flag)
+
+        const deleteTodo = document.createElement('div');
+        deleteTodo.classList.add('todo_delete');
+        deleteTodo.textContent = 'Delete'
+        deleteTodo.addEventListener('click', () => {
+            // NEEDS TO RUN A FUNCTION / OPEN A POPUP TO CONFIRM A DELETE!
+        });
+        todoGrid.appendChild(deleteTodo);
+
+        // Append the completed todo div to the content area:
+        content.appendChild(todoDiv);
+    });
+    const addNewTodoButton = document.createElement('div')
+    addNewTodoButton.textContent = '+ New Todo'
+    addNewTodoButton.classList.add('add_new_todo_button')
+    addNewTodoButton.addEventListener('click', () => {
+        // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT ADDS A NEW TODO TO THE DATABASE!
+    });
+    content.appendChild(addNewTodoButton);
+};
 
 function launchTodoPopup() {
     // Not sure yet!

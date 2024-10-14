@@ -68,7 +68,7 @@ export function toggleTodoCompleted(todoId) {
             };
              
             // Refresh the content area
-            updateScreen(currentProject, updatedTodos);
+            setTimeout(() => updateScreen(currentProject, updatedTodos), 1500);
             return;
         }
     }
