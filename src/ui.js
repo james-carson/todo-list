@@ -5,7 +5,7 @@ import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, ge
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 import { loadData, saveState, loadState } from './storage.js';
-import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
+import { format, isToday, isTomorrow, isThisWeek, isThisYear } from 'date-fns';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -38,7 +38,7 @@ export function renderSidebar() {
         // Append the click listeners
         projectHolder.addEventListener('click', () => {
             // Find the todos for this project using its name
-             // Save the current state so that the correct todos are used:
+            // Save the current state so that the correct todos are used:
             saveState('state', 'dynamic')
             // Pass this through updateScreen
             updateScreen(project, []);
@@ -86,40 +86,40 @@ export function attachStaticSidebarClickListeners() {
         // Find the todos for this project using its name
         const project = 'Due This Week'
         const todos = getTodosDueThisWeek();
-         // Save the current state so that the correct todos are used:
+        // Save the current state so that the correct todos are used:
         saveState('state', 'static')
         saveState('currentProject', project)
-         // Pass this through updateScreen
+        // Pass this through updateScreen
         updateScreen(project, todos);
     });
     overdueTodosButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const project = 'Overdue'
         const todos = getOverdueTodos();
-         // Save the current state so that the correct todos are used:
+        // Save the current state so that the correct todos are used:
         saveState('state', 'static')
         saveState('currentProject', project)
-         // Pass this through updateScreen
+        // Pass this through updateScreen
         updateScreen(project, todos);
     });
     highPriorityButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const project = 'High Priority'
         const todos = getHighPriorityTodos();
-         // Save the current state so that the correct todos are used:
+        // Save the current state so that the correct todos are used:
         saveState('state', 'static')
         saveState('currentProject', project)
-         // Pass this through updateScreen
+        // Pass this through updateScreen
         updateScreen(project, todos);
     });
     completedButton.addEventListener('click', () => {
         // Find the todos for this project using its name
         const project = 'Completed'
         const todos = getCompletedTodos();
-         // Save the current state so that the correct todos are used:
+        // Save the current state so that the correct todos are used:
         saveState('state', 'static')
         saveState('currentProject', project)
-         // Pass this through updateScreen
+        // Pass this through updateScreen
         updateScreen(project, todos);
     });
 }
@@ -224,16 +224,20 @@ export function renderContent(project, todos) {
         dueDate.classList.add('todo_due_date');
         const todoDate = new Date(todo.dueDate);
         let formattedDate;
-        if (isToday(todoDate)) {
-            formattedDate = 'Today';
-        } else if (isTomorrow(todoDate)) {
-            formattedDate = 'Tomorrow';
-        } else if (isThisWeek(todoDate)) {
-            // Day of the Week
-            formattedDate = format(todoDate, 'EEEE');
+        if (isThisYear(todoDate)) {
+            if (isToday(todoDate)) {
+                formattedDate = 'Today';
+            } else if (isTomorrow(todoDate)) {
+                formattedDate = 'Tomorrow';
+            } else if (isThisWeek(todoDate)) {
+                // Day of the Week
+                formattedDate = format(todoDate, 'EEEE');
+            } else {
+                // Full date
+                formattedDate = format(todoDate, 'do MMMM');
+            }
         } else {
-            // Full date
-            formattedDate = format(todoDate, 'do MMMM yyyy');
+            formattedDate = format(todoDate, 'do MMM YYYY');
         }
         dueDate.textContent = formattedDate;
         dueDate.addEventListener('click', () => {

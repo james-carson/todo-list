@@ -110,7 +110,8 @@ export class Project {
 
 export function createNewProject(name) {
         let currentData = loadData('projects');
-        const newProjectId = addToCounter('projectCounter');
+        const numberForId = addToCounter('projectCounter');
+        newProjectId = ('p-' + numberForId);
         const newProjectName = name;
         const newProject = new Project (newProjectId, newProjectName, []);
         currentData.push(newProject);
