@@ -5,6 +5,7 @@ import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, ge
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 import { loadData, saveState, loadState } from './storage.js';
+import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -32,7 +33,7 @@ export function renderSidebar() {
         const projectEditButton = document.createElement('div');
         projectEditButton.classList.add('project_edit_button')
         projectEditButton.textContent = 'Edit';
-        projectHolder.appendChild(projectEditButton)
+        projectHolder.appendChild(projectEditButton);
 
         // Append the click listeners
         projectHolder.addEventListener('click', () => {
@@ -219,7 +220,20 @@ export function renderContent(project, todos) {
         // Add the due date:
         const dueDate = document.createElement('div');
         dueDate.classList.add('todo_due_date');
-        dueDate.textContent = `Due: ${todo.dueDate}`;
+        const todoDate = new Date(todo.dueDate);
+        let formattedDate;
+        if (isToday(todoDate)) {
+            formattedDate = 'Today';
+        } else if (isTomorrow(todoDate)) {
+            formattedDate = 'Tomorrow';
+        } else if (isThisWeek(todoDate)) {
+            // Day of the Week
+            formattedDate = format(todoDate, 'EEEE');
+        } else {
+            // Full date
+            formattedDate = format(todoDate, 'do MMMM yyyy');
+        }
+        dueDate.textContent = formattedDate;
         dueDate.addEventListener('click', () => {
             // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
         });
