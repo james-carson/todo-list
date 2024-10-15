@@ -308,7 +308,7 @@ export function addOrEditTodo(type, todo = '') {
     // Add the title, depending on input
     const todoPopupTitle = document.createElement('div');
     todoPopupTitle.classList.add('todo_popup_title');
-    if (type === 'edit') {
+    if (type === 'edit' && todo) {
         todoPopupTitle.textContent = `Edit ${todo.title}`
     } else if (type === 'add') {
         todoPopupTitle.textContent = 'Add Todo';
@@ -322,15 +322,18 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupName.classList.add('todo_popup_name');
     todoPopupName.classList.add('flex');
     const todoPopupNameLabel = document.createElement('h4');
-    todoPopupNameLabel.textContent = 'Name:';
+    todoPopupNameLabel.textContent = 'Title:';
     todoPopupName.appendChild(todoPopupNameLabel);
     const todoPopupNameInput = document.createElement('input');
     todoPopupNameInput.setAttribute('type', 'text');
-    // DEFAULT VALUE IF EDIT
     todoPopupNameInput.setAttribute('name', 'name');
     todoPopupNameInput.setAttribute('id', 'todo_name');
     todoPopupNameInput.setAttribute('minlength', '1');
     todoPopupNameInput.setAttribute('tabindex', '0');
+    if (type === 'edit' && todo) {
+        todoPopupNameInput.value = todo.title; 
+    }
+    
     todoPopupName.appendChild(todoPopupNameInput);
     todoPopupGrid.appendChild(todoPopupName);
 
@@ -357,7 +360,9 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupPriorityInputLow.setAttribute('value', 'Low');
     todoPopupPriorityInputLow.textContent = 'Low';
     todoPopupPriorityInput.appendChild(todoPopupPriorityInputLow);
-    // DEFAULT VALUE IF EDIT
+    if (type === 'edit' && todo) {
+        todoPopupPriorityInput.value = todo.priority; 
+    }
     // Append the whole thing
     todoPopupPriority.appendChild(todoPopupPriorityInput);
     todoPopupGrid.appendChild(todoPopupPriority);
@@ -376,6 +381,9 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupDueDateInput.setAttribute('id', 'todo_duedate');
     todoPopupDueDateInput.setAttribute('minlength', '1');
     todoPopupDueDateInput.setAttribute('tabindex', '2');
+    if (type === 'edit' && todo) {
+        todoPopupDueDateInput.value = todo.dueDate; 
+    }    
     todoPopupDueDate.appendChild(todoPopupDueDateInput);
     todoPopupGrid.appendChild(todoPopupDueDate);
 
@@ -391,6 +399,9 @@ export function addOrEditTodo(type, todo = '') {
     // DEFAULT VALUE IF EDIT
     todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
     todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
+    if (type === 'edit' && todo) {
+        todoPopupCompletedCheckbox.checked = todo.completed; 
+    }    
     todoPopupCompleted.appendChild(todoPopupCompletedCheckbox);
     todoPopupGrid.appendChild(todoPopupCompleted);
 
@@ -411,6 +422,9 @@ export function addOrEditTodo(type, todo = '') {
         todoPopupProjectInputOption.textContent = project.name;
         todoPopupProjectInput.appendChild(todoPopupProjectInputOption);
     });
+    if (type === 'edit' && todo) {
+        todoPopupProjectInput.value = todo.project; 
+    }    
     todoPopupProject.appendChild(todoPopupProjectInput)
     todoPopupGrid.appendChild(todoPopupProject);
 
@@ -419,6 +433,9 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupNotesLabel.classList.add('todo_notes_label')
     todoPopupNotesLabel.classList.add('flex');
     todoPopupNotesLabel.textContent = 'Notes: '
+    if (type === 'edit' && todo) {
+        todoPopupNotesInput.value = todo.notes; 
+    }    
     todoPopupGrid.appendChild(todoPopupNotesLabel);
 
     // Append the notes input section:
