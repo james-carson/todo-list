@@ -310,12 +310,18 @@ h1 {
     padding: 2vh 2vw;
 }
 
-#sidebar div:hover{
+#sidebar div:hover {
     cursor: pointer;
-    
+
 }
 
-#due_today:hover, #due_this_week:hover, #overdue_todos:hover, #high_priority:hover, #completed_list:hover, .project_name:hover, .add_new_project_button:hover {
+#due_today:hover,
+#due_this_week:hover,
+#overdue_todos:hover,
+#high_priority:hover,
+#completed_list:hover,
+.project_name:hover,
+.add_new_project_button:hover {
     color: var(--text-grey)
 }
 
@@ -407,7 +413,7 @@ h1 {
     background-color: var(--bg-grey);
 }
 
-.todo_div + .todo_div::before {
+.todo_div+.todo_div::before {
     content: '';
     position: absolute;
     background-color: var(--bg-grey);
@@ -428,7 +434,9 @@ h1 {
     text-align: end;
 }
 
-.todo_priority_high, .todo_priority_medium, .todo_priority_low {
+.todo_priority_high,
+.todo_priority_medium,
+.todo_priority_low {
     display: flex;
     justify-content: end;
 }
@@ -445,7 +453,7 @@ h1 {
     filter: brightness(0) saturate(100%) invert(21%) sepia(99%) saturate(6346%) hue-rotate(223deg) brightness(98%) contrast(77%);
 }
 
-.todo_delete{
+.todo_delete {
     color: var(--bg-black);
     font-weight: 700;
 }
@@ -487,10 +495,12 @@ h1 {
     cursor: pointer;
 }
 
-.todo_popup_window {
-    height: 100%;
-    width: 100%;
-    position: relative;
+.todo_popup_overlay {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    position: fixed;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
     z-index: 1;
@@ -499,59 +509,74 @@ h1 {
 .todo_popup_grid {
     z-index: 2;
     min-height: 50%;
+    max-height: 80%;
     min-width: 50%;
+    max-width: 80%;
     position: absolute;
+    top: 25%;
+    left: 25%;
     display: grid;
     padding: 2%;
+    gap: 2%;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1.5fr 1fr 1fr 1fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
+    background-color: var(--bg-grey);
+    color: white;
+    align-items: center;
 }
 
-  .todo_popup_title, .todo_notes_input, .save_todo_button {
-    grid-row: 0 / 2;
-  }
+.todo_popup_title,
+.todo_notes_input {
+    grid-column: span 2;
+}
 
-  .flex {
+.todo_popup_title {
+    grid-row: 1 / 2;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.flex {
     display: flex;
-  }
+}
 
-  .todo_popup_name {
-    grid-column: 0 / 1;
-    grid-row: 1 / 2;
-  }
-
-  .todo_popup_priority {
+.todo_popup_name {
     grid-column: 1 / 2;
-    grid-row: 1 / 2;
-  }
-
-  .todo_popup_duedate {
-    grid-column: 0 / 1;
     grid-row: 2 / 3;
-  }
+}
 
-  .todo_popup_completed {
-    grid-column: 1 / 2;
-   grid-row: 2 / 3; 
-  }
+.todo_popup_priority {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
 
-  .todo_popup_project {
-    grid-column: 0 / 1;
-    grid-row: 3 / 4;
-  }
-
-  .todo_notes_label {
+.todo_popup_duedate {
     grid-column: 1 / 2;
     grid-row: 3 / 4;
-    text-align: end;
-  }
+}
 
-  .todo_notes_input {
+.todo_popup_completed {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+}
+
+.todo_popup_project {
+    grid-column: 2 / 3;
     grid-row: 4 / 5;
-  }
+}
 
-  .todo_save_button {
+.todo_notes_label {
     grid-column: 1 / 2;
+    grid-row: 4 / 5;
+    font-weight: bold;
+}
+
+.todo_notes_input {
     grid-row: 5 / 6;
+}
+
+.todo_save_button {
+    grid-column: 2 / 3;
+    grid-row: 6 / 7;
     /* Add button styling here! */
-  }
+}

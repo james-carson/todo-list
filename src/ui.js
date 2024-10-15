@@ -296,14 +296,14 @@ export function addOrEditTodo(type, todo = '') {
     const projects = loadData('projects');
 
     // Add the overlay window
-    const todoPopupWindow = document.createElement('div');
-    todoPopupWindow.classList.add('todo_popup_window');
-    content.appendChild(todoPopupWindow);
+    const todoPopupOverlay = document.createElement('div');
+    todoPopupOverlay.classList.add('todo_popup_overlay');
+    document.body.appendChild(todoPopupOverlay);
 
     // Add the Grid layout
     const todoPopupGrid = document.createElement('div');
     todoPopupGrid.classList.add('todo_popup_grid');
-    todoPopupWindow.appendChild(todoPopupGrid);
+    todoPopupOverlay.appendChild(todoPopupGrid);
 
     // Add the title, depending on input
     const todoPopupTitle = document.createElement('div');
@@ -348,17 +348,16 @@ export function addOrEditTodo(type, todo = '') {
     const todoPopupPriorityInputHigh = document.createElement('option');
     todoPopupPriorityInputHigh.setAttribute('value', 'High');
     todoPopupPriorityInputHigh.textContent = 'High';
-    todoPopupPriority.appendChild(todoPopupPriorityInputHigh);
+    todoPopupPriorityInput.appendChild(todoPopupPriorityInputHigh);
     const todoPopupPriorityInputMedium = document.createElement('option');
     todoPopupPriorityInputMedium.setAttribute('value', 'Medium');
     todoPopupPriorityInputMedium.textContent = 'Medium';
-    todoPopupPriority.appendChild(todoPopupPriorityInputMedium);
+    todoPopupPriorityInput.appendChild(todoPopupPriorityInputMedium);
     const todoPopupPriorityInputLow = document.createElement('option');
     todoPopupPriorityInputLow.setAttribute('value', 'Low');
     todoPopupPriorityInputLow.textContent = 'Low';
-    todoPopupPriority.appendChild(todoPopupPriorityInputLow);
+    todoPopupPriorityInput.appendChild(todoPopupPriorityInputLow);
     // DEFAULT VALUE IF EDIT
-    todoPopupPriority.appendChild(todoPopupPriorityInput);
     // Append the whole thing
     todoPopupPriority.appendChild(todoPopupPriorityInput);
     todoPopupGrid.appendChild(todoPopupPriority);
@@ -392,6 +391,7 @@ export function addOrEditTodo(type, todo = '') {
     // DEFAULT VALUE IF EDIT
     todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
     todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
+    todoPopupCompleted.appendChild(todoPopupCompletedCheckbox);
     todoPopupGrid.appendChild(todoPopupCompleted);
 
     // Append the project section:
