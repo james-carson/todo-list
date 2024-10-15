@@ -118,3 +118,5 @@ export function loadCounter(key) {
     // Create a temporary variable to load the JSON data into, and load it
     return JSON.parse(localStorage.getItem(key));
 }
+
+window.loadData = loadData;

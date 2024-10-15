@@ -290,3 +290,155 @@ export function renderContent(project, todos) {
 function launchTodoPopup() {
     // Not sure yet!
 }
+
+export function addOrEditTodo(type, todo = '') {
+
+    const projects = loadData('projects');
+
+    // Add the overlay window
+    const todoPopupWindow = document.createElement('div');
+    todoPopupWindow.classList.add('todo_popup_window');
+    content.appendChild(todoPopupWindow);
+
+    // Add the Grid layout
+    const todoPopupGrid = document.createElement('div');
+    todoPopupGrid.classList.add('todo_popup_grid');
+    todoPopupWindow.appendChild(todoPopupGrid);
+
+    // Add the title, depending on input
+    const todoPopupTitle = document.createElement('div');
+    todoPopupTitle.classList.add('todo_popup_title');
+    if (type === 'edit') {
+        todoPopupTitle.textContent = `Edit ${todo.title}`
+    } else if (type === 'add') {
+        todoPopupTitle.textContent = 'Add Todo';
+    } else {
+        todoPopupTitle.textContent = 'Error loading todo title';
+    };
+    todoPopupGrid.appendChild(todoPopupTitle);
+
+    // Append the name input
+    const todoPopupName = document.createElement('div');
+    todoPopupName.classList.add('todo_popup_name');
+    todoPopupName.classList.add('flex');
+    const todoPopupNameLabel = document.createElement('h4');
+    todoPopupNameLabel.textContent = 'Name:';
+    todoPopupName.appendChild(todoPopupNameLabel);
+    const todoPopupNameInput = document.createElement('input');
+    todoPopupNameInput.setAttribute('type', 'text');
+    // DEFAULT VALUE IF EDIT
+    todoPopupNameInput.setAttribute('name', 'name');
+    todoPopupNameInput.setAttribute('id', 'todo_name');
+    todoPopupNameInput.setAttribute('minlength', '1');
+    todoPopupNameInput.setAttribute('tabindex', '0');
+    todoPopupName.appendChild(todoPopupNameInput);
+    todoPopupGrid.appendChild(todoPopupName);
+
+    // Append the priority input (if it works...)
+    const todoPopupPriority = document.createElement('div');
+    todoPopupPriority.classList.add('todo_popup_priority');
+    todoPopupPriority.classList.add('flex');
+    const todoPopupPriorityLabel = document.createElement('h4');
+    todoPopupPriorityLabel.textContent = 'Priority:';
+    todoPopupPriority.appendChild(todoPopupPriorityLabel);
+    // Append the options to the select
+    const todoPopupPriorityInput = document.createElement('select');
+    todoPopupPriorityInput.setAttribute('id', 'todo_priority')
+    todoPopupPriorityInput.setAttribute('tabindex', '1');
+    const todoPopupPriorityInputHigh = document.createElement('option');
+    todoPopupPriorityInputHigh.setAttribute('value', 'High');
+    todoPopupPriorityInputHigh.textContent = 'High';
+    todoPopupPriority.appendChild(todoPopupPriorityInputHigh);
+    const todoPopupPriorityInputMedium = document.createElement('option');
+    todoPopupPriorityInputMedium.setAttribute('value', 'Medium');
+    todoPopupPriorityInputMedium.textContent = 'Medium';
+    todoPopupPriority.appendChild(todoPopupPriorityInputMedium);
+    const todoPopupPriorityInputLow = document.createElement('option');
+    todoPopupPriorityInputLow.setAttribute('value', 'Low');
+    todoPopupPriorityInputLow.textContent = 'Low';
+    todoPopupPriority.appendChild(todoPopupPriorityInputLow);
+    // DEFAULT VALUE IF EDIT
+    todoPopupPriority.appendChild(todoPopupPriorityInput);
+    // Append the whole thing
+    todoPopupPriority.appendChild(todoPopupPriorityInput);
+    todoPopupGrid.appendChild(todoPopupPriority);
+
+    // Append the due date input (if it works...)
+    const todoPopupDueDate = document.createElement('div');
+    todoPopupDueDate.classList.add('todo_popup_duedate');
+    todoPopupDueDate.classList.add('flex');
+    const todoPopupDueDateLabel = document.createElement('h4');
+    todoPopupDueDateLabel.textContent = 'Due Date:';
+    todoPopupDueDate.appendChild(todoPopupDueDateLabel);
+    const todoPopupDueDateInput = document.createElement('input');
+    todoPopupDueDateInput.setAttribute('type', 'date');
+    // DEFAULT VALUE IF EDIT
+    todoPopupDueDateInput.setAttribute('name', 'duedate');
+    todoPopupDueDateInput.setAttribute('id', 'todo_duedate');
+    todoPopupDueDateInput.setAttribute('minlength', '1');
+    todoPopupDueDateInput.setAttribute('tabindex', '2');
+    todoPopupDueDate.appendChild(todoPopupDueDateInput);
+    todoPopupGrid.appendChild(todoPopupDueDate);
+
+    // Append the completed section:
+    const todoPopupCompleted = document.createElement('div');
+    todoPopupCompleted.classList.add('todo_popup_completed');
+    todoPopupCompleted.classList.add('flex');
+    const todoPopupCompletedLabel = document.createElement('h4');
+    todoPopupCompletedLabel.textContent = 'Completed:';
+    todoPopupCompleted.appendChild(todoPopupCompletedLabel);
+    const todoPopupCompletedCheckbox = document.createElement('input');
+    todoPopupCompletedCheckbox.setAttribute('type', 'checkbox');
+    // DEFAULT VALUE IF EDIT
+    todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
+    todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
+    todoPopupGrid.appendChild(todoPopupCompleted);
+
+    // Append the project section:
+    const todoPopupProject = document.createElement('div');
+    todoPopupProject.classList.add('todo_popup_project');
+    todoPopupProject.classList.add('flex');
+    const todoPopupProjectLabel = document.createElement('h4');
+    todoPopupProjectLabel.textContent = 'Project:'
+    todoPopupProject.appendChild(todoPopupProjectLabel);
+    const todoPopupProjectInput = document.createElement('select');
+    todoPopupProjectInput.setAttribute('id', 'todo_project')
+    todoPopupProjectInput.setAttribute('tabindex', '4');
+    // Need to loop through each project name and add it as a value:
+    projects.forEach(project => {
+        const todoPopupProjectInputOption= document.createElement('option');
+        todoPopupProjectInputOption.setAttribute('value', project.name);
+        todoPopupProjectInputOption.textContent = project.name;
+        todoPopupProjectInput.appendChild(todoPopupProjectInputOption);
+    });
+    todoPopupProject.appendChild(todoPopupProjectInput)
+    todoPopupGrid.appendChild(todoPopupProject);
+
+    // Append just the notes label section:
+    const todoPopupNotesLabel = document.createElement('div');
+    todoPopupNotesLabel.classList.add('todo_notes_label')
+    todoPopupNotesLabel.classList.add('flex');
+    todoPopupNotesLabel.textContent = 'Notes: '
+    todoPopupGrid.appendChild(todoPopupNotesLabel);
+
+    // Append the notes input section:
+    const todoPopupNotesInput = document.createElement('input');
+    todoPopupNotesInput.setAttribute('id', 'todo_notes')
+    todoPopupNotesInput.setAttribute('type', 'textarea');
+    todoPopupNotesInput.classList.add('todo_notes_input');
+    todoPopupGrid.appendChild(todoPopupNotesInput);
+
+    // Append the save button:
+    const todoPopupSaveButton = document.createElement('div');
+    todoPopupSaveButton.classList.add('todo_save_button');
+    todoPopupSaveButton.textContent = 'Save';
+    todoPopupGrid.appendChild(todoPopupSaveButton);
+
+    // DON'T FORGET TO ADD DEFAULT VALUES!
+}
+
+export function addOrEditProject(type) {
+    // Popup functionality
+}
+
+window.addOrEditTodo = addOrEditTodo;
