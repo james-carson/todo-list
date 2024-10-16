@@ -15,8 +15,7 @@ export function renderSidebar() {
     projectList.textContent = '';
 
     // Get a list of projects (getProjectNames)
-    const currentProjects = getAllProjectNames();
-    const fullProjects = loadData('projects');
+    const currentProjects = loadData('projects');
     console.log(`currentProjects loaded as: ${currentProjects}`)
 
     // For each project...
@@ -32,7 +31,7 @@ export function renderSidebar() {
         // -Create a div element  
         const projectItem = document.createElement('h3');
         // -Populate the text content with the project name
-        projectItem.textContent = project;
+        projectItem.textContent = project.name;
         projectItem.classList.add('project_name');
         projectHolder.appendChild(projectItem);
 
@@ -40,7 +39,9 @@ export function renderSidebar() {
         projectEditButton.classList.add('project_edit_button')
         projectEditButton.textContent = 'Edit';
         projectEditButton.addEventListener('click', () => {
+            console.log(`Sidebar project clicked - project.id is ${project.id}`);
             addOrEditProject('edit', project.id);
+            // How do I stop renderSidebar() from running?
         })
         projectHolder.appendChild(projectEditButton);
 
@@ -50,7 +51,7 @@ export function renderSidebar() {
             // Save the current state so that the correct todos are used:
             saveState('state', 'dynamic')
             // Pass this through updateScreen
-            updateScreen(project, []);
+            updateScreen(project.name, []);
         });
 
         // -Append it to the project list
@@ -62,10 +63,9 @@ export function renderSidebar() {
     addNewProjectButton.classList.add('add_new_project_button')
     addNewProjectButton.addEventListener('click', () => {
         addOrEditProject('add');
+        // How do I stop renderSidebar() from running?
     });
     projectList.appendChild(addNewProjectButton);
-
-
 
     attachStaticSidebarClickListeners();
 }
@@ -510,8 +510,10 @@ export function addOrEditProject(type, projectId = '') {
 
     if (type === 'edit' && projectId) {
         for (let project of projects) {
-            currentProject = project.find(p => p.id === projectId)
-            break;
+            if (project.id === projectId) {
+                currentProject = project;
+                break;
+            }
         }
         if (!currentProject) {
             console.log(`Project with ID ${projectId} found!`)
@@ -519,74 +521,76 @@ export function addOrEditProject(type, projectId = '') {
         }
     }
 
-// Add the overlay window
-const projectPopupOverlay = document.createElement('div');
-projectPopupOverlay.classList.add('project_popup_overlay');
-document.body.appendChild(projectPopupOverlay);
+    // Add the overlay window
+    const projectPopupOverlay = document.createElement('div');
+    projectPopupOverlay.classList.add('project_popup_overlay');
+    document.body.appendChild(projectPopupOverlay);
 
-// Add the Grid layout
-const projectPopupGrid = document.createElement('div');
-projectPopupGrid.classList.add('project_popup_grid');
-projectPopupOverlay.appendChild(projectPopupGrid);
+    // Add the Grid layout
+    const projectPopupGrid = document.createElement('div');
+    projectPopupGrid.classList.add('project_popup_grid');
+    projectPopupOverlay.appendChild(projectPopupGrid);
 
-// Add the title, depending on input
-const projectPopupTitle = document.createElement('div');
-projectPopupTitle.classList.add('project_popup_title');
-if (type === 'edit' && projectId) {
-    projectPopupTitle.textContent = `Edit '${currentProject.title}'`
-} else if (type === 'add') {
-    projectPopupTitle.textContent = 'Add Project';
-} else {
-    projectPopupTitle.textContent = 'Error loading project title';
-};
-projectPopupGrid.appendChild(projectPopupTitle);
+    // Add the title, depending on input
+    const projectPopupTitle = document.createElement('div');
+    projectPopupTitle.classList.add('project_popup_title');
+    if (type === 'edit' && projectId) {
+        projectPopupTitle.textContent = `Edit '${currentProject.name}'`
+    } else if (type === 'add') {
+        projectPopupTitle.textContent = 'Add Project';
+    } else {
+        projectPopupTitle.textContent = 'Error loading project title';
+    };
+    projectPopupGrid.appendChild(projectPopupTitle);
 
-// Append the name input
-const projectPopupName = document.createElement('div');
-projectPopupName.classList.add('project_popup_name');
-projectPopupName.classList.add('flex');
-const projectPopupNameLabel = document.createElement('h4');
-projectPopupNameLabel.textContent = 'Name:';
-projectPopupName.appendChild(projectPopupNameLabel);
-const projectPopupNameInput = document.createElement('input');
-projectPopupNameInput.setAttribute('type', 'text');
-projectPopupNameInput.setAttribute('name', 'name');
-projectPopupNameInput.setAttribute('id', 'project_name');
-projectPopupNameInput.setAttribute('minlength', '1');
-projectPopupNameInput.setAttribute('tabindex', '0');
-if (type === 'edit' && projectId) {
-    projectPopupNameInput.value = currentProject.name;
-}
+    // Append the name input
+    const projectPopupName = document.createElement('div');
+    projectPopupName.classList.add('project_popup_name');
+    projectPopupName.classList.add('flex');
+    const projectPopupNameLabel = document.createElement('h4');
+    projectPopupNameLabel.classList.add('project_popup_name_label');
+    projectPopupNameLabel.textContent = 'Name:';
+    projectPopupName.appendChild(projectPopupNameLabel);
+    const projectPopupNameInput = document.createElement('input');
+    projectPopupNameInput.classList.add('project_popup_name_input');
+    projectPopupNameInput.setAttribute('type', 'text');
+    projectPopupNameInput.setAttribute('name', 'name');
+    projectPopupNameInput.setAttribute('id', 'project_name');
+    projectPopupNameInput.setAttribute('minlength', '1');
+    projectPopupNameInput.setAttribute('tabindex', '0');
+    if (type === 'edit' && projectId) {
+        projectPopupNameInput.value = currentProject.name;
+    }
 
-projectPopupName.appendChild(projectPopupNameInput);
-projectPopupGrid.appendChild(projectPopupName);
+    projectPopupName.appendChild(projectPopupNameInput);
+    projectPopupGrid.appendChild(projectPopupName);
 
-// Add a buttons container
-const projectButtonsDiv = document.createElement('div');
-projectButtonsDiv.classList.add('project_buttons_div');
-projectButtonsDiv.classList.add('flex');
-projectPopupGrid.appendChild(projectButtonsDiv);
+    // Add a buttons container
+    const projectButtonsDiv = document.createElement('div');
+    projectButtonsDiv.classList.add('project_buttons_div');
+    projectButtonsDiv.classList.add('flex');
+    projectPopupGrid.appendChild(projectButtonsDiv);
 
-// Append the cancel button:
-const projectPopupCancelButton = document.createElement('div');
-projectPopupCancelButton.classList.add('project_cancel_button');
-projectPopupCancelButton.textContent = 'Cancel';
-projectPopupCancelButton.addEventListener('click', () => {
-    popupCancel('project');
-});
-projectButtonsDiv.appendChild(projectPopupCancelButton);
+    // Append the cancel button:
+    const projectPopupCancelButton = document.createElement('div');
+    projectPopupCancelButton.classList.add('project_cancel_button');
+    projectPopupCancelButton.textContent = 'Cancel';
+    projectPopupCancelButton.addEventListener('click', () => {
+        popupCancel('project');
+    });
+    projectButtonsDiv.appendChild(projectPopupCancelButton);
 
-// Append the cancel button:
-const projectPopupDeleteButton = document.createElement('div');
-projectPopupDeleteButton.classList.add('project_delete_button');
-projectPopupDeleteButton.textContent = 'Delete';
-projectButtonsDiv.appendChild(projectPopupDeleteButton);
+    // Append the cancel button:
+    const projectPopupDeleteButton = document.createElement('div');
+    projectPopupDeleteButton.classList.add('project_delete_button');
+    projectPopupDeleteButton.textContent = 'Delete';
+    projectButtonsDiv.appendChild(projectPopupDeleteButton);
 
-// Append the save button:
-const projectPopupSaveButton = document.createElement('div');
-projectPopupSaveButton.classList.add('project_save_button');
-projectPopupSaveButton.textContent = 'Save';
-projectButtonsDiv.appendChild(projectPopupSaveButton);
+    // Append the save button:
+    const projectPopupSaveButton = document.createElement('div');
+    projectPopupSaveButton.classList.add('project_save_button');
+    projectPopupSaveButton.textContent = 'Save';
+    projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
 
 export function popupCancel(type, projectId = '') {

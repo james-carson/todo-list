@@ -514,7 +514,6 @@ h1 {
     top: 25%;
     left: 25%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
     padding: 2%;
     gap: 2%;
     background-color: var(--bg-grey);
@@ -525,12 +524,14 @@ h1 {
 .todo_popup_grid {
     min-height: 50%;
     max-height: 80%;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
 }
 
 .project_popup_grid {
     min-height: 25%;
     max-height: 80%;
+    grid-template-columns: 3fr 2fr;
     grid-template-rows: 1fr 1fr;
 }
 
@@ -557,6 +558,10 @@ h4 {
 .todo_popup_name, .project_popup_name {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
+}
+
+.project_popup_name_input {
+    width: 100%;
 }
 
 .todo_popup_priority {
