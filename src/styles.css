@@ -506,31 +506,40 @@ h1 {
     z-index: 1;
 }
 
-.todo_popup_grid {
+.todo_popup_grid, .project_popup_grid {
     z-index: 2;
-    min-height: 50%;
-    max-height: 80%;
     min-width: 50%;
     max-width: 80%;
     position: absolute;
     top: 25%;
     left: 25%;
     display: grid;
+    grid-template-columns: 1fr 1fr;
     padding: 2%;
     gap: 2%;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
     background-color: var(--bg-grey);
     color: white;
     align-items: center;
 }
 
+.todo_popup_grid {
+    min-height: 50%;
+    max-height: 80%;
+    grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
+}
+
+.project_popup_grid {
+    min-height: 50%;
+    max-height: 80%;
+    grid-template-rows: 1fr 1fr;
+}
+
 .todo_popup_title,
-.todo_notes_input {
+.todo_notes_input, .project_popup_title {
     grid-column: span 2;
 }
 
-.todo_popup_title {
+.todo_popup_title, .project_popup_title {
     grid-row: 1 / 2;
     text-align: center;
     font-size: 1.5em;
@@ -545,7 +554,7 @@ h4 {
     align-content: center;
 }
 
-.todo_popup_name {
+.todo_popup_name, .project_popup_name {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
 }
@@ -585,27 +594,34 @@ h4 {
     overflow-y: auto;
 }
 
-.todo_buttons_div {
+.todo_buttons_div, .project_buttons_div {
     grid-column: span 2;
-    grid-row: 6 / 7;
     justify-self: end;
     gap: 5%;
     margin-right: 5%;
 }
 
-.todo_save_button, .todo_cancel_button, .todo_delete_button {
+.todo_buttons_div {
+    grid-row: 6 / 7;
+}
+
+.project_buttons_div {
+    grid-row: 2 / 3;
+}
+
+.todo_save_button, .todo_cancel_button, .todo_delete_button, .project_save_button, .project_cancel_button, .project_delete_button {
     padding: 0.25em 0.75em;
     border: 1px solid white;
 }
 
-.todo_save_button:hover, .todo_cancel_button:hover {
+.todo_save_button:hover, .todo_cancel_button:hover, .project_save_button:hover, .project_cancel_button:hover {
     cursor: pointer;
     background-color: white;
     color: var(--bg-black);
     border: var(--td-red) solid 1px;
 }
 
-.todo_delete_button:hover {
+.todo_delete_button:hover, .project_delete_button:hover {
     cursor: pointer;
     background-color: var(--td-red);
     border: white solid 1px;
