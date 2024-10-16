@@ -17,33 +17,10 @@ export class Project {
         this.todoList.push(todo);
     }
 
-    deleteTodo(todoIndex) {
-        // Returning to a much simpler version - the todoIndex MUST be found before running this:
+    deleteTodo(todoId) {
+        const todoIndex = this.getTodoIndex(todoId);
+        // The todoIndex MUST be found before running this:
         this.todoList.splice(todoIndex, 1);
-
-        // // Too complicated and too tightly coupled - removing this:
-
-        // // Load data
-        // currentData = loadData('projects');
-        // // ID project by ID
-        // const projectById = currentData.find(project => project.id === this.id);
-        // // Check for a match:
-        // if (projectById) {
-        //     // Find the index of this todo:
-        //     const todoIndex = projectById.todoList.findIndex(todo => todo.id === todoId);
-        //     // Check that the todo exists by seeing if its index is 0 or higher
-        //     if (todoIndex > -1) {
-        //         // Splice todo from array
-        //         projectById.todoList.splice(todoIndex, 1);
-        //         // Save data
-        //         saveData('projects', currentData)
-        //         console.log(`Todo removed from project "${this.name}" and data saved.`);
-        //     } else {
-        //         console.error(`Todo with ID ${todoId} not found in project "${this.name}".`);
-        //     }
-        // } else {
-        //     console.error(`Project with ID ${this.id} not found.`);
-        // }
     }
 
     moveTodo(todoId, oldProject, newProject) {

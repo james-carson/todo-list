@@ -496,7 +496,27 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupDeleteButton = document.createElement('div');
     todoPopupDeleteButton.classList.add('todo_delete_button');
     todoPopupDeleteButton.textContent = 'Delete';
-    // NEED AN EVENT LISTENER FOR CLICKS TO DELETE!
+    todoPopupDeleteButton.addEventListener('click', () => {
+        let currentData = loadData('projects')
+        let currentState = loadState('state')
+        deleteTodo(todo.id);
+        saveData('projects', currentData);
+        saveState('state', currentState);
+        popupCancel('todo');
+        updateScreen(currentProject.name, []);
+        // WILL THIS WORK?
+
+
+
+
+        // I AM HERE - NOT TESTED!
+
+
+
+
+
+
+    })
     todoButtonsDiv.appendChild(todoPopupDeleteButton);
     }
 
