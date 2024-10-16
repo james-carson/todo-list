@@ -580,19 +580,33 @@ h4 {
 .todo_notes_input {
     grid-row: 5 / 6;
     height: 100%;
+    text-align: left;
+    vertical-align: top;
+    overflow-y: auto;
 }
 
-.todo_save_button {
-    grid-column: 2 / 3;
+.todo_buttons_div {
+    grid-column: span 2;
     grid-row: 6 / 7;
     justify-self: end;
+    gap: 5%;
+    margin-right: 5%;
+}
+
+.todo_save_button, .todo_cancel_button, .todo_delete_button {
     padding: 0.25em 0.75em;
     border: 1px solid white;
 }
 
-.todo_save_button:hover {
+.todo_save_button:hover, .todo_cancel_button:hover {
     cursor: pointer;
     background-color: white;
     color: var(--bg-black);
     border: var(--td-red) solid 1px;
+}
+
+.todo_delete_button:hover {
+    cursor: pointer;
+    background-color: var(--td-red);
+    border: white solid 1px;
 }

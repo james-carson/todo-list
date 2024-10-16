@@ -191,7 +191,10 @@ export function renderContent(project, todos) {
     todos.forEach(todo => {
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
-        todoDiv.classList.add('todo_div');  // Class for CSS grid styling
+        todoDiv.classList.add('todo_div');
+
+        // Set the ID as an attribute so that it can be passed into addOrEditTodo
+        todoDiv.setAttribute('todo-id', todo.id);
 
         // Create a checkbox for completion:
         const checkbox = document.createElement('input');
@@ -215,7 +218,8 @@ export function renderContent(project, todos) {
         todoTitle.classList.add('todo_title');
         todoTitle.textContent = todo.title;
         todoTitle.addEventListener('click', () => {
-            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+            console.log('Todo ID clicked:', todo.id)
+            addOrEditTodo('edit', todo.id);
         });
         todoGrid.appendChild(todoTitle);
 
@@ -241,7 +245,8 @@ export function renderContent(project, todos) {
         }
         dueDate.textContent = formattedDate;
         dueDate.addEventListener('click', () => {
-            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+            console.log('Todo ID clicked:', todo.id)
+            addOrEditTodo('edit', todo.id);
         });
         todoGrid.appendChild(dueDate);
 
@@ -258,7 +263,8 @@ export function renderContent(project, todos) {
             priority.classList.add('todo_priority_low');
         }
         priority.addEventListener('click', () => {
-            // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT EDITS A TODO!
+            console.log('Todo ID clicked:', todo.id)
+            addOrEditTodo('edit', todo.id);
         });
         todoGrid.appendChild(priority);
 
@@ -282,18 +288,34 @@ export function renderContent(project, todos) {
     addNewTodoButton.textContent = '+ New Todo'
     addNewTodoButton.classList.add('add_new_todo_button')
     addNewTodoButton.addEventListener('click', () => {
-        // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT ADDS A NEW TODO TO THE DATABASE!
+        addOrEditTodo('add');
     });
     content.appendChild(addNewTodoButton);
 };
 
-function launchTodoPopup() {
-    // Not sure yet!
-}
+export function addOrEditTodo(type, todoId = '') {
 
-export function addOrEditTodo(type, todo = '') {
-
+    console.log(`addOrEditTodo initiated with type = ${type} and todoID = ${todoId}`);
     const projects = loadData('projects');
+    console.log(`Data loaded in addOrEditTodo: ${projects}`)
+    let todo;
+    let currentProject;
+
+    if (type === 'edit' && todoId) {
+        for (let project of projects) {
+            console.log('Checking project:', project);
+            todo = project.todoList.find(t => t.id === todoId);
+            if (todo) {
+                currentProject = project;
+                console.log(`Todo with ID ${todoId} found in project: ${project}!`)
+                break;
+            }
+        }
+        if (!todo) {
+            console.error('Todo not found by ID')
+            return
+        }
+    };
 
     // Add the overlay window
     const todoPopupOverlay = document.createElement('div');
@@ -308,7 +330,7 @@ export function addOrEditTodo(type, todo = '') {
     // Add the title, depending on input
     const todoPopupTitle = document.createElement('div');
     todoPopupTitle.classList.add('todo_popup_title');
-    if (type === 'edit' && todo) {
+    if (type === 'edit' && todoId) {
         todoPopupTitle.textContent = `Edit ${todo.title}`
     } else if (type === 'add') {
         todoPopupTitle.textContent = 'Add Todo';
@@ -330,42 +352,46 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupNameInput.setAttribute('id', 'todo_name');
     todoPopupNameInput.setAttribute('minlength', '1');
     todoPopupNameInput.setAttribute('tabindex', '0');
-    if (type === 'edit' && todo) {
-        todoPopupNameInput.value = todo.title; 
+    if (type === 'edit' && todoId) {
+        todoPopupNameInput.value = todo.title;
     }
-    
+
     todoPopupName.appendChild(todoPopupNameInput);
     todoPopupGrid.appendChild(todoPopupName);
 
-    // Append the priority input (if it works...)
+    // Append the priority input
     const todoPopupPriority = document.createElement('div');
     todoPopupPriority.classList.add('todo_popup_priority');
     todoPopupPriority.classList.add('flex');
     const todoPopupPriorityLabel = document.createElement('h4');
     todoPopupPriorityLabel.textContent = 'Priority:';
     todoPopupPriority.appendChild(todoPopupPriorityLabel);
-    // Append the options to the select
+    // Create the select
     const todoPopupPriorityInput = document.createElement('select');
     todoPopupPriorityInput.setAttribute('id', 'todo_priority')
     todoPopupPriorityInput.setAttribute('tabindex', '1');
+    // Create the options for the select / High
     const todoPopupPriorityInputHigh = document.createElement('option');
-    todoPopupPriorityInputHigh.setAttribute('value', 'High');
+    todoPopupPriorityInputHigh.setAttribute('value', 'high');
     todoPopupPriorityInputHigh.textContent = 'High';
     todoPopupPriorityInput.appendChild(todoPopupPriorityInputHigh);
+    // Medium
     const todoPopupPriorityInputMedium = document.createElement('option');
-    todoPopupPriorityInputMedium.setAttribute('value', 'Medium');
+    todoPopupPriorityInputMedium.setAttribute('value', 'medium');
     todoPopupPriorityInputMedium.textContent = 'Medium';
     todoPopupPriorityInput.appendChild(todoPopupPriorityInputMedium);
+    // Low
     const todoPopupPriorityInputLow = document.createElement('option');
-    todoPopupPriorityInputLow.setAttribute('value', 'Low');
+    todoPopupPriorityInputLow.setAttribute('value', 'low');
     todoPopupPriorityInputLow.textContent = 'Low';
     todoPopupPriorityInput.appendChild(todoPopupPriorityInputLow);
-    if (type === 'edit' && todo) {
-        todoPopupPriorityInput.value = todo.priority; 
-    }
     // Append the whole thing
     todoPopupPriority.appendChild(todoPopupPriorityInput);
     todoPopupGrid.appendChild(todoPopupPriority);
+    // Set the default priority value:
+    if (type === 'edit' && todoId) {
+        todoPopupPriorityInput.value = todo.priority;
+    }
 
     // Append the due date input (if it works...)
     const todoPopupDueDate = document.createElement('div');
@@ -376,14 +402,13 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupDueDate.appendChild(todoPopupDueDateLabel);
     const todoPopupDueDateInput = document.createElement('input');
     todoPopupDueDateInput.setAttribute('type', 'date');
-    // DEFAULT VALUE IF EDIT
     todoPopupDueDateInput.setAttribute('name', 'duedate');
     todoPopupDueDateInput.setAttribute('id', 'todo_duedate');
     todoPopupDueDateInput.setAttribute('minlength', '1');
     todoPopupDueDateInput.setAttribute('tabindex', '2');
-    if (type === 'edit' && todo) {
-        todoPopupDueDateInput.value = todo.dueDate; 
-    }    
+    if (type === 'edit' && todoId) {
+        todoPopupDueDateInput.value = todo.dueDate;
+    }
     todoPopupDueDate.appendChild(todoPopupDueDateInput);
     todoPopupGrid.appendChild(todoPopupDueDate);
 
@@ -396,12 +421,11 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupCompleted.appendChild(todoPopupCompletedLabel);
     const todoPopupCompletedCheckbox = document.createElement('input');
     todoPopupCompletedCheckbox.setAttribute('type', 'checkbox');
-    // DEFAULT VALUE IF EDIT
     todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
     todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
-    if (type === 'edit' && todo) {
-        todoPopupCompletedCheckbox.checked = todo.completed; 
-    }    
+    if (type === 'edit' && todoId) {
+        todoPopupCompletedCheckbox.checked = todo.completed;
+    }
     todoPopupCompleted.appendChild(todoPopupCompletedCheckbox);
     todoPopupGrid.appendChild(todoPopupCompleted);
 
@@ -417,14 +441,14 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupProjectInput.setAttribute('tabindex', '4');
     // Need to loop through each project name and add it as a value:
     projects.forEach(project => {
-        const todoPopupProjectInputOption= document.createElement('option');
+        const todoPopupProjectInputOption = document.createElement('option');
         todoPopupProjectInputOption.setAttribute('value', project.name);
         todoPopupProjectInputOption.textContent = project.name;
         todoPopupProjectInput.appendChild(todoPopupProjectInputOption);
     });
-    if (type === 'edit' && todo) {
-        todoPopupProjectInput.value = todo.project; 
-    }    
+    if (type === 'edit' && todoId) {
+        todoPopupProjectInput.value = currentProject.name;
+    }
     todoPopupProject.appendChild(todoPopupProjectInput)
     todoPopupGrid.appendChild(todoPopupProject);
 
@@ -433,25 +457,40 @@ export function addOrEditTodo(type, todo = '') {
     todoPopupNotesLabel.classList.add('todo_notes_label')
     todoPopupNotesLabel.classList.add('flex');
     todoPopupNotesLabel.textContent = 'Notes: '
-    if (type === 'edit' && todo) {
-        todoPopupNotesInput.value = todo.notes; 
-    }    
     todoPopupGrid.appendChild(todoPopupNotesLabel);
 
     // Append the notes input section:
-    const todoPopupNotesInput = document.createElement('input');
+    const todoPopupNotesInput = document.createElement('textarea');
     todoPopupNotesInput.setAttribute('id', 'todo_notes')
-    todoPopupNotesInput.setAttribute('type', 'textarea');
     todoPopupNotesInput.classList.add('todo_notes_input');
+    if (type === 'edit' && todoId) {
+        todoPopupNotesInput.value = todo.notes;
+    }
     todoPopupGrid.appendChild(todoPopupNotesInput);
+
+    // Add a buttons container
+    const todoButtonsDiv = document.createElement('div');
+    todoButtonsDiv.classList.add('todo_buttons_div');
+    todoButtonsDiv.classList.add('flex');
+    todoPopupGrid.appendChild(todoButtonsDiv);
+
+    // Append the cancel button:
+    const todoPopupCancelButton = document.createElement('div');
+    todoPopupCancelButton.classList.add('todo_cancel_button');
+    todoPopupCancelButton.textContent = 'Cancel';
+    todoButtonsDiv.appendChild(todoPopupCancelButton);
+
+    // Append the cancel button:
+    const todoPopupDeleteButton = document.createElement('div');
+    todoPopupDeleteButton.classList.add('todo_delete_button');
+    todoPopupDeleteButton.textContent = 'Delete';
+    todoButtonsDiv.appendChild(todoPopupDeleteButton);
 
     // Append the save button:
     const todoPopupSaveButton = document.createElement('div');
     todoPopupSaveButton.classList.add('todo_save_button');
     todoPopupSaveButton.textContent = 'Save';
-    todoPopupGrid.appendChild(todoPopupSaveButton);
-
-    // DON'T FORGET TO ADD DEFAULT VALUES!
+    todoButtonsDiv.appendChild(todoPopupSaveButton);
 }
 
 export function addOrEditProject(type) {
