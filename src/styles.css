@@ -529,7 +529,7 @@ h1 {
 }
 
 .project_popup_grid {
-    min-height: 50%;
+    min-height: 25%;
     max-height: 80%;
     grid-template-rows: 1fr 1fr;
 }

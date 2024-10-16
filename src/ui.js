@@ -16,6 +16,8 @@ export function renderSidebar() {
 
     // Get a list of projects (getProjectNames)
     const currentProjects = getAllProjectNames();
+    const fullProjects = loadData('projects');
+    console.log(`currentProjects loaded as: ${currentProjects}`)
 
     // For each project...
     currentProjects.forEach(project => {
@@ -25,6 +27,7 @@ export function renderSidebar() {
 
         // Set the ID as an attribute so that it can be passed into addOrEditProject
         projectHolder.setAttribute('project-id', project.id);
+        console.log(`Sidebar rendered project with ID: ${project.id}`)
 
         // -Create a div element  
         const projectItem = document.createElement('h3');
