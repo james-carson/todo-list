@@ -23,6 +23,9 @@ export function renderSidebar() {
         const projectHolder = document.createElement('div');
         projectHolder.classList.add('project_holder');
 
+        // Set the ID as an attribute so that it can be passed into addOrEditProject
+        projectHolder.setAttribute('project-id', project.id);
+
         // -Create a div element  
         const projectItem = document.createElement('h3');
         // -Populate the text content with the project name
@@ -33,6 +36,9 @@ export function renderSidebar() {
         const projectEditButton = document.createElement('div');
         projectEditButton.classList.add('project_edit_button')
         projectEditButton.textContent = 'Edit';
+        projectEditButton.addEventListener('click', () => {
+            addOrEditProject('edit', project.id);
+        })
         projectHolder.appendChild(projectEditButton);
 
         // Append the click listeners
@@ -52,7 +58,7 @@ export function renderSidebar() {
     addNewProjectButton.textContent = '+ New Project'
     addNewProjectButton.classList.add('add_new_project_button')
     addNewProjectButton.addEventListener('click', () => {
-        // NEEDS TO RUN A FUNCTION / OPEN A POPUP THAT ADDS A NEW PROJECT TO THE DATABASE!
+        addOrEditProject('add');
     });
     projectList.appendChild(addNewProjectButton);
 
@@ -295,9 +301,7 @@ export function renderContent(project, todos) {
 
 export function addOrEditTodo(type, todoId = '') {
 
-    console.log(`addOrEditTodo initiated with type = ${type} and todoID = ${todoId}`);
     const projects = loadData('projects');
-    console.log(`Data loaded in addOrEditTodo: ${projects}`)
     let todo;
     let currentProject;
 
@@ -331,7 +335,7 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupTitle = document.createElement('div');
     todoPopupTitle.classList.add('todo_popup_title');
     if (type === 'edit' && todoId) {
-        todoPopupTitle.textContent = `Edit ${todo.title}`
+        todoPopupTitle.textContent = `Edit '${todo.title}'`
     } else if (type === 'add') {
         todoPopupTitle.textContent = 'Add Todo';
     } else {
@@ -478,6 +482,9 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupCancelButton = document.createElement('div');
     todoPopupCancelButton.classList.add('todo_cancel_button');
     todoPopupCancelButton.textContent = 'Cancel';
+    todoPopupCancelButton.addEventListener('click', () => {
+        popupCancel('todo');
+    });
     todoButtonsDiv.appendChild(todoPopupCancelButton);
 
     // Append the cancel button:
@@ -494,7 +501,26 @@ export function addOrEditTodo(type, todoId = '') {
 }
 
 export function addOrEditProject(type) {
-    // Popup functionality
+
+    let projects = loadData('projects');
+    let currentProject;
+
+    
 }
+
+export function popupCancel(type, projectId = '') {
+    if (type === 'todo') {
+        const target = document.querySelector('.todo_popup_overlay');
+        const divs = target.querySelectorAll('div');
+        divs.forEach(div => div.remove());
+        target.remove();
+    } else if (type === 'project') {
+        // Will fill in later when project todo is complete
+    } else if (type === 'delete') {
+        // Will fill in later when delete functionality is complete
+    } else {
+        console.error('Overlay not found. Cancel aborted.');
+    }
+};
 
 window.addOrEditTodo = addOrEditTodo;
