@@ -6,6 +6,7 @@ import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
 import { loadData, saveState, loadState } from './storage.js';
 import { format, isToday, isTomorrow, isThisWeek, isThisYear } from 'date-fns';
+import { createNewProject, deleteProject } from './project.js';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -584,16 +585,37 @@ export function addOrEditProject(type, projectId = '') {
     const projectPopupDeleteButton = document.createElement('div');
     projectPopupDeleteButton.classList.add('project_delete_button');
     projectPopupDeleteButton.textContent = 'Delete';
+    projectPopupDeleteButton.addEventListener('click', () => {
+        if (type === 'edit') {
+            deleteProject(currentProject.id)
+            popupCancel('project');
+            renderSidebar();
+        } else if (type === 'add')
+            alert('Can only delete in edit mode!')
+            // Change this to something better!
+    })
     projectButtonsDiv.appendChild(projectPopupDeleteButton);
 
     // Append the save button:
     const projectPopupSaveButton = document.createElement('div');
     projectPopupSaveButton.classList.add('project_save_button');
     projectPopupSaveButton.textContent = 'Save';
+    projectPopupSaveButton.addEventListener('click', () => {
+        if (type === 'add') {
+            const newProjectName = projectPopupNameInput.value
+            createNewProject(newProjectName);
+            popupCancel('project');
+        } else if (type === 'edit') {
+            // Working on it!
+        } else {
+            console.log('Problem with saving after Save button clicked')
+        }
+        renderSidebar();
+    });
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
 
-export function popupCancel(type, projectId = '') {
+function popupCancel(type) {
     if (type === 'todo') {
         const target = document.querySelector('.todo_popup_overlay');
         const divs = target.querySelectorAll('div');
