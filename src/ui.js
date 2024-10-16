@@ -4,9 +4,9 @@
 import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
 import { toggleTodoCompleted } from './todo.js';
 import flagImage from './images/flag.svg';
-import { loadData, saveState, loadState } from './storage.js';
+import { loadData, saveData, saveState, loadState, addToCounter } from './storage.js';
 import { format, isToday, isTomorrow, isThisWeek, isThisYear } from 'date-fns';
-import { createNewProject, deleteProject } from './project.js';
+import { Project } from './project.js';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -491,11 +491,14 @@ export function addOrEditTodo(type, todoId = '') {
     });
     todoButtonsDiv.appendChild(todoPopupCancelButton);
 
-    // Append the cancel button:
+    // Append the Delete button:
+    if (type === 'edit') {
     const todoPopupDeleteButton = document.createElement('div');
     todoPopupDeleteButton.classList.add('todo_delete_button');
     todoPopupDeleteButton.textContent = 'Delete';
+    // NEED AN EVENT LISTENER FOR CLICKS TO DELETE!
     todoButtonsDiv.appendChild(todoPopupDeleteButton);
+    }
 
     // Append the save button:
     const todoPopupSaveButton = document.createElement('div');
@@ -581,20 +584,22 @@ export function addOrEditProject(type, projectId = '') {
     });
     projectButtonsDiv.appendChild(projectPopupCancelButton);
 
-    // Append the cancel button:
-    const projectPopupDeleteButton = document.createElement('div');
-    projectPopupDeleteButton.classList.add('project_delete_button');
-    projectPopupDeleteButton.textContent = 'Delete';
-    projectPopupDeleteButton.addEventListener('click', () => {
-        if (type === 'edit') {
-            deleteProject(currentProject.id)
-            popupCancel('project');
-            renderSidebar();
-        } else if (type === 'add')
-            alert('Can only delete in edit mode!')
+    // Append the Delete button:
+    if (type === 'edit') {
+        const projectPopupDeleteButton = document.createElement('div');
+        projectPopupDeleteButton.classList.add('project_delete_button');
+        projectPopupDeleteButton.textContent = 'Delete';
+        projectPopupDeleteButton.addEventListener('click', () => {
+            if (type === 'edit') {
+                deleteProject(currentProject.id)
+                popupCancel('project');
+                renderSidebar();
+            } else if (type === 'add')
+                alert('Can only delete in edit mode!')
             // Change this to something better!
-    })
-    projectButtonsDiv.appendChild(projectPopupDeleteButton);
+        })
+        projectButtonsDiv.appendChild(projectPopupDeleteButton);
+    }
 
     // Append the save button:
     const projectPopupSaveButton = document.createElement('div');
@@ -614,6 +619,37 @@ export function addOrEditProject(type, projectId = '') {
     });
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
+
+function createNewProject(name) {
+    let currentData = loadData('projects');
+    const numberForId = addToCounter('projectCounter');
+    const newProjectId = ('p-' + numberForId);
+    const newProjectName = name;
+    const newProject = new Project(newProjectId, newProjectName, []);
+    currentData.push(newProject);
+    saveData('projects', currentData);
+};
+
+function deleteProject(projectId) {
+    let currentData = loadData('projects');
+    let currentProjectIndex;
+
+    if (projectId) {
+        currentProjectIndex = currentData.findIndex(project => project.id === projectId)
+
+        // Check for error:
+        if (currentProjectIndex === -1) {
+            console.error(`Project with ID ${projectId} not found!`);
+            return;
+        }
+        
+        currentData.splice(currentProjectIndex, 1);
+        saveData('projects', currentData);
+        saveState('state', 'default');
+        updateScreen();
+        console.log(`Project with ID ${projectId} deleted successfully!`);
+    }
+};
 
 function popupCancel(type) {
     if (type === 'todo') {

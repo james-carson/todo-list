@@ -1,6 +1,6 @@
 // project.js contains the Project class, its constuctor, and functions to manipulate existing objects, including todos.
 
-import { loadData, saveData, addToCounter } from "./storage"
+import { loadData, saveData } from "./storage"
 
 // Project class, including a constructor.
 // Update - adding methods back in fo simplicity of later functions
@@ -106,33 +106,4 @@ export class Project {
         return this.todoList;
     }
 
-};
-
-export function createNewProject(name) {
-    let currentData = loadData('projects');
-    const numberForId = addToCounter('projectCounter');
-    const newProjectId = ('p-' + numberForId);
-    const newProjectName = name;
-    const newProject = new Project(newProjectId, newProjectName, []);
-    currentData.push(newProject);
-    saveData('projects', currentData);
-};
-
-export function deleteProject(projectId) {
-    currentData = loadData('projects');
-    let currentProjectIndex;
-
-    if (projectId) {
-        currentProjectIndex = currentData.findIndex(project => project.id === projectId)
-
-        // Check for error:
-        if (currentProjectIndex === -1) {
-            console.error(`Project with ID ${projectId} not found!`);
-            return;
-        }
-        
-        currentData.splice(currentProjectIndex, 1);
-        saveData('projects', currentData);
-        console.log(`Project with ID ${projectId} deleted successfully!`);
-    }
 };
