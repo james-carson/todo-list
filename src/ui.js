@@ -515,7 +515,7 @@ export function addOrEditTodo(type, todoId = '') {
 
             if (todo.id && project) {
                 console.log(`Attempting to delete todo with ID: (${todo.id})`)
-                project.deleteTodo(todo.id);
+                project.deleteTodoFromProject(todo.id);
                 saveData('projects', currentData);
                 saveState('state', currentState);
                 popupCancel('todo');
