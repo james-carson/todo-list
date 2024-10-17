@@ -1,7 +1,7 @@
 // todo.js contains the Todo class, its constuctor, and functions to manipulate existing objects.
 
 import { getCompletedTodos, getHighPriorityTodos, getOverdueTodos, getTodosDueThisWeek, getTodosDueToday } from "./functions"
-import { loadData, loadState, saveData, loadProject, saveState } from "./storage"
+import { loadData, loadState, saveData, addToCounter, loadProject, saveState } from "./storage"
 import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos, renderContent } from "./ui"
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
@@ -91,11 +91,19 @@ export function deleteTodo(todoId) {
     }
 }
 
+export function createNewTodo(title, dueDate, priority, notes, projectName) {
+    let currentData = loadData('projects');
+    const project = currentData.find(p => p.name === projectName);
 
-function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.
-    // Load data
-    // Get todo counter number
-    // Add one to it and assign this as ID
-    // Add to project using func
-    // Save data
-}
+    if (!project) {
+        console.error(`Project with name "${projectName}" not found!`);
+        return;
+    }
+
+    const numberForId = addToCounter('todoCounter');
+    const newTodoId = (`t-${numberForId}`);
+    const newTodo = new Todo (newTodoId, title, dueDate, priority, notes, 'false');
+    project.todoList.push(newTodo);
+    saveData('projects', currentData);
+    console.log(`New todo added to project "${projectName}":`, newTodo);
+};

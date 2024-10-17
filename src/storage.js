@@ -86,26 +86,22 @@ export function getCounter(key) {
         // If it is, return it
         return counter;
     } else {
-        console.log('No Todo Counter exists, so set to 0.')
+        console.log('No Counter exists, so set to 0.')
         // If it isn't create it.
         return setCounter(key);
     }
 }
 
 export function addToCounter(key) {
-    console.log(`Initiated addToCounter()`);
+    console.log(`Initiated addToCounter(${key})`);
     // Load Todo Counter data
-    const counter = loadCounter(key);
-    if (counter !== null && !isNaN(counter)) {
-        // Increment by 1
-        counter++;
-    } else if (!counter) {
-        setCounter(key);
-    }
+    let counter = getCounter(key);
+    // Increment by 1
+    counter++;
     // Save the new data
     saveCounter(key, counter);
     console.log(`${key} Counter is now ${counter}.`)
-    // Return the number - ***Do I need to do this, or is the act of doing it enough?*** I think I need it
+    // Return the number
     return counter;
 }
 

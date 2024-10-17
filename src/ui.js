@@ -2,11 +2,11 @@
 // ...through index.js
 
 import { getAllTodos, getTodosDueToday, getOverdueTodos, getTodosDueThisWeek, getHighPriorityTodos, getCompletedTodos, getTodosForSpecificProject, getAllProjectNames } from './functions.js';
-import { toggleTodoCompleted } from './todo.js';
+import { toggleTodoCompleted, createNewTodo } from './todo.js';
 import flagImage from './images/flag.svg';
-import { loadData, saveData, saveState, loadState, addToCounter } from './storage.js';
+import { loadData, saveData, saveState, loadState } from './storage.js';
 import { format, isToday, isTomorrow, isThisWeek, isThisYear } from 'date-fns';
-import { Project } from './project.js';
+import { createNewProject, Project } from './project.js';
 import { deleteTodo } from './todo.js';
 
 export function renderSidebar() {
@@ -432,21 +432,23 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupGrid.appendChild(todoPopupDueDate);
 
     // Append the completed section:
-    const todoPopupCompleted = document.createElement('div');
-    todoPopupCompleted.classList.add('todo_popup_completed');
-    todoPopupCompleted.classList.add('flex');
-    const todoPopupCompletedLabel = document.createElement('h4');
-    todoPopupCompletedLabel.textContent = 'Completed:';
-    todoPopupCompleted.appendChild(todoPopupCompletedLabel);
-    const todoPopupCompletedCheckbox = document.createElement('input');
-    todoPopupCompletedCheckbox.setAttribute('type', 'checkbox');
-    todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
-    todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
-    if (type === 'edit' && todoId) {
-        todoPopupCompletedCheckbox.checked = todo.completed;
+    if (type === 'edit') {
+        const todoPopupCompleted = document.createElement('div');
+        todoPopupCompleted.classList.add('todo_popup_completed');
+        todoPopupCompleted.classList.add('flex');
+        const todoPopupCompletedLabel = document.createElement('h4');
+        todoPopupCompletedLabel.textContent = 'Completed:';
+        todoPopupCompleted.appendChild(todoPopupCompletedLabel);
+        const todoPopupCompletedCheckbox = document.createElement('input');
+        todoPopupCompletedCheckbox.setAttribute('type', 'checkbox');
+        todoPopupCompletedCheckbox.setAttribute('id', 'todo_completed');
+        todoPopupCompletedCheckbox.setAttribute('tabindex', '3');
+        if (todoId) {
+            todoPopupCompletedCheckbox.checked = todo.completed;
+        }
+        todoPopupCompleted.appendChild(todoPopupCompletedCheckbox);
+        todoPopupGrid.appendChild(todoPopupCompleted);
     }
-    todoPopupCompleted.appendChild(todoPopupCompletedCheckbox);
-    todoPopupGrid.appendChild(todoPopupCompleted);
 
     // Append the project section:
     const todoPopupProject = document.createElement('div');
@@ -531,6 +533,22 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupSaveButton = document.createElement('div');
     todoPopupSaveButton.classList.add('todo_save_button');
     todoPopupSaveButton.textContent = 'Save';
+    todoPopupSaveButton.addEventListener('click', () => {
+        if (type === 'add') {
+        const title = todoPopupNameInput.value;
+        const dueDate = todoPopupDueDateInput.value
+        const priority = todoPopupPriorityInput.value;
+        const notes = todoPopupNotesInput.value;
+        const project = todoPopupProjectInput.value;
+        createNewTodo(title, dueDate, priority, notes, project)
+        popupCancel('todo')
+        } else if (type === 'edit') {
+            // Working on it!
+        } else {
+            console.log('Problem with saving after Save button clicked')
+        }
+        // What to render here?
+    })
     todoButtonsDiv.appendChild(todoPopupSaveButton);
 }
 
@@ -646,16 +664,6 @@ export function addOrEditProject(type, projectId = '') {
     });
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
-
-function createNewProject(name) {
-    let currentData = loadData('projects');
-    const numberForId = addToCounter('projectCounter');
-    const newProjectId = ('p-' + numberForId);
-    const newProjectName = name;
-    const newProject = new Project(newProjectId, newProjectName, []);
-    currentData.push(newProject);
-    saveData('projects', currentData);
-};
 
 function deleteProject(projectId) {
     let currentData = loadData('projects');
