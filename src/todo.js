@@ -106,4 +106,7 @@ export function createNewTodo(title, dueDate, priority, notes, projectName) {
     project.todoList.push(newTodo);
     saveData('projects', currentData);
     console.log(`New todo added to project "${projectName}":`, newTodo);
+
+    const updatedData = loadData('projects');
+    console.log(`Updated data after saving: ${JSON.stringify(updatedData, null, 2)}`);
 };

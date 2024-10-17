@@ -190,7 +190,8 @@ export function renderContent(project, todos) {
 
     const currentData = loadData('projects');
     const currentProject = currentData.find(p => p.name === project);
-
+    const todos = currentProject.todoList;
+    
     todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Get the specified project (from input)
@@ -534,6 +535,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupSaveButton.classList.add('todo_save_button');
     todoPopupSaveButton.textContent = 'Save';
     todoPopupSaveButton.addEventListener('click', () => {
+        currentProject = loadState('currentProject')
         if (type === 'add') {
         const title = todoPopupNameInput.value;
         const dueDate = todoPopupDueDateInput.value
@@ -547,6 +549,12 @@ export function addOrEditTodo(type, todoId = '') {
         } else {
             console.log('Problem with saving after Save button clicked')
         }
+        updateScreen(currentProject) //How to load the correct todos?
+
+
+
+
+
         // What to render here?
     })
     todoButtonsDiv.appendChild(todoPopupSaveButton);
