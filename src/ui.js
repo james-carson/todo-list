@@ -7,6 +7,7 @@ import flagImage from './images/flag.svg';
 import { loadData, saveData, saveState, loadState, addToCounter } from './storage.js';
 import { format, isToday, isTomorrow, isThisWeek, isThisYear } from 'date-fns';
 import { Project } from './project.js';
+import { deleteTodo } from './todo.js';
 
 export function renderSidebar() {
     console.log('Initialised renderSidebar()')
@@ -187,6 +188,9 @@ export function renderContent(project, todos) {
     const content = document.getElementById('content');
     content.textContent = '';
 
+    const currentData = loadData('projects');
+    const currentProject = currentData.find(p => p.name === project);
+
     todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Get the specified project (from input)
@@ -283,13 +287,20 @@ export function renderContent(project, todos) {
         priority_flag.classList.add('priority_flag');
         priority.appendChild(priority_flag)
 
-        const deleteTodo = document.createElement('div');
-        deleteTodo.classList.add('todo_delete');
-        deleteTodo.textContent = 'Delete'
-        deleteTodo.addEventListener('click', () => {
-            // NEEDS TO RUN A FUNCTION / OPEN A POPUP TO CONFIRM A DELETE!
+        const deleteTodoButton = document.createElement('div');
+        deleteTodoButton.classList.add('todo_delete');
+        deleteTodoButton.textContent = 'Delete'
+        deleteTodoButton.addEventListener('click', () => {
+            if (todo.id) {
+                console.log(`Attempting to delete todo with ID: (${todo.id})`)
+                console.log('Todo to delete:', todo.id);
+                deleteTodo(todo.id);
+                updateScreen(project);
+            } else {
+                console.log('Error deleting todos');
+            }
         });
-        todoGrid.appendChild(deleteTodo);
+        todoGrid.appendChild(deleteTodoButton);
 
         // Append the completed todo div to the content area:
         content.appendChild(todoDiv);
@@ -493,31 +504,27 @@ export function addOrEditTodo(type, todoId = '') {
 
     // Append the Delete button:
     if (type === 'edit') {
-    const todoPopupDeleteButton = document.createElement('div');
-    todoPopupDeleteButton.classList.add('todo_delete_button');
-    todoPopupDeleteButton.textContent = 'Delete';
-    todoPopupDeleteButton.addEventListener('click', () => {
-        let currentData = loadData('projects')
-        let currentState = loadState('state')
-        deleteTodo(todo.id);
-        saveData('projects', currentData);
-        saveState('state', currentState);
-        popupCancel('todo');
-        updateScreen(currentProject.name, []);
-        // WILL THIS WORK?
+        const todoPopupDeleteButton = document.createElement('div');
+        todoPopupDeleteButton.classList.add('todo_delete_button');
+        todoPopupDeleteButton.textContent = 'Delete';
+        todoPopupDeleteButton.addEventListener('click', () => {
+            let currentData = loadData('projects')
+            let currentState = loadState('state')
 
+            const project = currentData.find(p => p.id === currentProject.id);
 
-
-
-        // I AM HERE - NOT TESTED!
-
-
-
-
-
-
-    })
-    todoButtonsDiv.appendChild(todoPopupDeleteButton);
+            if (todo.id && project) {
+                console.log(`Attempting to delete todo with ID: (${todo.id})`)
+                project.deleteTodo(todo.id);
+                saveData('projects', currentData);
+                saveState('state', currentState);
+                popupCancel('todo');
+                updateScreen(currentProject.name, []);
+            } else {
+                console.log('Error deleting todos');
+            }
+        })
+        todoButtonsDiv.appendChild(todoPopupDeleteButton);
     }
 
     // Append the save button:
@@ -662,7 +669,7 @@ function deleteProject(projectId) {
             console.error(`Project with ID ${projectId} not found!`);
             return;
         }
-        
+
         currentData.splice(currentProjectIndex, 1);
         saveData('projects', currentData);
         saveState('state', 'default');

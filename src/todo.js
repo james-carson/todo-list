@@ -75,6 +75,23 @@ export function toggleTodoCompleted(todoId) {
     console.error(`Todo with ID ${todoId} cannot be found`);
 };
 
+export function deleteTodo(todoId) {
+    const projects = loadData('projects');
+    const parentProject = projects.find(project =>
+        project.todoList.find(todo => todo.id === todoId)
+    );
+
+    if (parentProject) {
+        // Remove the todo by filtering it out
+        parentProject.todoList = parentProject.todoList.filter(todo => todo.id !== todoId);
+        saveData('projects', projects); // Save updated projects data
+        console.log(`Todo with ID: ${todoId} deleted.`);
+    } else {
+        console.error(`Todo with ID: ${todoId} not found.`);
+    }
+}
+
+
 function createTodo(todoCounter) { // Need to work out the counter functions before I can use this.
     // Load data
     // Get todo counter number

@@ -17,12 +17,6 @@ export class Project {
         this.todoList.push(todo);
     }
 
-    deleteTodo(todoId) {
-        const todoIndex = this.getTodoIndex(todoId);
-        // The todoIndex MUST be found before running this:
-        this.todoList.splice(todoIndex, 1);
-    }
-
     moveTodo(todoId, oldProject, newProject) {
         // Get the todo's index:
         const todoIndex = oldProject.getTodoIndex(todoId);
