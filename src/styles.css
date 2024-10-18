@@ -496,7 +496,8 @@ h1 {
 }
 
 .todo_popup_overlay,
-.project_popup_overlay {
+.project_popup_overlay,
+.confirmation_popup_overlay {
     height: 100vh;
     width: 100vw;
     top: 0;
@@ -508,7 +509,8 @@ h1 {
 }
 
 .todo_popup_grid,
-.project_popup_grid {
+.project_popup_grid,
+.confirmation_popup_grid {
     z-index: 2;
     min-width: 50%;
     max-width: 80%;
@@ -537,6 +539,13 @@ h1 {
     grid-template-rows: 1fr 1fr 1fr;
 }
 
+.confirmation_popup_grid {
+    min-height: 25%;
+    max-height: 50%;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
 .todo_popup_title,
 .todo_notes_input,
 .project_popup_title {
@@ -544,10 +553,17 @@ h1 {
 }
 
 .todo_popup_title,
-.project_popup_title {
+.project_popup_title,
+.confirmation_popup_title {
     grid-row: 1 / 2;
     text-align: center;
     font-size: 1.5em;
+}
+
+.confirmation_message {
+    grid-row: 2 / 3;
+    text-align: center;
+    font-size: 1em;
 }
 
 .flex {
@@ -612,32 +628,34 @@ h4 {
 }
 
 .todo_buttons_div,
-.project_buttons_div {
+.project_buttons_div,
+.confirmation_buttons_div {
     justify-self: end;
     gap: 5%;
     margin-right: 5%;
 }
 
-.todo_required_text, .project_required_text {
+.todo_required_text,
+.project_required_text {
     grid-column: 1 / 2;
-    
+
 }
 
 .todo_required_text {
     grid-row: 6 / 7;
-} 
+}
 
 .project_required_text {
     grid-row: 3 / 4;
 }
-
 
 .todo_buttons_div {
     grid-column: 2 / 3;
     grid-row: 6 / 7;
 }
 
-.project_buttons_div {
+.project_buttons_div,
+.confirmation_buttons_div {
     grid-row: 3 / 4;
 }
 
@@ -646,7 +664,9 @@ h4 {
 .todo_delete_button,
 .project_save_button,
 .project_cancel_button,
-.project_delete_button {
+.project_delete_button,
+.confirmation_cancel_button,
+.confirmation_confirm_button {
     padding: 0.25em 0.75em;
     border: 1px solid white;
 }
@@ -654,7 +674,8 @@ h4 {
 .todo_save_button:hover,
 .todo_cancel_button:hover,
 .project_save_button:hover,
-.project_cancel_button:hover {
+.project_cancel_button:hover,
+.confirmation_cancel_button:hover {
     cursor: pointer;
     background-color: white;
     color: var(--bg-black);
@@ -662,7 +683,8 @@ h4 {
 }
 
 .todo_delete_button:hover,
-.project_delete_button:hover {
+.project_delete_button:hover,
+.confirmation_confirm_button:hover {
     cursor: pointer;
     background-color: var(--td-red);
     border: white solid 1px;

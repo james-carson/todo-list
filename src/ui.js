@@ -203,6 +203,7 @@ export function renderContent(project, todos) {
     // Get the todos for this specific project
     // For each of them, create the required divs and append them to the content area
     todos.forEach(todo => {
+
         // Create a div for each todo:
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo_div');
@@ -294,14 +295,7 @@ export function renderContent(project, todos) {
         deleteTodoButton.classList.add('todo_delete');
         deleteTodoButton.textContent = 'Delete'
         deleteTodoButton.addEventListener('click', () => {
-            if (todo.id) {
-                console.log(`Attempting to delete todo with ID: (${todo.id})`)
-                console.log('Todo to delete:', todo.id);
-                deleteTodo(todo.id);
-                updateScreen(project);
-            } else {
-                console.log('Error deleting todos');
-            }
+            deleteTodoConfirmationPopup(todo.id, todo.title, project); //What to feed in as currentProject? project may be wrong
         });
         todoGrid.appendChild(deleteTodoButton);
 
@@ -521,21 +515,7 @@ export function addOrEditTodo(type, todoId = '') {
         todoPopupDeleteButton.classList.add('todo_delete_button');
         todoPopupDeleteButton.textContent = 'Delete';
         todoPopupDeleteButton.addEventListener('click', () => {
-            let currentData = loadData('projects')
-            let currentState = loadState('state')
-
-            const project = currentData.find(p => p.id === currentProject.id);
-
-            if (todo.id && project) {
-                console.log(`Attempting to delete todo with ID: (${todo.id})`)
-                project.deleteTodoFromProject(todo.id);
-                saveData('projects', currentData);
-                saveState('state', currentState);
-                popupCancel('todo');
-                updateScreen(currentProject.name, []);
-            } else {
-                console.log('Error deleting todos');
-            }
+                deleteTodoConfirmationPopup(todo.id, todo.title, currentProject);
         })
         todoButtonsDiv.appendChild(todoPopupDeleteButton);
     }
@@ -767,11 +747,8 @@ export function addOrEditProject(type, projectId = '') {
         projectPopupDeleteButton.classList.add('project_delete_button');
         projectPopupDeleteButton.textContent = 'Delete';
         projectPopupDeleteButton.addEventListener('click', () => {
-            if (type === 'edit') {
-                deleteTodoConfirmationPopup(currentProject.id);
-            } else if (type === 'add')
-                alert('Can only delete in edit mode!')
-            // Change this to something better!
+            console.log('Delete button clicked!')
+            deleteProjectConfirmationPopup(currentProject.id, currentProject.name);
         })
         projectButtonsDiv.appendChild(projectPopupDeleteButton);
     }
@@ -839,6 +816,7 @@ export function addOrEditProject(type, projectId = '') {
 }
 
 function deleteProject(projectId) {
+    console.log(`deleteProject(projectId)launched with ID: ${projectId}`)
     let currentData = loadData('projects');
     let currentProjectIndex;
 
@@ -877,7 +855,8 @@ function popupCancel(type) {
     }
 };
 
-function deleteTodoConfirmationPopup(project) {
+function deleteProjectConfirmationPopup(projectId, projectName) {
+    console.log(`deleteProjectConfirmationPopup(projectId)launched with ID: ${projectId}`)
     // Add the overlay window
     const confirmationPopupOverlay = document.createElement('div');
     confirmationPopupOverlay.classList.add('confirmation_popup_overlay');
@@ -888,10 +867,16 @@ function deleteTodoConfirmationPopup(project) {
     confirmationPopupGrid.classList.add('confirmation_popup_grid');
     confirmationPopupOverlay.appendChild(confirmationPopupGrid);
 
+    // Add a title
+    const confirmationPopupTitle = document.createElement('div');
+    confirmationPopupTitle.classList.add('confirmation_popup_title');
+    confirmationPopupTitle.textContent = 'Are you sure?';
+    confirmationPopupGrid.appendChild(confirmationPopupTitle);
+
     // Add the message to the popup
     const confirmationMessage = document.createElement('div');
     confirmationMessage.classList.add('confirmation_message');
-    confirmationMessage.textContent = `Are you sure you want to delete this todo? This cannot be undone.`
+    confirmationMessage.textContent = `Are you sure you want to delete ${projectName}? This cannot be undone.`
     confirmationPopupGrid.appendChild(confirmationMessage);
 
     // Add a buttons container
@@ -914,13 +899,71 @@ function deleteTodoConfirmationPopup(project) {
     confirmationConfirmButton.classList.add('confirmation_confirm_button');
     confirmationConfirmButton.textContent = 'Delete';
     confirmationConfirmButton.addEventListener('click', () => {
+        deleteProject(projectId);
         confirmationPopupOverlay.remove();
-        deleteProject(project)
         popupCancel('project');
         renderSidebar();
     });
     confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 }
 
+function deleteTodoConfirmationPopup(todoId, todoName, currentProject) {
+    console.log(`deleteTodoConfirmationPopup(projectId)launched with ID: ${todoId}`)
+    // Add the overlay window
+    const confirmationPopupOverlay = document.createElement('div');
+    confirmationPopupOverlay.classList.add('confirmation_popup_overlay');
+    document.body.appendChild(confirmationPopupOverlay);
+
+    // Add the Grid layout
+    const confirmationPopupGrid = document.createElement('div');
+    confirmationPopupGrid.classList.add('confirmation_popup_grid');
+    confirmationPopupOverlay.appendChild(confirmationPopupGrid);
+
+    // Add a title
+    const confirmationPopupTitle = document.createElement('div');
+    confirmationPopupTitle.classList.add('confirmation_popup_title');
+    confirmationPopupTitle.textContent = 'Are you sure?';
+    confirmationPopupGrid.appendChild(confirmationPopupTitle);
+
+    // Add the message to the popup
+    const confirmationMessage = document.createElement('div');
+    confirmationMessage.classList.add('confirmation_message');
+    confirmationMessage.textContent = `Are you sure you want to delete ${todoName}? This cannot be undone.`
+    confirmationPopupGrid.appendChild(confirmationMessage);
+
+    // Add a buttons container
+    const confirmationButtonsDiv = document.createElement('div');
+    confirmationButtonsDiv.classList.add('confirmation_buttons_div');
+    confirmationButtonsDiv.classList.add('flex');
+    confirmationPopupGrid.appendChild(confirmationButtonsDiv);
+
+    // Append the cancel button
+    const confirmationCancelButton = document.createElement('div');
+    confirmationCancelButton.classList.add('confirmation_cancel_button');
+    confirmationCancelButton.textContent = 'Cancel';
+    confirmationCancelButton.addEventListener('click', () => {
+        confirmationPopupOverlay.remove();
+    });
+    confirmationButtonsDiv.appendChild(confirmationCancelButton);
+
+    // Append the confirm button
+    const confirmationConfirmButton = document.createElement('div');
+    confirmationConfirmButton.classList.add('confirmation_confirm_button');
+    confirmationConfirmButton.textContent = 'Delete';
+    confirmationConfirmButton.addEventListener('click', () => {
+            console.log(`Attempting to delete todo with ID: (${todoId})`)
+            let currentData = loadData('projects')
+            let currentState = loadState('state')
+            const project = currentData.find(p => p.id === currentProject.id);
+            project.deleteTodoFromProject(todoId);
+            saveData('projects', currentData);
+            saveState('state', currentState);
+            confirmationPopupOverlay.remove();
+            popupCancel('todo');
+            //Do I need two delete functions? Works for edit but not from main page.
+            updateScreen(currentProject.name, []); //Does not work from renderContent
+    });
+    confirmationButtonsDiv.appendChild(confirmationConfirmButton);
+}
 
 window.addOrEditTodo = addOrEditTodo;
