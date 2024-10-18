@@ -150,6 +150,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // Update state
         saveState('state', 'default');
         saveState('currentProject', project);
+        saveState('currentTodos', todos);
     } else if (currentState === 'static') {
         // console.log('Input was deemed as static')
         if (projectInput === 'Completed') {
@@ -163,6 +164,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // Update state
         saveState('state', 'static');
         saveState('currentProject', project);
+        saveState('currentTodos', todos);
     } else if (currentState === 'dynamic') {
         // console.log('Input was deemed as dynamic')
         // Perform actions
@@ -173,6 +175,7 @@ export function updateScreen(projectInput = '', todosInput = []) {
         // Update state
         saveState('state', 'dynamic');
         saveState('currentProject', project);
+        saveState('currentTodos', todos);
     } else {
         console.error('updateScreen() not run correctly')
     }
@@ -187,10 +190,6 @@ export function renderContent(project, todos) {
     // Define the content area and clear it
     const content = document.getElementById('content');
     content.textContent = '';
-
-    const currentData = loadData('projects');
-    const currentProject = currentData.find(p => p.name === project);
-    const todos = currentProject.todoList;
     
     todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
@@ -535,27 +534,23 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupSaveButton.classList.add('todo_save_button');
     todoPopupSaveButton.textContent = 'Save';
     todoPopupSaveButton.addEventListener('click', () => {
-        currentProject = loadState('currentProject')
         if (type === 'add') {
         const title = todoPopupNameInput.value;
         const dueDate = todoPopupDueDateInput.value
         const priority = todoPopupPriorityInput.value;
         const notes = todoPopupNotesInput.value;
         const project = todoPopupProjectInput.value;
-        createNewTodo(title, dueDate, priority, notes, project)
+        createNewTodo(title, dueDate, priority, notes, project);
         popupCancel('todo')
         } else if (type === 'edit') {
             // Working on it!
         } else {
             console.log('Problem with saving after Save button clicked')
         }
-        updateScreen(currentProject) //How to load the correct todos?
+        const currentProject = loadState('currentProject');
+        const currentTodos = loadState('currentTodos');
 
-
-
-
-
-        // What to render here?
+        updateScreen(currentProject, currentTodos) //How to identify the current todo list?
     })
     todoButtonsDiv.appendChild(todoPopupSaveButton);
 }
@@ -660,7 +655,7 @@ export function addOrEditProject(type, projectId = '') {
     projectPopupSaveButton.textContent = 'Save';
     projectPopupSaveButton.addEventListener('click', () => {
         if (type === 'add') {
-            const newProjectName = projectPopupNameInput.value
+            const newProjectName = projectPopupNameInput.value;
             createNewProject(newProjectName);
             popupCancel('project');
         } else if (type === 'edit') {

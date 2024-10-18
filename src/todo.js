@@ -93,8 +93,9 @@ export function deleteTodo(todoId) {
 
 export function createNewTodo(title, dueDate, priority, notes, projectName) {
     let currentData = loadData('projects');
-    const project = currentData.find(p => p.name === projectName);
 
+    const project = currentData.find(p => p.name === projectName);
+    console.log(`Has the project been found in currentData? Here: ${project}`);
     if (!project) {
         console.error(`Project with name "${projectName}" not found!`);
         return;
@@ -102,9 +103,13 @@ export function createNewTodo(title, dueDate, priority, notes, projectName) {
 
     const numberForId = addToCounter('todoCounter');
     const newTodoId = (`t-${numberForId}`);
-    const newTodo = new Todo (newTodoId, title, dueDate, priority, notes, 'false');
+    const newTodo = new Todo (newTodoId, title, dueDate, priority, notes, false);
     project.todoList.push(newTodo);
     saveData('projects', currentData);
+    saveState('state', 'dynamic');
+    saveState('currentProject', project.name);
+    saveState('currentTodos', project.todoList);
+
     console.log(`New todo added to project "${projectName}":`, newTodo);
 
     const updatedData = loadData('projects');
