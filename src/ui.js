@@ -190,7 +190,7 @@ export function renderContent(project, todos) {
     // Define the content area and clear it
     const content = document.getElementById('content');
     content.textContent = '';
-    
+
     todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Get the specified project (from input)
@@ -213,8 +213,11 @@ export function renderContent(project, todos) {
         // Create a checkbox for completion:
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        // This explains what to happen when checked:
-        checkbox.checked = todo.complete;
+        if (project === 'Completed' || todo.completed === true) {
+            checkbox.checked = true; // Ensure it's ticked for completed todos
+        } else {
+            checkbox.checked = false; // For incomplete todos, it's unticked
+        }
 
         // Adding an event listener that saves the change
         checkbox.addEventListener('click', () => {
@@ -363,7 +366,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupName.classList.add('todo_popup_name');
     todoPopupName.classList.add('flex');
     const todoPopupNameLabel = document.createElement('h4');
-    todoPopupNameLabel.textContent = 'Title:';
+    todoPopupNameLabel.textContent = 'Title: *';
     todoPopupName.appendChild(todoPopupNameLabel);
     const todoPopupNameInput = document.createElement('input');
     todoPopupNameInput.setAttribute('type', 'text');
@@ -383,7 +386,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupPriority.classList.add('todo_popup_priority');
     todoPopupPriority.classList.add('flex');
     const todoPopupPriorityLabel = document.createElement('h4');
-    todoPopupPriorityLabel.textContent = 'Priority:';
+    todoPopupPriorityLabel.textContent = 'Priority: *';
     todoPopupPriority.appendChild(todoPopupPriorityLabel);
     // Create the select
     const todoPopupPriorityInput = document.createElement('select');
@@ -417,7 +420,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupDueDate.classList.add('todo_popup_duedate');
     todoPopupDueDate.classList.add('flex');
     const todoPopupDueDateLabel = document.createElement('h4');
-    todoPopupDueDateLabel.textContent = 'Due Date:';
+    todoPopupDueDateLabel.textContent = 'Due Date: *';
     todoPopupDueDate.appendChild(todoPopupDueDateLabel);
     const todoPopupDueDateInput = document.createElement('input');
     todoPopupDueDateInput.setAttribute('type', 'date');
@@ -455,7 +458,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupProject.classList.add('todo_popup_project');
     todoPopupProject.classList.add('flex');
     const todoPopupProjectLabel = document.createElement('h4');
-    todoPopupProjectLabel.textContent = 'Project:'
+    todoPopupProjectLabel.textContent = 'Project: *'
     todoPopupProject.appendChild(todoPopupProjectLabel);
     const todoPopupProjectInput = document.createElement('select');
     todoPopupProjectInput.setAttribute('id', 'todo_project')
@@ -488,6 +491,12 @@ export function addOrEditTodo(type, todoId = '') {
         todoPopupNotesInput.value = todo.notes;
     }
     todoPopupGrid.appendChild(todoPopupNotesInput);
+
+    // Add a label for required:
+    const todoRequiredText = document.createElement('div');
+    todoRequiredText.classList.add('todo_required_text');
+    todoRequiredText.textContent = '* = Required field'
+    todoPopupGrid.appendChild(todoRequiredText);
 
     // Add a buttons container
     const todoButtonsDiv = document.createElement('div');
@@ -533,15 +542,80 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupSaveButton = document.createElement('div');
     todoPopupSaveButton.classList.add('todo_save_button');
     todoPopupSaveButton.textContent = 'Save';
+
+    // Initially disabled depending on form validation:
+    todoPopupSaveButton.disabled = true;
+    todoPopupSaveButton.style.opacity = 0.5;
+
+    // Checking for required input:
+    const validateTodoForm = () => {
+        const title = todoPopupNameInput.value;
+        const dueDate = todoPopupDueDateInput.value;
+        const priority = todoPopupPriorityInput.value;
+        const project = todoPopupProjectInput.value;
+
+        // Add or remove red border based on whether fields are filled
+        if (!title) {
+            todoPopupNameInput.style.borderColor = 'var(--priority-high)';
+        } else {
+            todoPopupNameInput.style.borderColor = '';
+        }
+
+        if (!dueDate) {
+            todoPopupDueDateInput.style.borderColor = 'var(--priority-high)';
+        } else {
+            todoPopupDueDateInput.style.borderColor = '';
+        }
+
+        if (!priority) {
+            todoPopupPriorityInput.style.borderColor = 'var(--priority-high)';
+        } else {
+            todoPopupPriorityInput.style.borderColor = '';
+        }
+
+        if (!project) {
+            todoPopupProjectInput.style.borderColor = 'var(--priority-high)';
+        } else {
+            todoPopupProjectInput.style.borderColor = '';
+        }
+
+        // Enable save button only if all required fields are filled
+        if (title && dueDate && priority && project) {
+            todoPopupSaveButton.disabled = false;
+            // Make button fully visible if all is good
+            todoPopupSaveButton.style.opacity = 1;
+        } else {
+            todoPopupSaveButton.disabled = true;
+            // Keep the button visually disabled if validation fails
+            todoPopupSaveButton.style.opacity = 0.5;
+        }
+    }
+
+    // Attach the validation listener to inputs
+    todoPopupNameInput.addEventListener('input', validateTodoForm);
+    todoPopupDueDateInput.addEventListener('input', validateTodoForm);
+    todoPopupPriorityInput.addEventListener('change', validateTodoForm);
+    todoPopupProjectInput.addEventListener('change', validateTodoForm);
+
+    validateTodoForm();
+
+    // Click listener for save button:
     todoPopupSaveButton.addEventListener('click', () => {
         if (type === 'add') {
-        const title = todoPopupNameInput.value;
-        const dueDate = todoPopupDueDateInput.value
-        const priority = todoPopupPriorityInput.value;
-        const notes = todoPopupNotesInput.value;
-        const project = todoPopupProjectInput.value;
-        createNewTodo(title, dueDate, priority, notes, project);
-        popupCancel('todo')
+            const title = todoPopupNameInput.value;
+            const dueDate = todoPopupDueDateInput.value
+            const priority = todoPopupPriorityInput.value;
+            const notes = todoPopupNotesInput.value;
+            const project = todoPopupProjectInput.value;
+
+            // Check if the required fields are filled in:
+            if (title === '' || dueDate === '' || priority === '' || project === '') {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            createNewTodo(title, dueDate, priority, notes, project);
+            popupCancel('todo')
         } else if (type === 'edit') {
             // Working on it!
         } else {
@@ -601,7 +675,7 @@ export function addOrEditProject(type, projectId = '') {
     projectPopupName.classList.add('flex');
     const projectPopupNameLabel = document.createElement('h4');
     projectPopupNameLabel.classList.add('project_popup_name_label');
-    projectPopupNameLabel.textContent = 'Name:';
+    projectPopupNameLabel.textContent = 'Name: *';
     projectPopupName.appendChild(projectPopupNameLabel);
     const projectPopupNameInput = document.createElement('input');
     projectPopupNameInput.classList.add('project_popup_name_input');
@@ -613,9 +687,14 @@ export function addOrEditProject(type, projectId = '') {
     if (type === 'edit' && projectId) {
         projectPopupNameInput.value = currentProject.name;
     }
-
     projectPopupName.appendChild(projectPopupNameInput);
     projectPopupGrid.appendChild(projectPopupName);
+
+    // Add a label for required:
+    const projectRequiredText = document.createElement('div');
+    projectRequiredText.classList.add('project_required_text');
+    projectRequiredText.textContent = '* = Required field'
+    projectPopupGrid.appendChild(projectRequiredText);
 
     // Add a buttons container
     const projectButtonsDiv = document.createElement('div');
@@ -653,13 +732,54 @@ export function addOrEditProject(type, projectId = '') {
     const projectPopupSaveButton = document.createElement('div');
     projectPopupSaveButton.classList.add('project_save_button');
     projectPopupSaveButton.textContent = 'Save';
+
+    projectPopupSaveButton.disabled = true;
+    projectPopupSaveButton.style.opacity = 0.5;
+
+    // Checking for required input:
+    const validateProjectForm = () => {
+        const projectName = projectPopupNameInput.value;
+
+        // Add or remove red border based on whether fields are filled
+        if (!projectName) {
+            projectPopupNameInput.style.borderColor = 'var(--priority-high)';
+        } else {
+            projectPopupNameInput.style.borderColor = '';
+        }
+
+        // Enable save button only if all required fields are filled
+        if (projectName) {
+            projectPopupSaveButton.disabled = false;
+            // Make button fully visible if all is good
+            projectPopupSaveButton.style.opacity = 1;
+        } else {
+            projectPopupSaveButton.disabled = true;
+            // Keep the button visually disabled if validation fails
+            projectPopupSaveButton.style.opacity = 0.5;
+        }
+    };
+
+    // Attach the validation listener to inputs
+    projectPopupNameInput.addEventListener('input', validateProjectForm);
+
+    // Immediately validate the form to check initial input states
+    validateProjectForm();
+
     projectPopupSaveButton.addEventListener('click', () => {
         if (type === 'add') {
             const newProjectName = projectPopupNameInput.value;
+
+            if (newProjectName === '') {
+                alert('Please provide a name for the project.');
+                return; // Stop the save process if name is empty
+            }
+
             createNewProject(newProjectName);
             popupCancel('project');
         } else if (type === 'edit') {
-            // Working on it!
+            currentProject.name = projectName;
+            saveData('projects', projects);
+            popupCancel('project');
         } else {
             console.log('Problem with saving after Save button clicked')
         }

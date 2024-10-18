@@ -495,7 +495,8 @@ h1 {
     cursor: pointer;
 }
 
-.todo_popup_overlay, .project_popup_overlay {
+.todo_popup_overlay,
+.project_popup_overlay {
     height: 100vh;
     width: 100vw;
     top: 0;
@@ -506,7 +507,8 @@ h1 {
     z-index: 1;
 }
 
-.todo_popup_grid, .project_popup_grid {
+.todo_popup_grid,
+.project_popup_grid {
     z-index: 2;
     min-width: 50%;
     max-width: 80%;
@@ -532,15 +534,17 @@ h1 {
     min-height: 25%;
     max-height: 80%;
     grid-template-columns: 3fr 2fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
 }
 
 .todo_popup_title,
-.todo_notes_input, .project_popup_title {
+.todo_notes_input,
+.project_popup_title {
     grid-column: span 2;
 }
 
-.todo_popup_title, .project_popup_title {
+.todo_popup_title,
+.project_popup_title {
     grid-row: 1 / 2;
     text-align: center;
     font-size: 1.5em;
@@ -555,13 +559,21 @@ h4 {
     align-content: center;
 }
 
-.todo_popup_name, .project_popup_name {
-    grid-column: 1 / 2;
+.todo_popup_name,
+.project_popup_name {
     grid-row: 2 / 3;
 }
 
+.todo_popup_name {
+    grid-column: 1 / 2;
+}
+
+.project_popup_name {
+    grid-column: span 2;
+}
+
 .project_popup_name_input {
-    width: 100%;
+    width: 85%;
 }
 
 .todo_popup_priority {
@@ -599,35 +611,72 @@ h4 {
     overflow-y: auto;
 }
 
-.todo_buttons_div, .project_buttons_div {
-    grid-column: span 2;
+.todo_buttons_div,
+.project_buttons_div {
     justify-self: end;
     gap: 5%;
     margin-right: 5%;
 }
 
+.todo_required_text, .project_required_text {
+    grid-column: 1 / 2;
+    
+}
+
+.todo_required_text {
+    grid-row: 6 / 7;
+} 
+
+.project_required_text {
+    grid-row: 3 / 4;
+}
+
+
 .todo_buttons_div {
+    grid-column: 2 / 3;
     grid-row: 6 / 7;
 }
 
 .project_buttons_div {
-    grid-row: 2 / 3;
+    grid-row: 3 / 4;
 }
 
-.todo_save_button, .todo_cancel_button, .todo_delete_button, .project_save_button, .project_cancel_button, .project_delete_button {
+.todo_save_button,
+.todo_cancel_button,
+.todo_delete_button,
+.project_save_button,
+.project_cancel_button,
+.project_delete_button {
     padding: 0.25em 0.75em;
     border: 1px solid white;
 }
 
-.todo_save_button:hover, .todo_cancel_button:hover, .project_save_button:hover, .project_cancel_button:hover {
+.todo_save_button:hover,
+.todo_cancel_button:hover,
+.project_save_button:hover,
+.project_cancel_button:hover {
     cursor: pointer;
     background-color: white;
     color: var(--bg-black);
     border: var(--td-red) solid 1px;
 }
 
-.todo_delete_button:hover, .project_delete_button:hover {
+.todo_delete_button:hover,
+.project_delete_button:hover {
     cursor: pointer;
     background-color: var(--td-red);
     border: white solid 1px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+input:invalid {
+    border: 2px solid var(--priority-high);
+}
+
+input:valid {
+    border: 2px solid var(--priority-low)
 }
