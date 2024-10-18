@@ -322,6 +322,7 @@ export function addOrEditTodo(type, todoId = '') {
     const projects = loadData('projects');
     let todo;
     let currentProject;
+    let originalProject;
 
     if (type === 'edit' && todoId) {
         for (let project of projects) {
@@ -329,6 +330,7 @@ export function addOrEditTodo(type, todoId = '') {
             todo = project.todoList.find(t => t.id === todoId);
             if (todo) {
                 currentProject = project;
+                originalProject = project;
                 console.log(`Todo with ID ${todoId} found in project: ${project}!`);
                 break;
             }
@@ -606,25 +608,73 @@ export function addOrEditTodo(type, todoId = '') {
             const dueDate = todoPopupDueDateInput.value
             const priority = todoPopupPriorityInput.value;
             const notes = todoPopupNotesInput.value;
-            const project = todoPopupProjectInput.value;
+            const projectName = todoPopupProjectInput.value;
 
             // Check if the required fields are filled in:
-            if (title === '' || dueDate === '' || priority === '' || project === '') {
+            if (title === '' || dueDate === '' || priority === '' || projectName === '') {
                 alert('Please fill in all required fields.');
                 return;
             }
 
-            createNewTodo(title, dueDate, priority, notes, project);
+            createNewTodo(title, dueDate, priority, notes, projectName);
             popupCancel('todo')
-        } else if (type === 'edit') {
-            // Working on it!
-        } else {
-            console.log('Problem with saving after Save button clicked')
-        }
-        const currentProject = loadState('currentProject');
-        const currentTodos = loadState('currentTodos');
 
-        updateScreen(currentProject, currentTodos) //How to identify the current todo list?
+            const updatedProject = projects.find(p => p.name === projectName);
+            if (updatedProject) {
+                updateScreen(updatedProject.name, updatedProject.todoList);
+            }
+
+        } else if (type === 'edit') {
+
+            const newTitle = todoPopupNameInput.value;
+            const newDueDate = todoPopupDueDateInput.value;
+            const newPriority = todoPopupPriorityInput.value;
+            const newNotes = todoPopupNotesInput.value;
+            const newProjectName = todoPopupProjectInput.value;
+
+            // Update the existing todo properties
+            todo.title = newTitle;
+            todo.dueDate = newDueDate;
+            todo.priority = newPriority;
+            todo.notes = newNotes;
+
+            // Check if the project has changed by comparing with `originalProject`
+            console.log(`Comparing originalProject.name: "${originalProject.name}" with newProjectName: "${newProjectName}"`);
+            if (originalProject.name !== newProjectName) {
+                // Remove the todo from the original project
+                console.log('Before removing todo from originalProject:', originalProject.todoList);
+                originalProject.todoList = originalProject.todoList.filter(t => t.id !== todo.id);
+                console.log('After removing todo from originalProject:', originalProject.todoList);
+
+                // Find the new project and add the todo to its todo list
+                const newProject = projects.find(p => p.name === newProjectName);
+                console.log('New project identified:', newProject);
+                if (newProject) {
+                    console.log('Before adding todo to newProject:', newProject.todoList);
+                    newProject.todoList.push(todo);
+                    console.log('After adding todo to newProject:', newProject.todoList);
+
+                    saveData('projects', projects);
+                    const savedData = loadData('projects');
+                    console.log('Updated projects after save:', savedData);
+                    popupCancel('todo');
+                    updateScreen(newProject.name, newProject.todoList);
+                } else {
+                    console.error(`Project with name "${newProjectName}" not found.`);
+                }
+            } else {
+                // If the project hasn't changed, update the todo in the original project
+                const todoIndex = originalProject.todoList.findIndex(t => t.id === todo.id);
+                originalProject.todoList[todoIndex] = todo;
+
+                // Save data and refresh screen
+                saveData('projects', projects);
+                popupCancel('todo');
+                updateScreen(originalProject.name, originalProject.todoList);
+            }
+        } else {
+            console.error('Problem with saving after Save button clicked')
+        }
     })
     todoButtonsDiv.appendChild(todoPopupSaveButton);
 }
@@ -718,9 +768,7 @@ export function addOrEditProject(type, projectId = '') {
         projectPopupDeleteButton.textContent = 'Delete';
         projectPopupDeleteButton.addEventListener('click', () => {
             if (type === 'edit') {
-                deleteProject(currentProject.id)
-                popupCancel('project');
-                renderSidebar();
+                deleteTodoConfirmationPopup(currentProject.id);
             } else if (type === 'add')
                 alert('Can only delete in edit mode!')
             // Change this to something better!
@@ -766,24 +814,26 @@ export function addOrEditProject(type, projectId = '') {
     validateProjectForm();
 
     projectPopupSaveButton.addEventListener('click', () => {
-        if (type === 'add') {
-            const newProjectName = projectPopupNameInput.value;
+        const newProjectName = projectPopupNameInput.value;
 
+        if (type === 'add') {
             if (newProjectName === '') {
                 alert('Please provide a name for the project.');
                 return; // Stop the save process if name is empty
             }
-
             createNewProject(newProjectName);
             popupCancel('project');
+
         } else if (type === 'edit') {
-            currentProject.name = projectName;
+            currentProject.name = newProjectName;
             saveData('projects', projects);
             popupCancel('project');
+
         } else {
             console.log('Problem with saving after Save button clicked')
         }
         renderSidebar();
+        updateScreen(currentProject.name, currentProject.todoList)
     });
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
@@ -826,5 +876,51 @@ function popupCancel(type) {
         console.error('Overlay not found. Cancel aborted.');
     }
 };
+
+function deleteTodoConfirmationPopup(project) {
+    // Add the overlay window
+    const confirmationPopupOverlay = document.createElement('div');
+    confirmationPopupOverlay.classList.add('confirmation_popup_overlay');
+    document.body.appendChild(confirmationPopupOverlay);
+
+    // Add the Grid layout
+    const confirmationPopupGrid = document.createElement('div');
+    confirmationPopupGrid.classList.add('confirmation_popup_grid');
+    confirmationPopupOverlay.appendChild(confirmationPopupGrid);
+
+    // Add the message to the popup
+    const confirmationMessage = document.createElement('div');
+    confirmationMessage.classList.add('confirmation_message');
+    confirmationMessage.textContent = `Are you sure you want to delete this todo? This cannot be undone.`
+    confirmationPopupGrid.appendChild(confirmationMessage);
+
+    // Add a buttons container
+    const confirmationButtonsDiv = document.createElement('div');
+    confirmationButtonsDiv.classList.add('confirmation_buttons_div');
+    confirmationButtonsDiv.classList.add('flex');
+    confirmationPopupGrid.appendChild(confirmationButtonsDiv);
+
+    // Append the cancel button
+    const confirmationCancelButton = document.createElement('div');
+    confirmationCancelButton.classList.add('confirmation_cancel_button');
+    confirmationCancelButton.textContent = 'Cancel';
+    confirmationCancelButton.addEventListener('click', () => {
+        confirmationPopupOverlay.remove();
+    });
+    confirmationButtonsDiv.appendChild(confirmationCancelButton);
+
+    // Append the confirm button
+    const confirmationConfirmButton = document.createElement('div');
+    confirmationConfirmButton.classList.add('confirmation_confirm_button');
+    confirmationConfirmButton.textContent = 'Delete';
+    confirmationConfirmButton.addEventListener('click', () => {
+        confirmationPopupOverlay.remove();
+        deleteProject(project)
+        popupCancel('project');
+        renderSidebar();
+    });
+    confirmationButtonsDiv.appendChild(confirmationConfirmButton);
+}
+
 
 window.addOrEditTodo = addOrEditTodo;
