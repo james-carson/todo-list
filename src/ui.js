@@ -294,7 +294,8 @@ export function renderContent(project, todos) {
         deleteTodoButton.classList.add('todo_delete');
         deleteTodoButton.textContent = 'Delete'
         deleteTodoButton.addEventListener('click', () => {
-            deleteTodoConfirmationPopup(todo.id, todo.title, project); //What to feed in as currentProject? project may be
+            const fullProject = loadData('projects').find(p => p.name === project);
+            deleteTodoConfirmationPopup(todo.id, todo.title, fullProject);
         });
         todoGrid.appendChild(deleteTodoButton);
 
@@ -514,7 +515,7 @@ export function addOrEditTodo(type, todoId = '') {
         todoPopupDeleteButton.classList.add('todo_delete_button');
         todoPopupDeleteButton.textContent = 'Delete';
         todoPopupDeleteButton.addEventListener('click', () => {
-            deleteTodoConfirmationPopup(todo.id, todo.title, currentProject);
+            deleteTodoConfirmationPopup(todo.id, todo.title, currentProject, 'edit');
         })
         todoButtonsDiv.appendChild(todoPopupDeleteButton);
     }
@@ -906,7 +907,7 @@ function deleteProjectConfirmationPopup(projectId, projectName) {
     confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 }
 
-function deleteTodoConfirmationPopup(todoId, todoName, currentProject) {
+function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = '') {
     console.log(`deleteTodoConfirmationPopup(projectId)launched with ID: ${todoId}`)
     // Add the overlay window
     const confirmationPopupOverlay = document.createElement('div');
@@ -962,7 +963,9 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject) {
                 project.todoList = project.todoList.filter(t => t.id !== todoId);
                 saveData('projects', currentData);
                 confirmationPopupOverlay.remove();
-                popupCancel('todo');
+                if (from === 'edit') {
+                    popupCancel('todo');
+                };
                 updateScreen(currentProject.name, project.todoList);
             }
         } else if (currentState === 'default' || currentState === 'static') {
@@ -978,18 +981,20 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject) {
 
             if (projectFound) {
                 saveData('projects', currentData);
-                // For 'default' or 'static' states, refresh the screen with the current view
-                const todos = loadState('currentTodos');
+                const todos = loadState('currentTodos').filter(t => t.id !== todoId);
                 const projectName = loadState('currentProject');
+                saveState('currentTodos', todos);
                 confirmationPopupOverlay.remove();
-                popupCancel('todo');
+                if (from === 'edit') {
+                    popupCancel('todo');
+                };
                 updateScreen(projectName, todos);
             } else {
                 console.error(`Error while attempting to delete todo with ID ${todo.id}`)
             }
         }
-        confirmationButtonsDiv.appendChild(confirmationConfirmButton);
     })
+    confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 };
 
 window.addOrEditTodo = addOrEditTodo;
