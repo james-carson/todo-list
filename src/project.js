@@ -93,4 +93,5 @@ export function createNewProject(name) {
     const newProject = new Project(newProjectId, newProjectName, []);
     currentData.push(newProject);
     saveData('projects', currentData);
+    return newProject;
 };

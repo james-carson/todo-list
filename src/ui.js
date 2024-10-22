@@ -794,21 +794,24 @@ export function addOrEditProject(type, projectId = '') {
         if (type === 'add') {
             if (newProjectName === '') {
                 alert('Please provide a name for the project.');
-                return; // Stop the save process if name is empty
+                return;
             }
-            createNewProject(newProjectName);
+            const newProject = createNewProject(newProjectName);
             popupCancel('project');
+
+            renderSidebar();
+            updateScreen(newProject.name, newProject.todoList);
 
         } else if (type === 'edit') {
             currentProject.name = newProjectName;
             saveData('projects', projects);
             popupCancel('project');
 
+            renderSidebar();
+            updateScreen(currentProject.name, currentProject.todoList);
         } else {
             console.log('Problem with saving after Save button clicked')
         }
-        renderSidebar();
-        updateScreen(currentProject.name, currentProject.todoList)
     });
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
