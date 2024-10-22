@@ -43,7 +43,6 @@ export function renderSidebar() {
         projectEditButton.addEventListener('click', () => {
             console.log(`Sidebar project clicked - project.id is ${project.id}`);
             addOrEditProject('edit', project.id);
-            // How do I stop renderSidebar() from running?
         })
         projectHolder.appendChild(projectEditButton);
 
@@ -295,7 +294,7 @@ export function renderContent(project, todos) {
         deleteTodoButton.classList.add('todo_delete');
         deleteTodoButton.textContent = 'Delete'
         deleteTodoButton.addEventListener('click', () => {
-            deleteTodoConfirmationPopup(todo.id, todo.title, project); //What to feed in as currentProject? project may be wrong
+            deleteTodoConfirmationPopup(todo.id, todo.title, project); //What to feed in as currentProject? project may be
         });
         todoGrid.appendChild(deleteTodoButton);
 
@@ -515,7 +514,7 @@ export function addOrEditTodo(type, todoId = '') {
         todoPopupDeleteButton.classList.add('todo_delete_button');
         todoPopupDeleteButton.textContent = 'Delete';
         todoPopupDeleteButton.addEventListener('click', () => {
-                deleteTodoConfirmationPopup(todo.id, todo.title, currentProject);
+            deleteTodoConfirmationPopup(todo.id, todo.title, currentProject);
         })
         todoButtonsDiv.appendChild(todoPopupDeleteButton);
     }
@@ -951,19 +950,46 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject) {
     confirmationConfirmButton.classList.add('confirmation_confirm_button');
     confirmationConfirmButton.textContent = 'Delete';
     confirmationConfirmButton.addEventListener('click', () => {
-            console.log(`Attempting to delete todo with ID: (${todoId})`)
-            let currentData = loadData('projects')
-            let currentState = loadState('state')
+        console.log(`Attempting to delete todo with ID: (${todoId})`)
+        let currentData = loadData('projects')
+        let currentState = loadState('state')
+
+        if (currentState === 'dynamic') {
+            console.log(`Attempting to delete todo with ID: (${todoId}) from dynamic state`);
+
             const project = currentData.find(p => p.id === currentProject.id);
-            project.deleteTodoFromProject(todoId);
-            saveData('projects', currentData);
-            saveState('state', currentState);
-            confirmationPopupOverlay.remove();
-            popupCancel('todo');
-            //Do I need two delete functions? Works for edit but not from main page.
-            updateScreen(currentProject.name, []); //Does not work from renderContent
-    });
-    confirmationButtonsDiv.appendChild(confirmationConfirmButton);
-}
+            if (project) {
+                project.todoList = project.todoList.filter(t => t.id !== todoId);
+                saveData('projects', currentData);
+                confirmationPopupOverlay.remove();
+                popupCancel('todo');
+                updateScreen(currentProject.name, project.todoList);
+            }
+        } else if (currentState === 'default' || currentState === 'static') {
+            console.log(`Attempting to delete todo with ID: (${todoId}) from ${currentState} state`);
+
+            let projectFound = false;
+            currentData.forEach(project => {
+                if (project.todoList.some(t => t.id === todoId)) {
+                    project.todoList = project.todoList.filter(t => t.id !== todoId);
+                    projectFound = true;
+                }
+            });
+
+            if (projectFound) {
+                saveData('projects', currentData);
+                // For 'default' or 'static' states, refresh the screen with the current view
+                const todos = loadState('currentTodos');
+                const projectName = loadState('currentProject');
+                confirmationPopupOverlay.remove();
+                popupCancel('todo');
+                updateScreen(projectName, todos);
+            } else {
+                console.error(`Error while attempting to delete todo with ID ${todo.id}`)
+            }
+        }
+        confirmationButtonsDiv.appendChild(confirmationConfirmButton);
+    })
+};
 
 window.addOrEditTodo = addOrEditTodo;
