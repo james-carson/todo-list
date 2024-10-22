@@ -10,11 +10,10 @@ function initialiseApp() {
     // Add event listener for DOM loaded
     document.addEventListener('DOMContentLoaded', () => {
         console.log('DOM Content loaded, initialising initialiseApp()');
-        // For now, set the demo Data - later, when there is demo mode, ask which dataset should be used
+        // Demo data is set - These projects can be removed if desired
         setDemoData();
         renderSidebar();
         updateScreen();
-        // console.log('updateScreen() ran within initialiseApp() with loadDefaultView()');
         console.log('App initialised')
     })
 };

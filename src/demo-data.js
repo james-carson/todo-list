@@ -4,30 +4,32 @@
 import { Todo } from './todo.js';
 import { Project } from './project.js';
 import { saveData, loadData, saveState } from './storage.js';
+import { format, addDays, startOfToday } from 'date-fns';
 
 // Sample data for todos in the "Personal Tasks" project
+const today = startOfToday();
+
 const demoTodos1 = [
-    new Todo("td-0", "Buy groceries", "2024-10-14", "high", "Get milk, bread, eggs, and fruits", false),
-    new Todo("td-1", "Plan birthday party", "2024-09-28", "low", "Send out invitations, book the venue, and order cake", false),
-    new Todo("td-2", "Finish project report", "2024-09-30", "medium", "Complete the draft and send it for review", false),
-    new Todo("td-3", "Book dentist appointment", "2024-10-15", "high", "Teeth cleaning and check-up", false),
-    new Todo("td-4", "Do laundry", "2024-09-27", "low", "Wash and fold clothes", false),
-    new Todo("td-5", "Exercise", "2024-10-14", "medium", "Go for a run or hit the gym", false),
-    new Todo("td-6", "Read a book", "2024-10-18", "medium", "Finish 'The Great Gatsby'", false),
-    new Todo("td-7", "Clean the house", "2024-10-20", "low", "Dust, vacuum, and organize rooms", false),
+    new Todo("td-0", "Buy groceries", format(today, 'yyyy-MM-dd'), "high", "Get milk, bread, eggs, and fruits", false), // Today
+    new Todo("td-1", "Plan birthday party", format(addDays(today, -7), 'yyyy-MM-dd'), "low", "Send out invitations, book the venue, and order cake", false), // Overdue
+    new Todo("td-2", "Finish project report", format(addDays(today, -3), 'yyyy-MM-dd'), "medium", "Complete the draft and send it for review", false), // Overdue
+    new Todo("td-3", "Book dentist appointment", format(today, 'yyyy-MM-dd'), "high", "Teeth cleaning and check-up", false), // Today
+    new Todo("td-4", "Do laundry", format(addDays(today, -10), 'yyyy-MM-dd'), "low", "Wash and fold clothes", false), // Overdue
+    new Todo("td-5", "Exercise", format(today, 'yyyy-MM-dd'), "medium", "Go for a run or hit the gym", false), // Today
+    new Todo("td-6", "Read a book", format(addDays(today, 3), 'yyyy-MM-dd'), "medium", "Finish 'The Great Gatsby'", false), // This week
+    new Todo("td-7", "Clean the house", format(addDays(today, 6), 'yyyy-MM-dd'), "low", "Dust, vacuum, and organize rooms", false), // This week
 ];
 
 const demoTodos2 = [
-    new Todo("td-8", "Book flight tickets", "2024-09-30", "high", "Look for the cheapest fares and book them", false),
-    new Todo("td-9", "Attend meeting with client", "2024-10-14", "medium", "Prepare the presentation and agenda", false),
-    new Todo("td-10", "Call the plumber", "2024-09-25", "low", "Fix the kitchen sink and bathroom faucet", true),
-    new Todo("td-11", "Update project timeline", "2024-10-15", "medium", "Revise the deadlines based on the team's feedback", false),
-    new Todo("td-12", "Submit budget proposal", "2024-10-19", "high", "Ensure all expenses are included and submitted on time", false),
-    new Todo("td-13", "Conduct team meeting", "2024-10-17", "medium", "Discuss project progress and assign new tasks", false),
-    new Todo("td-14", "Prepare quarterly report", "2024-10-22", "high", "Gather data and analyze performance metrics", false),
-    new Todo("td-16", "Review code changes", "2024-09-30", "medium", "Ensure all changes are compliant with coding standards", false),
+    new Todo("td-8", "Book flight tickets", format(addDays(today, -5), 'yyyy-MM-dd'), "high", "Look for the cheapest fares and book them", false), // Overdue
+    new Todo("td-9", "Attend meeting with client", format(today, 'yyyy-MM-dd'), "medium", "Prepare the presentation and agenda", false), // Today
+    new Todo("td-10", "Call the plumber", format(addDays(today, -20), 'yyyy-MM-dd'), "low", "Fix the kitchen sink and bathroom faucet", true), // Overdue
+    new Todo("td-11", "Update project timeline", format(today, 'yyyy-MM-dd'), "medium", "Revise the deadlines based on the team's feedback", false), // Today
+    new Todo("td-12", "Submit budget proposal", format(addDays(today, 5), 'yyyy-MM-dd'), "high", "Ensure all expenses are included and submitted on time", false), // This week
+    new Todo("td-13", "Conduct team meeting", format(addDays(today, 2), 'yyyy-MM-dd'), "medium", "Discuss project progress and assign new tasks", false), // This week
+    new Todo("td-14", "Prepare quarterly report", format(addDays(today, 7), 'yyyy-MM-dd'), "high", "Gather data and analyze performance metrics", false), // This week
+    new Todo("td-16", "Review code changes", format(addDays(today, -2), 'yyyy-MM-dd'), "medium", "Ensure all changes are compliant with coding standards", false), // Overdue
 ];
-
 
 // // Sample data for projects
 export const demoProjects = [

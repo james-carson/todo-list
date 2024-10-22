@@ -59,10 +59,10 @@ export function loadState(key) {
 }
 
 export function clearStorage() {
-    console.log('Console is about to be cleared!')
+    console.log('Local Storage is about to be cleared!')
     // Clear the console
-    console.clear();
-    console.log('Console has just been cleared');
+    localStorage.clear();
+    console.log('Local Storage has just been cleared');
 }
 
 export function setCounter(key) {

@@ -18,7 +18,6 @@ export function renderSidebar() {
 
     // Get a list of projects (getProjectNames)
     const currentProjects = loadData('projects');
-    console.log(`currentProjects loaded as: ${currentProjects}`)
 
     // For each project...
     currentProjects.forEach(project => {
@@ -64,7 +63,6 @@ export function renderSidebar() {
     addNewProjectButton.classList.add('add_new_project_button')
     addNewProjectButton.addEventListener('click', () => {
         addOrEditProject('add');
-        // How do I stop renderSidebar() from running?
     });
     projectList.appendChild(addNewProjectButton);
 
