@@ -6,7 +6,7 @@ import { Project } from './project.js';
 import { saveData, loadData, saveState } from './storage.js';
 import { format, addDays, startOfToday } from 'date-fns';
 
-// Sample data for todos in the "Personal Tasks" project
+// Sample data for todos in the "Personal Tasks" project, using today to ensure there is always something there.
 const today = startOfToday();
 
 const demoTodos1 = [
@@ -37,6 +37,7 @@ export const demoProjects = [
     new Project("pd-1", "Work Projects", demoTodos2),
 ];
 
+// This function simply saves the above demo data in storage, and saves the state as default so that the default view is loaded afterwards
 export function setDemoData() {
     saveData('projects', demoProjects);
     saveState('state', 'default');

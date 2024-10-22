@@ -13,59 +13,28 @@ export class Project {
         this.todoList = todoList
     }
 
+    // Pushes a todo into the array
     addTodo(todo) {
         this.todoList.push(todo);
     }
 
+    // Splices a todo out of the array - index needed
     deleteTodoFromProject(todoId) {
         const todoIndex = this.getTodoIndex(todoId);
         // The todoIndex MUST be found before running this:
         this.todoList.splice(todoIndex, 1);
     }
 
+    // Moves a todo from one project to another
     moveTodo(todoId, oldProject, newProject) {
         // Get the todo's index:
         const todoIndex = oldProject.getTodoIndex(todoId);
-
+        // If it has one...
         if (todoIndex > -1) {
             // Splice the todo from the old project
             const [todoToMove] = oldProject.todoList.splice(todoIndex, 1);
-
             // Add the todo to the new project's todoList
             newProject.todoList.push(todoToMove);
-
-            // Simplifying that as it is too complicated and tightly coupled:
-
-            // // Load data
-            // currentData = loadData('projects');
-            // // ID current project by ID
-            // const currentProjectById = currentData.find(project => project.id === oldProject.id);
-            // // Check for a match:
-            // if (currentProjectById) {
-            //     // Find the index of this todo:
-            //     const todoIndex = currentProjectById.todoList.findIndex(todo => todo.id === todoId);
-            //     // Check that the todo exists by seeing if its index is 0 or higher
-            //     if (todoIndex > -1) {
-            //         // Splice todo from array into a variable
-            //         const [temporaryTodo] = currentProjectById.todoList.splice(todoIndex, 1);
-            //         // Find the new Project
-            //         const newProjectById = currentData.find(project => project.id === newProject.id);
-            //         // Check that the new project exists:
-            //         if (newProjectById) {
-            //             // Push spliced todo to project by ID
-            //             newProjectById.todoList.push(temporaryTodo);
-            //             // Save the data
-            //             saveData('projects', currentData)
-            //             console.log(`Todo with ID ${todoId} moved from project "${oldProject.name}" to "${newProject.name}".`);
-            //         } else {
-            //             console.error(`New project with ID ${newProject.id} not found.`);
-            //         }
-            //     } else {
-            //         console.error(`Todo with ID ${todoId} not found in the source project "${oldProject.name}".`);
-            //     }
-            // } else {
-            //     console.error(`Source project with ID ${oldProject.id} not found.`);
-            // }
         };
     };
 
@@ -74,24 +43,24 @@ export class Project {
         return this.todoList;
     }
 
+    // Find a todo's index number using its ID
     getTodoIndex(todoId) {
         return this.todoList.findIndex(todo => todo.id === todoId);
     }
-
-    // Necessary?
-    getTodoList() {
-        return this.todoList;
-    }
-
 };
 
+// Creates a new project into which todos can be pushed. A name is required and a unique ID is given
 export function createNewProject(name) {
+    // Load the current data
     let currentData = loadData('projects');
+    // Get the unique number needed for an ID and add p- to it to create the ID
     const numberForId = addToCounter('projectCounter');
     const newProjectId = (`p-${numberForId}`);
     const newProjectName = name;
     const newProject = new Project(newProjectId, newProjectName, []);
+    // Push the new project into the project list
     currentData.push(newProject);
+    // Save the data and return the project so that it can be immediately used
     saveData('projects', currentData);
     return newProject;
 };

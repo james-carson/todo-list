@@ -58,6 +58,7 @@ export function renderSidebar() {
         projectList.appendChild(projectHolder);
     });
 
+    // Adds a button at the bottom of the list that can be clicked to create a new Project
     const addNewProjectButton = document.createElement('h3')
     addNewProjectButton.textContent = '+ New Project'
     addNewProjectButton.classList.add('add_new_project_button')
@@ -66,6 +67,7 @@ export function renderSidebar() {
     });
     projectList.appendChild(addNewProjectButton);
 
+    // Static sidebar listeners are attached every time the sidebar is refreshed
     attachStaticSidebarClickListeners();
 }
 
@@ -132,43 +134,46 @@ export function attachStaticSidebarClickListeners() {
     });
 }
 
-// Input is set to blank by default
+// Input is set to blank by default - this function prepares the input that goes into renderContent depending on what 'state' the view is in
 export function updateScreen(projectInput = '', todosInput = []) {
     // Initialise the variables that will be fed into renderContent
     let currentState = loadState('state');
     let project;
     let todos;
 
+    // Different states require different forms of projects (string names or full project objects) and todos to be
+    // passed through to renderContent, so this is filtered here. This allows:
+    // 1) A main 'default' view to be used that contains overdue todos from different projects
+    // 2) 'Static', filtered views that are always present on the sidebar
+    // 3) 'Dynamic', user-defined (or demo data) projects that contain todos. 
+    // This was important so that the default view could be used and also for deleting todos from different 'types' of projects
     if (currentState === 'default') {
         console.log('Input was deemed as default')
-        // Perform actions
+        // In default, the project title is a string and the todos are a list of overdue ones
         project = 'Welcome to Todo(L)ist! Here is your inbox:'
         todos = getOverdueTodos();
-        // Update state
+        // Update state for when todos need to be deleted or updateScreen needs to be re-ran
         saveState('state', 'default');
         saveState('currentProject', project);
         saveState('currentTodos', todos);
     } else if (currentState === 'static') {
-        // console.log('Input was deemed as static')
         if (projectInput === 'Completed') {
             project = projectInput;
             todos = getCompletedTodos();
         } else {
+            // An inputted title is used and the todos are provided and filtered for completed in case of a re-render
             project = projectInput;
             todos = todosInput.filter(todo => !todo.completed);
         }
-        // console.log(`Static project with name ${project} rendered.`)
         // Update state
         saveState('state', 'static');
         saveState('currentProject', project);
         saveState('currentTodos', todos);
     } else if (currentState === 'dynamic') {
-        // console.log('Input was deemed as dynamic')
-        // Perform actions
+        // Project is a full Project object with its own todos and they are then filtered for completion
         project = projectInput;
         const todosToFilter = getTodosForSpecificProject(projectInput);
         todos = todosToFilter.filter(todo => !todo.completed);
-        // console.log(`Dynamic project with name ${projectInput} rendered.`)
         // Update state
         saveState('state', 'dynamic');
         saveState('currentProject', project);
@@ -176,11 +181,12 @@ export function updateScreen(projectInput = '', todosInput = []) {
     } else {
         console.error('updateScreen() not run correctly')
     }
-    // Now, render the content...
+    // Now, render the specifid content...
     renderContent(project, todos)
     console.log('Content Rendered within updateScreen(). Screen updated')
 }
 
+// renderContent is used to render the correct todos onto the content area
 export function renderContent(project, todos) {
     console.log(`running renderContent(${project}, ${todos}`)
 
@@ -188,6 +194,7 @@ export function renderContent(project, todos) {
     const content = document.getElementById('content');
     content.textContent = '';
 
+    // Sort the todos by due date
     todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Get the specified project (from input)
@@ -303,14 +310,18 @@ export function renderContent(project, todos) {
     const addNewTodoButton = document.createElement('div')
     addNewTodoButton.textContent = '+ New Todo'
     addNewTodoButton.classList.add('add_new_todo_button')
+    // Add a click listener for the add button to create a new todo
     addNewTodoButton.addEventListener('click', () => {
+
         addOrEditTodo('add');
     });
     content.appendChild(addNewTodoButton);
 };
 
+// This function creates a popup that can be used to add a new todo, that is originally blank, or edit an existing one, that is populated with its corresponding data
 export function addOrEditTodo(type, todoId = '') {
 
+    // Defining important variables. currentProject can change, originalProject should not
     const projects = loadData('projects');
     let todo;
     let currentProject;
@@ -318,6 +329,7 @@ export function addOrEditTodo(type, todoId = '') {
 
     if (type === 'edit' && todoId) {
         for (let project of projects) {
+            // In each project, loop through and find the todo by its ID
             console.log('Checking project:', project);
             todo = project.todoList.find(t => t.id === todoId);
             if (todo) {
@@ -368,6 +380,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupNameInput.setAttribute('id', 'todo_name');
     todoPopupNameInput.setAttribute('minlength', '1');
     todoPopupNameInput.setAttribute('tabindex', '0');
+    // If in 'edit mode' use the already-existing value for this input
     if (type === 'edit' && todoId) {
         todoPopupNameInput.value = todo.title;
     }
@@ -457,7 +470,7 @@ export function addOrEditTodo(type, todoId = '') {
     const todoPopupProjectInput = document.createElement('select');
     todoPopupProjectInput.setAttribute('id', 'todo_project')
     todoPopupProjectInput.setAttribute('tabindex', '4');
-    // Need to loop through each project name and add it as a value:
+    // Need to loop through each project name and add it as a value so that it can be selected
     projects.forEach(project => {
         const todoPopupProjectInputOption = document.createElement('option');
         todoPopupProjectInputOption.setAttribute('value', project.name);
@@ -507,7 +520,7 @@ export function addOrEditTodo(type, todoId = '') {
     });
     todoButtonsDiv.appendChild(todoPopupCancelButton);
 
-    // Append the Delete button:
+    // Append the Delete button. This only happens in an 'edit' mode so that the user cannot delete a todo that doesn't yet exist!
     if (type === 'edit') {
         const todoPopupDeleteButton = document.createElement('div');
         todoPopupDeleteButton.classList.add('todo_delete_button');
@@ -577,6 +590,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoPopupPriorityInput.addEventListener('change', validateTodoForm);
     todoPopupProjectInput.addEventListener('change', validateTodoForm);
 
+    // This is run for an initial check before any input or change
     validateTodoForm();
 
     // Click listener for save button:
@@ -594,6 +608,7 @@ export function addOrEditTodo(type, todoId = '') {
                 return;
             }
 
+            // Create the todo and kill the popup window
             createNewTodo(title, dueDate, priority, notes, projectName);
             popupCancel('todo')
 
@@ -604,6 +619,7 @@ export function addOrEditTodo(type, todoId = '') {
 
         } else if (type === 'edit') {
 
+            // Set the values for the input
             const newTitle = todoPopupNameInput.value;
             const newDueDate = todoPopupDueDateInput.value;
             const newPriority = todoPopupPriorityInput.value;
@@ -657,6 +673,7 @@ export function addOrEditTodo(type, todoId = '') {
     todoButtonsDiv.appendChild(todoPopupSaveButton);
 }
 
+// Similar to addOrEditTodo
 export function addOrEditProject(type, projectId = '') {
 
     let projects = loadData('projects');
@@ -816,6 +833,7 @@ export function addOrEditProject(type, projectId = '') {
     projectButtonsDiv.appendChild(projectPopupSaveButton);
 }
 
+// Deletes a project from the array using its ID
 function deleteProject(projectId) {
     console.log(`deleteProject(projectId)launched with ID: ${projectId}`)
     let currentData = loadData('projects');
@@ -838,6 +856,7 @@ function deleteProject(projectId) {
     }
 };
 
+// Closes a JS-created popup which can be of varying types
 function popupCancel(type) {
     if (type === 'todo') {
         const target = document.querySelector('.todo_popup_overlay');
@@ -856,6 +875,7 @@ function popupCancel(type) {
     }
 };
 
+// A function that creates a popup to check that a user really does want to delete a project
 function deleteProjectConfirmationPopup(projectId, projectName) {
     console.log(`deleteProjectConfirmationPopup(projectId)launched with ID: ${projectId}`)
     // Add the overlay window
@@ -908,6 +928,8 @@ function deleteProjectConfirmationPopup(projectId, projectName) {
     confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 }
 
+// Similar to the previous function, but requires more imput as the todo needs to be removed from a specific project, and 
+// needs to know how the todo is being deleted (through edit or from the content window) as these are handled in different ways
 function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = '') {
     console.log(`deleteTodoConfirmationPopup(projectId)launched with ID: ${todoId}`)
     // Add the overlay window
@@ -943,6 +965,7 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = ''
     confirmationCancelButton.classList.add('confirmation_cancel_button');
     confirmationCancelButton.textContent = 'Cancel';
     confirmationCancelButton.addEventListener('click', () => {
+        // Simply closes the popup.
         confirmationPopupOverlay.remove();
     });
     confirmationButtonsDiv.appendChild(confirmationCancelButton);
@@ -957,9 +980,11 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = ''
         let currentState = loadState('state')
 
         if (currentState === 'dynamic') {
+            // If the current state is dynamic, then we know which project the todo is from, we just need to check it with an ID
             console.log(`Attempting to delete todo with ID: (${todoId}) from dynamic state`);
 
             const project = currentData.find(p => p.id === currentProject.id);
+            // If the project is found, then filter out the todo by its ID
             if (project) {
                 project.todoList = project.todoList.filter(t => t.id !== todoId);
                 saveData('projects', currentData);
@@ -967,13 +992,17 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = ''
                 if (from === 'edit') {
                     popupCancel('todo');
                 };
+                // Different data is used here from the other types of states - this is the easier version
                 updateScreen(currentProject.name, project.todoList);
             }
+            // If the state is default or static, then we don't at first know which project it is from, and we need to do so so that we can remove it.
         } else if (currentState === 'default' || currentState === 'static') {
             console.log(`Attempting to delete todo with ID: (${todoId}) from ${currentState} state`);
 
             let projectFound = false;
             currentData.forEach(project => {
+                // .some used rather than .find because we are checking if the todo exists in the project or not (true or false) rather than accessing the todo
+                // itself. We know which todo we want, so the project is the key value here.
                 if (project.todoList.some(t => t.id === todoId)) {
                     project.todoList = project.todoList.filter(t => t.id !== todoId);
                     projectFound = true;
@@ -997,5 +1026,3 @@ function deleteTodoConfirmationPopup(todoId, todoName, currentProject, from = ''
     })
     confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 };
-
-window.addOrEditTodo = addOrEditTodo;

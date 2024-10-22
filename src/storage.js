@@ -10,7 +10,7 @@ export function saveData(key, data) {
     console.log('Data saved')
 }
 
-// Load projects to localStorage, using a key, and revive the data from JSON data to create 'new' objects
+// Load projects to localStorage, using a key, and 'revive' the data from JSON data to create 'new' objects
 export function loadData(key) {
     console.log(`Initiated loadData(${key})`)
     // Create a temporary variable to load the JSON data into, and load it
@@ -46,6 +46,7 @@ export function loadData(key) {
 }
 
 // Save state is used with two keys: 'state', which saves the current state/view type, and 'currentProject', which is self-explanatory.
+// Current todos can also be used
 export function saveState(key, state) {
     // Convert the state object to JSON data, and save it by the key.
     localStorage.setItem(key, JSON.stringify(state));
@@ -58,6 +59,7 @@ export function loadState(key) {
     return JSON.parse(localStorage.getItem(key));
 }
 
+// Clears local storage. Can be (but isn't currently) used to get rid of the demo data.
 export function clearStorage() {
     console.log('Local Storage is about to be cleared!')
     // Clear the console
@@ -65,6 +67,7 @@ export function clearStorage() {
     console.log('Local Storage has just been cleared');
 }
 
+// Sets a counter if none exists
 export function setCounter(key) {
     console.log(`Initialised setCounter(${key}).`)
     // Create a counter variable and set it to 0
@@ -76,6 +79,7 @@ export function setCounter(key) {
     return counter;
 }
 
+// Gets a counter for ID purposes, usually so that it can be added to for a new ID
 export function getCounter(key) {
     console.log(`Initited getCounter(${key}).`);
     // Load Todo Counter data into a variable
@@ -92,6 +96,7 @@ export function getCounter(key) {
     }
 }
 
+// Adds to a new counter for ID purposes
 export function addToCounter(key) {
     console.log(`Initiated addToCounter(${key})`);
     // Load Todo Counter data
@@ -114,5 +119,3 @@ export function loadCounter(key) {
     // Create a temporary variable to load the JSON data into, and load it
     return JSON.parse(localStorage.getItem(key));
 }
-
-window.loadData = loadData;

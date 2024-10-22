@@ -8,9 +8,8 @@ import { updateScreen, getCurrentType, getCurrentProject, getCurrentTodos, rende
 // Update - adding methods back in fo simplicity of later functions
 export class Todo {
     constructor(id, title, dueDate, priority, notes, completed = 'false') {
-        // ID needs to be able to accept input from dummy data
+        // ID needs to be able to accept input from dummy data and must also be unique
         this.id = id
-        // Don't create any until this is sorted!
         this.title = title
         this.dueDate = dueDate
         this.priority = priority
@@ -18,9 +17,10 @@ export class Todo {
         this.completed = completed
     }
 
+    // currently not used but could be, for example if a todo can be directly edited from the content list.
     editTodo(newTitle, newDueDate, newPriority, newNotes) {
         // Updates each todo property to the new provided value, or defaults to the original if none provided.
-        // ID not necessary as this is unique and shoul not/cannot be changed
+        // ID not necessary as this is unique and should not/cannot be changed
         this.title = newTitle || this.title;
         this.dueDate = newDueDate || this.dueDate;
         this.priority = newPriority || this.priority;
@@ -30,6 +30,7 @@ export class Todo {
 
 };
 
+// Toggles whether a todo has been completed or not. Fades after 1.5 seconds. Because of the different views, this gave me a lot of trouble!
 export function toggleTodoCompleted(todoId) {
     console.log(`Initiated toggleTodoCompleted(${todoId})`)
     // Load variables for use later
@@ -75,6 +76,7 @@ export function toggleTodoCompleted(todoId) {
     console.error(`Todo with ID ${todoId} cannot be found`);
 };
 
+// Currently not in use, but could be used if expanded to delete a todo in another way
 export function deleteTodo(todoId) {
     const projects = loadData('projects');
     const parentProject = projects.find(project =>
@@ -91,9 +93,11 @@ export function deleteTodo(todoId) {
     }
 }
 
+// Similar to projects, uses a unique ID to identify each todo. Also requires a project as all todos belong to one (and currently only one)
 export function createNewTodo(title, dueDate, priority, notes, projectName) {
     let currentData = loadData('projects');
 
+    // Searching for the project chosen by its provided name
     const project = currentData.find(p => p.name === projectName);
     console.log(`Has the project been found in currentData? Here: ${project}`);
     if (!project) {
@@ -101,6 +105,7 @@ export function createNewTodo(title, dueDate, priority, notes, projectName) {
         return;
     }
 
+    // Creating the ID for the new todo and pushing it into the chosen project.
     const numberForId = addToCounter('todoCounter');
     const newTodoId = (`t-${numberForId}`);
     const newTodo = new Todo (newTodoId, title, dueDate, priority, notes, false);
@@ -112,6 +117,7 @@ export function createNewTodo(title, dueDate, priority, notes, projectName) {
 
     console.log(`New todo added to project "${projectName}":`, newTodo);
 
-    const updatedData = loadData('projects');
-    console.log(`Updated data after saving: ${JSON.stringify(updatedData, null, 2)}`);
+    // This was used for debugging but could be useful in some situations
+    // const updatedData = loadData('projects');
+    // console.log(`Updated data after saving: ${JSON.stringify(updatedData, null, 2)}`);
 };

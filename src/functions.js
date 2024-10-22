@@ -5,7 +5,6 @@ import { isToday, isThisWeek } from "date-fns";
 import { Project } from "./project";
 import { saveData, loadData, saveState, loadState, setCounter, getCounter, addToCounter } from "./storage"
 
-// Completed:
 export function getAllTodos() {
     console.log('Initiated getAllTodos()')
     // Load Data into a variable, loadedData
@@ -17,8 +16,7 @@ export function getAllTodos() {
     // all of the todos from every project.
     const allTodos = loadedData.flatMap(project => project.todoList);
     
-    // console.log('Finished running getAllTodos()')
-    
+    // Return the todos for use
     return allTodos
 }
 
@@ -32,10 +30,6 @@ export function getTodosDueToday() {
         const dueDate = new Date(todo.dueDate);
         // and checking if the todo is due today and is also uncompleted, then
         // returning those that match
-
-        // console.log('dueDate:', dueDate);
-        // console.log('isToday:', isToday());
-
         return isToday(dueDate) && !todo.complete;
     });
 };
@@ -72,7 +66,7 @@ export function getHighPriorityTodos() {
     console.log('Initiated getHighPriorityTodos()')
     // Load Data in getAllTodos and assign to a variable
     const allTodos = getAllTodos();
-    // This list is then filtered by...
+    // This list is then filtered by high priority and incomplete, then returned
     return allTodos.filter(todo => todo.priority === 'high' && !todo.completed);
 };
 
@@ -80,12 +74,13 @@ export function getCompletedTodos() {
     console.log('Initiated getCompletedTodos()')
     // Load Data
     const allTodos = getAllTodos();
-    // This list is then filtered by...
+    // This list is then filtered by completed status
     return allTodos.filter(todo => todo.completed);
 }
 
-// Note - this does not filter for incomplete todos:
+
 export function getTodosForSpecificProject(projectName) {
+// Note - this does not filter for incomplete todos:
     console.log(`Initiated getTodosForSpecificProject(${projectName})`)
     // Load Data
     const loadedData = loadData('projects');
@@ -94,7 +89,7 @@ export function getTodosForSpecificProject(projectName) {
 
     // If it's found...
     if (projectByName) {
-        // console.log(`Project found: ${projectName}, Todos: ${projectByName.todoList}`);
+        // Return the specific list if found
         return projectByName.todoList
     } else {
         console.error(`Project with name "${projectName}" not found.`);
@@ -108,17 +103,6 @@ export function getAllProjectNames() {
     const loadedData = loadData('projects');
     // Create variable that will contain all project names
     const allNames = loadedData.map(project => project.name);
-    // console.log('Finished running getAllProjectNames()', allNames)
-    return allNames;
     // Return it
-
-}
-
-function getNextId(type) {
-    return addToCounter(type);
-}
-
-function createProject(name) {
-    const newProject = new Project(getNextId('project'), name, [])
-    return newProject;
+    return allNames;
 }
