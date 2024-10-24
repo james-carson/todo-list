@@ -3,6 +3,7 @@
 
 import { setDemoData } from "./demo-data.js";
 import { renderSidebar, updateScreen } from "./ui.js";
+import { saveState } from "./storage.js";
 import "./styles.css";
 
 // This function runs on startup to set the app up.
@@ -10,14 +11,27 @@ function initialiseApp() {
   // Add event listener for DOM loaded
   document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content loaded, initialising initialiseApp()");
-    // Demo data is set - These projects can be removed by the user if desired
-    setDemoData();
-    // Render the sidebar with all static and dynamic projects
-    renderSidebar();
-    // Render the rest of the content.
-    updateScreen();
+    checkStorage();
     console.log("App initialised");
   });
+}
+
+function checkStorage() {
+  let dataCheck;
+  const storedProjects = localStorage.getItem("projects");
+  if (!storedProjects || storedProjects == null) {
+    dataCheck = false;
+  } else {
+    dataCheck = true;
+  }
+
+  if (!dataCheck) {
+    setDemoData();
+  }
+
+  saveState("state", "default");
+  renderSidebar();
+  updateScreen();
 }
 
 // Run the function immediately

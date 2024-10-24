@@ -1058,3 +1058,34 @@ function deleteTodoConfirmationPopup(
   });
   confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 }
+
+export function addOnlyAddButtons() {
+  // Define the project list
+  const projectList = document.getElementById("project_list");
+  projectList.textContent = "";
+
+  // Adds a button at the bottom of the Project list that can be clicked to create a new Project
+  const addNewProjectButton = document.createElement("h3");
+  addNewProjectButton.textContent = "+ New Project";
+  addNewProjectButton.classList.add("add_new_project_button");
+  addNewProjectButton.addEventListener("click", () => {
+    addOrEditProject("add");
+  });
+  projectList.appendChild(addNewProjectButton);
+
+  // Static sidebar listeners are attached every time the sidebar is refreshed
+  attachStaticSidebarClickListeners();
+
+  // Define the content area and clear it
+  const content = document.getElementById("content");
+  content.textContent = "";
+
+  const addNewTodoButton = document.createElement("div");
+  addNewTodoButton.textContent = "+ New Todo";
+  addNewTodoButton.classList.add("add_new_todo_button");
+  // Add a click listener for the add button to create a new todo
+  addNewTodoButton.addEventListener("click", () => {
+    addOrEditTodo("add");
+  });
+  content.appendChild(addNewTodoButton);
+}

@@ -2,9 +2,7 @@
 // ...with the UI, dummy data, or initialisation from the 'main' file
 
 import { isToday, isThisWeek } from "date-fns";
-import {
-  loadData,
-} from "./storage";
+import { loadData } from "./storage";
 
 export function getAllTodos() {
   console.log("Initiated getAllTodos()");

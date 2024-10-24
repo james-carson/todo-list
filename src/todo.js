@@ -12,15 +12,10 @@ import {
   loadState,
   saveData,
   addToCounter,
-  loadProject,
   saveState,
 } from "./storage";
 import {
   updateScreen,
-  getCurrentType,
-  getCurrentProject,
-  getCurrentTodos,
-  renderContent,
 } from "./ui";
 
 // Todo class, including a constructor. No methods; functions will be handled separately.
