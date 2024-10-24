@@ -1059,6 +1059,7 @@ function deleteTodoConfirmationPopup(
   confirmationButtonsDiv.appendChild(confirmationConfirmButton);
 }
 
+// Is this needed? Most likely not - only if clearing storage.
 export function addOnlyAddButtons() {
   // Define the project list
   const projectList = document.getElementById("project_list");
